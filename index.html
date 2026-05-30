@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Slovník">
+<link rel="manifest" href="./manifest.json">
+<title>Slovník</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0e0c;--sf:#1a1916;--sf2:#242220;--sf3:#2e2c29;
+  --gold:#c9a84c;--gold-l:#e8c96a;--gold-d:#7a6330;
+  --text:#f0ead8;--dim:#8a8270;--muted:#4a4840;
+  --green:#5a9e6f;--red:#b85555;--blue:#5580a0;--orange:#c07840;
+  --r:16px;--rs:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+.screen{display:none;flex-direction:column;height:100vh;height:-webkit-fill-available}
+.screen.active{display:flex}
+/* topbar */
+.tb{display:flex;align-items:center;justify-content:space-between;padding:52px 16px 12px;border-bottom:1px solid var(--sf3);flex-shrink:0}
+.tb h1{font-family:'DM Serif Display',serif;font-size:19px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.tb-acts{display:flex;gap:4px;flex-shrink:0}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;border-radius:var(--rs);transition:all .15s;padding:10px 16px}
+.btn-p{background:var(--gold);color:#0f0e0c}.btn-p:active{background:var(--gold-l);transform:scale(.97)}
+.btn-s{background:var(--sf2);color:var(--text)}.btn-s:active{background:var(--sf3)}
+.btn-g{background:transparent;color:var(--dim);padding:9px}.btn-g:active{color:var(--text)}
+.btn-ic{width:38px;height:38px;padding:0;border-radius:50%}
+.btn-full{width:100%}.btn:disabled{opacity:.4;pointer-events:none}
+.icon-btn{background:none;border:none;color:var(--dim);cursor:pointer;padding:7px;border-radius:8px;display:flex;align-items:center}.icon-btn:active{color:var(--text)}
+svg.ic{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* scroll */
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px}
+/* tabs */
+.tabs{display:flex;gap:2px;background:var(--sf2);border-radius:var(--rs);padding:3px;margin-bottom:16px}
+.tab{flex:1;text-align:center;padding:8px;border-radius:8px;font-size:13px;font-weight:500;color:var(--dim);cursor:pointer;transition:all .2s}
+.tab.active{background:var(--sf);color:var(--text)}
+.tab-c{display:none}.tab-c.active{display:block}
+/* home */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.stat-card{background:var(--sf);border-radius:var(--rs);padding:12px 8px;text-align:center}
+.stat-num{font-family:'DM Serif Display',serif;font-size:24px;color:var(--gold)}
+.stat-lbl{font-size:10px;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
+.sec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:9px}
+.lbtn{width:100%;background:var(--sf);border:1px solid var(--sf3);border-radius:var(--r);padding:16px;margin-bottom:9px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;text-align:left}
+.lbtn:active{background:var(--sf2);transform:scale(.98)}
+.lbtn-ic{width:42px;height:42px;background:rgba(201,168,76,.15);border-radius:11px;display:flex;align-items:center;justify-content:center;color:var(--gold);flex-shrink:0}
+.lbtn-txt h3{font-size:15px;font-weight:600;margin-bottom:2px}.lbtn-txt p{font-size:12px;color:var(--dim)}
+.badge{margin-left:auto;background:var(--gold);color:#0f0e0c;font-size:12px;font-weight:700;border-radius:20px;padding:3px 10px;flex-shrink:0}
+.badge.zero{background:var(--sf3);color:var(--muted)}
+/* lang bar */
+.lang-bar{display:flex;align-items:center;gap:7px;padding:9px 16px;background:var(--sf);border-bottom:1px solid var(--sf3);flex-shrink:0;overflow-x:auto}
+.lchip{display:flex;align-items:center;background:var(--sf2);border:1px solid var(--sf3);border-radius:20px;padding:5px 11px;white-space:nowrap;cursor:pointer;font-size:12px;transition:all .15s;flex-shrink:0}
+.lchip.active{background:rgba(201,168,76,.15);border-color:var(--gold-d);color:var(--gold)}
+.lchip-add{background:none;border:1px dashed var(--sf3);border-radius:20px;padding:5px 11px;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+/* vocab list */
+.vi{background:var(--sf);border-radius:var(--rs);padding:12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:background .15s}
+.vi:active{background:var(--sf2)}
+.vi-w{flex:1;min-width:0}
+.vi-w strong{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vi-w span{font-size:12px;color:var(--dim);display:block;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vi-r{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.vstage{font-size:10px;font-weight:600;padding:2px 6px;border-radius:20px}
+.s0{background:rgba(184,85,85,.2);color:var(--red)}.s1{background:rgba(85,128,160,.2);color:var(--blue)}
+.s2{background:rgba(201,168,76,.12);color:var(--orange)}.s3{background:rgba(90,158,111,.15);color:var(--green)}
+.s4{background:rgba(90,158,158,.15);color:#5a9e9e}.s5{background:rgba(154,106,191,.15);color:#9a6abf}.s6{background:rgba(201,168,76,.15);color:var(--gold)}.s7{background:rgba(201,168,76,.07);color:var(--gold-d)}
+.empty{text-align:center;padding:40px 20px;color:var(--dim)}
+.empty-ic{font-size:42px;margin-bottom:10px}
+/* vocab controls */
+.vctrl{display:flex;gap:7px;margin-bottom:11px;flex-wrap:wrap}
+.vctrl input,.vctrl select{background:var(--sf);border:1px solid var(--sf3);border-radius:var(--rs);color:var(--text);font-size:13px;padding:8px 10px;outline:none;-webkit-appearance:none}
+.vctrl input{flex:1;min-width:100px;font-family:'DM Sans',sans-serif}
+.vctrl input::placeholder{color:var(--muted)}
+/* stats */
+.chart-wrap{background:var(--sf);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.chart-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.chart-title{font-size:12px;font-weight:600;color:var(--dim)}
+.chart-sel{background:var(--sf2);border:1px solid var(--sf3);border-radius:7px;color:var(--dim);font-size:11px;padding:3px 7px;-webkit-appearance:none;outline:none}
+.chart-bars{display:flex;align-items:flex-end;gap:2px;height:70px}
+.cbc{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.cb{width:100%;background:var(--gold);border-radius:3px 3px 0 0;min-height:2px}
+.cbl{font-size:7px;color:var(--muted);text-align:center}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.sg{background:var(--sf);border-radius:var(--rs);padding:13px}
+.sg-n{font-family:'DM Serif Display',serif;font-size:26px;color:var(--gold)}
+.sg-l{font-size:10px;color:var(--dim);margin-top:2px}
+.sbrow{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.sbrow .sbl{font-size:10px;color:var(--dim);width:48px;flex-shrink:0}
+.sbo{flex:1;height:6px;background:var(--sf3);border-radius:3px;overflow:hidden}
+.sbi{height:100%;border-radius:3px}
+.sbrow .sbc{font-size:10px;color:var(--dim);width:20px;text-align:right}
+/* form */
+.form-scroll{flex:1;padding:16px;overflow-y:auto}
+.field{margin-bottom:14px}
+.field label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);display:block;margin-bottom:6px}
+.field input,.field select{width:100%;background:var(--sf);border:1px solid var(--sf3);border-radius:var(--rs);padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--text);outline:none;transition:border-color .15s;-webkit-appearance:none}
+.field input:focus,.field select:focus{border-color:var(--gold-d)}
+.field input::placeholder{color:var(--muted)}
+.field select option{background:#1a1916}
+.dup-warn{border-radius:var(--rs);padding:9px 12px;margin-top:6px;font-size:12px;display:none}
+.dup-warn.show{display:block}
+.dup-orange{background:rgba(192,120,64,.15);border:1px solid rgba(192,120,64,.4);color:var(--orange)}
+.dup-red{background:rgba(184,85,85,.15);border:1px solid rgba(184,85,85,.4);color:var(--red)}
+.tx-row{display:flex;align-items:center;gap:7px;margin-top:5px}
+.tx-btn{background:rgba(201,168,76,.15);border:none;border-radius:var(--rs);padding:7px 12px;color:var(--gold);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.tx-hint{font-size:11px;color:var(--muted)}
+.sugg-box{background:var(--sf2);border:1px solid var(--sf3);border-radius:var(--rs);margin-top:5px;overflow:hidden;display:none}
+.sugg-box.show{display:block}
+.sugg-item{padding:10px 13px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--sf3)}
+.sugg-item:last-child{border-bottom:none}.sugg-item:active{background:var(--sf3)}
+.form-acts{display:flex;gap:8px;padding:12px 16px;flex-shrink:0}
+/* learn */
+.lhdr{padding:52px 16px 11px;display:flex;align-items:center;gap:11px;flex-shrink:0}
+.prog-wrap{flex:1;height:4px;background:var(--sf3);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .3s}
+.prog-lbl{font-size:11px;color:var(--dim);white-space:nowrap}
+.card-zone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:12px 16px 8px;overflow:hidden}
+/* flip card */
+.fcw{width:100%;max-width:400px;perspective:1000px;flex-shrink:0}
+.fc{width:100%;min-height:170px;position:relative;transform-style:preserve-3d;transition:transform .42s cubic-bezier(.4,0,.2,1);cursor:pointer}
+.fc.flipped{transform:rotateY(180deg)}
+.ff{position:absolute;inset:0;backface-visibility:hidden;background:var(--sf);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;border:1px solid var(--sf3)}
+.fb{transform:rotateY(180deg);background:var(--sf2)}
+.clang{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:10px}
+.cword{font-family:'DM Serif Display',serif;font-size:30px;color:var(--text);text-align:center;line-height:1.2}
+.chint{font-size:11px;color:var(--muted);margin-top:10px}
+.facts{width:100%;max-width:400px;margin-top:11px;display:flex;gap:8px;flex-shrink:0}
+.btn-wrong{flex:1;background:rgba(184,85,85,.15);color:var(--red);border:1px solid rgba(184,85,85,.3)}.btn-wrong:active{background:rgba(184,85,85,.3)}
+.btn-ok{flex:1;background:rgba(90,158,111,.15);color:var(--green);border:1px solid rgba(90,158,111,.3)}.btn-ok:active{background:rgba(90,158,111,.3)}
+.btn-learned{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3)}.btn-learned:active{background:rgba(201,168,76,.3)}
+/* type */
+.tcard{width:100%;max-width:400px;background:var(--sf);border-radius:var(--r);padding:18px 22px;border:1px solid var(--sf3);margin-bottom:9px;flex-shrink:0}
+.tinrow{width:100%;max-width:400px;display:flex;gap:7px;flex-shrink:0;margin-bottom:7px}
+.tinput{flex:1;background:var(--sf);border:2px solid var(--sf3);border-radius:var(--rs);padding:12px;font-size:19px;font-family:'DM Serif Display',serif;color:var(--text);text-align:center;outline:none;transition:border-color .2s;min-width:0}
+.tinput:focus{border-color:var(--gold-d)}.tinput.ok{border-color:var(--green);background:rgba(90,158,111,.08)}.tinput.bad{border-color:var(--red);background:rgba(184,85,85,.08)}
+.tchk{background:var(--gold);color:#0f0e0c;border:none;border-radius:var(--rs);padding:0 14px;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0}.tchk:active{background:var(--gold-l)}
+.tfb{width:100%;max-width:400px;text-align:center;font-size:13px;padding:9px;border-radius:var(--rs);flex-shrink:0;min-height:38px;display:flex;align-items:center;justify-content:center}
+.tfb.ok{background:rgba(90,158,111,.12);color:var(--green)}.tfb.bad{background:rgba(184,85,85,.12);color:var(--red)}
+/* letters */
+.lcard{width:100%;max-width:400px;background:var(--sf);border-radius:var(--r);padding:16px 20px;border:1px solid var(--sf3);margin-bottom:9px;flex-shrink:0}
+.lans{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);letter-spacing:3px;text-align:center;min-height:38px;margin:10px 0;word-break:break-all}
+.ltiles{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:9px}
+.ltile{background:var(--sf2);border:none;color:var(--text);font-family:'DM Serif Display',serif;font-size:19px;padding:8px 12px;border-radius:7px;cursor:pointer;transition:all .12s;min-width:36px;text-align:center}
+.ltile:active{background:var(--gold);color:#0f0e0c;transform:scale(.9)}.ltile.used{opacity:.3;pointer-events:none}
+.lacts{display:flex;gap:7px;width:100%;max-width:400px;flex-shrink:0}
+/* info badge */
+.info-badge{border-radius:20px;padding:3px 11px;font-size:11px;text-align:center;margin-bottom:9px;flex-shrink:0}
+.info-blue{background:rgba(85,128,160,.12);border:1px solid rgba(85,128,160,.3);color:var(--blue)}
+.info-gold{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:var(--gold)}
+/* done */
+.done{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;text-align:center}
+.done-ic{font-size:52px;margin-bottom:14px}
+.done h2{font-family:'DM Serif Display',serif;font-size:28px;color:var(--gold);margin-bottom:8px}
+.done p{color:var(--dim);font-size:13px;line-height:1.6;margin-bottom:24px}
+/* picker */
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--sf3);flex-shrink:0}
+.fchip{background:var(--sf);border:1px solid var(--sf3);border-radius:20px;padding:4px 11px;font-size:12px;color:var(--dim);cursor:pointer}
+.fchip.on{background:rgba(201,168,76,.2);border-color:var(--gold-d);color:var(--gold)}
+.picker-wrap{flex:1;overflow-y:auto;padding:12px 16px}
+.pi{background:var(--sf);border-radius:var(--rs);padding:11px 12px;margin-bottom:6px;display:flex;align-items:center;gap:9px;cursor:pointer}
+.pi.sel{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3)}
+.picheck{width:19px;height:19px;border-radius:50%;border:2px solid var(--sf3);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.pi.sel .picheck{background:var(--gold);border-color:var(--gold)}
+.picker-acts{padding:12px 16px;display:flex;gap:8px;flex-shrink:0}
+/* modal */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-ov.open{display:flex}
+.modal{background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:500px;padding:16px;max-height:88vh;overflow-y:auto}
+.mhandle{width:32px;height:4px;background:var(--sf3);border-radius:2px;margin:0 auto 16px}
+.modal h2{font-family:'DM Serif Display',serif;font-size:18px;color:var(--gold);margin-bottom:12px}
+.modal-acts{display:flex;gap:8px;margin-top:12px}
+.drow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--sf3);font-size:13px}
+.drow:last-child{border-bottom:none}.drow .dk{color:var(--dim)}
+.stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:4px}
+.sgbtn{background:var(--sf2);border:2px solid transparent;border-radius:var(--rs);padding:9px 5px;font-size:11px;font-weight:600;color:var(--dim);cursor:pointer;text-align:center}
+.sgbtn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.1)}
+.lf-row{display:flex;gap:8px;margin-bottom:8px}
+.lf-row .field{flex:1;margin-bottom:0}
+.ll-item{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid var(--sf3);gap:9px}
+.ll-item:last-child{border-bottom:none}
+.ll-name{flex:1;font-size:14px}.ll-count{font-size:11px;color:var(--muted)}
+/* settings */
+.set-row{background:var(--sf);border-radius:var(--rs);padding:13px 15px;margin-bottom:9px}
+.set-lbl{font-size:14px;font-weight:600;margin-bottom:3px}
+.set-desc{font-size:11px;color:var(--dim)}
+.set-inp{background:var(--sf2);border:1px solid var(--sf3);border-radius:7px;color:var(--text);font-size:15px;padding:7px 11px;width:100px;margin-top:7px;outline:none;font-family:'DM Sans',sans-serif}
+.set-sel{background:var(--sf2);border:1px solid var(--sf3);border-radius:7px;color:var(--text);font-size:13px;padding:7px 11px;margin-top:7px;outline:none;-webkit-appearance:none;width:100%}
+.set-toggle{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;background:var(--sf2);border-radius:7px;padding:7px 11px}
+.clr-row{display:flex;gap:9px;margin-top:9px;flex-wrap:wrap}
+.clr{width:34px;height:34px;border-radius:50%;cursor:pointer;transition:transform .15s;border:3px solid transparent}
+.clr:active{transform:scale(.88)}
+.clr.active-clr{border-color:var(--text)}
+/* packs */
+.pack{background:var(--sf);border-radius:var(--r);padding:14px;margin-bottom:11px}
+.pack-title{font-size:15px;font-weight:600;margin-bottom:3px}
+.pack-meta{font-size:11px;color:var(--dim);margin-bottom:9px}
+/* tutorial */
+.tut-step{text-align:center;padding:8px 0}
+.tut-ic{font-size:48px;margin-bottom:14px}
+.tut-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--gold);margin-bottom:10px}
+.tut-txt{font-size:13px;color:var(--dim);line-height:1.7}
+.tut-dots{display:flex;justify-content:center;gap:7px;margin-top:18px}
+.tut-dot{width:7px;height:7px;border-radius:50%;background:var(--sf3)}
+.tut-dot.on{background:var(--gold)}
+.ie-row{display:flex;gap:8px;margin-bottom:8px}
+/* toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--sf3);color:var(--text);padding:8px 16px;border-radius:18px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .2s ease both}
+</style>
+</head>
+<body>
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="tb">
+    <h1 id="home-title">Slovník ✦</h1>
+    <div class="tb-acts">
+      <button class="icon-btn" onclick="showScreen('packs')" title="Packs"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></button>
+      <button class="icon-btn" onclick="openLangMgr()"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></button>
+      <button class="icon-btn" onclick="openIE()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></button>
+      <button class="icon-btn" onclick="openSettings()"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
+      <button class="btn btn-p" onclick="openAdd()" style="padding:8px 12px;font-size:13px"><svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-i18n="add">Neu</span></button>
+    </div>
+  </div>
+  <div class="lang-bar" id="lang-bar"></div>
+  <div style="padding:11px 16px 0;flex-shrink:0">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('tl')" data-i18n="learn">Lernen</div>
+      <div class="tab" onclick="switchTab('tv')" data-i18n="vocab">Vokabeln</div>
+      <div class="tab" onclick="switchTab('ts')" data-i18n="stats">Statistik</div>
+    </div>
+  </div>
+  <div class="scroll">
+    <div class="tab-c active" id="tl">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num" id="h-tot">0</div><div class="stat-lbl" data-i18n="total">Gesamt</div></div>
+        <div class="stat-card"><div class="stat-num" id="h-due">0</div><div class="stat-lbl" data-i18n="due">Fällig</div></div>
+        <div class="stat-card"><div class="stat-num" id="h-mas">0</div><div class="stat-lbl" data-i18n="mastered">Gelernt</div></div>
+      </div>
+      <div class="sec-title" data-i18n="learnMode">Lernmodus</div>
+      <button class="lbtn" onclick="startQuickLearn()">
+        <div class="lbtn-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="lbtn-txt"><h3 data-i18n="quick">Schnell lernen</h3><p data-i18n="quickSub">Fällige Karten, zufällig gemischt</p></div>
+        <div class="badge zero" id="badge-q">0</div>
+      </button>
+      <button class="lbtn" onclick="showScreen('picker')">
+        <div class="lbtn-ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div class="lbtn-txt"><h3 data-i18n="deep">Gezielt üben</h3><p data-i18n="deepSub">Erst kennenlernen, dann üben</p></div>
+        <div class="badge zero" id="badge-d">0</div>
+      </button>
+    </div>
+    <div class="tab-c" id="tv">
+      <div class="vctrl">
+        <input type="text" id="vsearch" data-i18n-ph="search" placeholder="Suchen…" oninput="renderVocabList()">
+        <select id="vsort" onchange="renderVocabList()">
+          <option value="az">A→Z</option><option value="za">Z→A</option>
+          <option value="s-asc" data-i18n-opt="stageAsc">Stufe ↑</option>
+          <option value="s-desc" data-i18n-opt="stageDesc">Stufe ↓</option>
+          <option value="wrong" data-i18n-opt="mostWrong">Oft falsch</option>
+          <option value="new" data-i18n-opt="newest">Neueste</option>
+        </select>
+        <select id="vfilter" onchange="renderVocabList()">
+          <option value="all" data-i18n-opt="all">Alle</option>
+          <option value="due" data-i18n-opt="due">Fällig</option>
+          <option value="new" data-i18n-opt="new">Neu</option>
+          <option value="fail" data-i18n-opt="fail">Oft falsch</option>
+          <option value="mastered" data-i18n-opt="mastered">Gelernt</option>
+        </select>
+      </div>
+      <div id="vocab-list"></div>
+    </div>
+    <div class="tab-c" id="ts">
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="chart-wrap">
+        <div class="chart-hdr">
+          <div class="chart-title" id="chart-lbl">—</div>
+          <select class="chart-sel" id="stat-days" onchange="renderStats()">
+            <option value="7">7</option><option value="14" selected>14</option>
+            <option value="30">30</option><option value="90">90</option>
+          </select>
+        </div>
+        <div class="chart-bars" id="chart-bars"></div>
+      </div>
+      <div class="chart-wrap"><div class="chart-title" data-i18n="stageDistrib">Verteilung nach Stufe</div><div id="stage-bars" style="margin-top:10px"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT -->
+<div id="add" class="screen">
+  <div class="tb">
+    <button class="btn btn-g" onclick="cancelAdd()"><svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+    <h1 id="add-title" data-i18n="addWord">Hinzufügen</h1>
+    <div style="width:38px"></div>
+  </div>
+  <div class="form-scroll">
+    <input type="hidden" id="edit-idx" value="-1">
+    <div class="field"><label id="lbl-nat" data-i18n="nativeLang">Muttersprache</label><input type="text" id="inp-nat" autocomplete="off" autocorrect="off"></div>
+    <div class="field">
+      <label id="lbl-for" data-i18n="foreignLang">Fremdsprache</label>
+      <input type="text" id="inp-for" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <div class="tx-row">
+        <button class="tx-btn" onclick="doTranslate()"><svg style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg><span data-i18n="translate">Übersetzen</span></button>
+        <span class="tx-hint" id="tx-hint" data-i18n="txHint">Vorschlag via Wörterbuch</span>
+      </div>
+      <div class="sugg-box" id="sugg-box"></div>
+    </div>
+    <div class="dup-warn" id="dup-warn"></div>
+  </div>
+  <div class="form-acts">
+    <button class="btn btn-s" onclick="cancelAdd()" data-i18n="cancel">Abbrechen</button>
+    <button class="btn btn-p btn-full" id="save-btn" onclick="saveEntry()" data-i18n="save">Speichern</button>
+  </div>
+</div>
+
+<!-- PICKER -->
+<div id="picker" class="screen">
+  <div class="tb">
+    <button class="btn btn-g" onclick="showScreen('home')"><svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+    <h1 data-i18n="deep">Gezielt üben</h1>
+    <div style="width:38px"></div>
+  </div>
+  <div class="filter-row">
+    <div class="fchip on" id="fc-new" onclick="toggleFilter('new')" data-i18n="new">Neu</div>
+    <div class="fchip on" id="fc-fail" onclick="toggleFilter('fail')" data-i18n="fail">Oft falsch</div>
+    <div class="fchip" id="fc-due" onclick="toggleFilter('due')" data-i18n="due">Fällig</div>
+    <div class="fchip" id="fc-all" onclick="toggleFilter('all')" data-i18n="all">Alle</div>
+    <div class="fchip" style="margin-left:auto" onclick="toggleAllPicker()" data-i18n="selectAll">Alle wählen</div>
+  </div>
+  <div class="picker-wrap" id="picker-list"></div>
+  <div class="picker-acts">
+    <button class="btn btn-s" onclick="showScreen('home')" data-i18n="cancel">Abbrechen</button>
+    <button class="btn btn-p btn-full" id="picker-btn" onclick="startDeepLearn()" disabled data-i18n="start">Starten (0)</button>
+  </div>
+</div>
+
+<!-- LEARN -->
+<div id="learn" class="screen">
+  <div class="lhdr">
+    <button class="btn btn-g btn-ic" onclick="exitLearn()"><svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+    <div class="prog-wrap"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="prog-lbl" id="prog-lbl">0/0</div>
+  </div>
+  <div class="card-zone" id="card-zone"></div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="screen">
+  <div class="tb">
+    <button class="btn btn-g" onclick="showScreen('home')"><svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+    <h1 data-i18n="settings">Einstellungen</h1>
+    <div style="width:38px"></div>
+  </div>
+  <div class="scroll">
+    <div class="sec-title" data-i18n="learn">Lernen</div>
+    <div class="set-row">
+      <div class="set-lbl" data-i18n="repeatIntervalLbl">Wiederholung nach X neuen Wörtern</div>
+      <div class="set-desc" data-i18n="repeatIntervalDesc">Wie oft ein Wort wiederholt wird bevor es aufsteigt (3–20)</div>
+      <input type="range" id="set-ri" min="3" max="20" value="5" class="set-inp" style="width:100%;margin-top:8px" oninput="updateRILabel(this.value)" onchange="updateRILabel(this.value)">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:2px"><span>3</span><span id="ri-val" style="color:var(--gold);font-weight:600">5×</span><span>20</span></div>
+    </div>
+    <div class="set-row">
+      <div class="set-lbl" data-i18n="learnModesLbl">Lernmodi</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:8px">
+        <label class="set-toggle"><input type="checkbox" id="set-flip" checked onchange="saveSetting('modeFlip',this.checked)"> <span data-i18n="modeFlip">Umdrehen</span></label>
+        <label class="set-toggle"><input type="checkbox" id="set-type" checked onchange="saveSetting('modeType',this.checked)"> <span data-i18n="modeType">Eintippen</span></label>
+        <label class="set-toggle"><input type="checkbox" id="set-letters" checked onchange="saveSetting('modeLetters',this.checked)"> <span data-i18n="modeLetters">Buchstaben</span></label>
+      </div>
+    </div>
+    <div class="sec-title" style="margin-top:18px" data-i18n="appearance">Erscheinungsbild</div>
+    <div class="set-row">
+      <div class="set-lbl" data-i18n="accentColor">Akzentfarbe</div>
+      <div class="clr-row">
+        <div class="clr" style="background:#c9a84c" onclick="setAccent('#c9a84c','#7a6330','#e8c96a')" data-accent="#c9a84c" title="Gold"></div>
+        <div class="clr" style="background:#5a9e6f" onclick="setAccent('#5a9e6f','#3a6e4f','#7abe8f')" data-accent="#5a9e6f" title="Grün"></div>
+        <div class="clr" style="background:#5580a0" onclick="setAccent('#5580a0','#3a6070','#75a0c0')" data-accent="#5580a0" title="Blau"></div>
+        <div class="clr" style="background:#b85555" onclick="setAccent('#b85555','#8a3535','#d87575')" data-accent="#b85555" title="Rot"></div>
+        <div class="clr" style="background:#9a6abf" onclick="setAccent('#9a6abf','#6a4a8f','#ba8adf')" data-accent="#9a6abf" title="Lila"></div>
+        <div class="clr" style="background:#c07840" onclick="setAccent('#c07840','#905020','#e09860')" data-accent="#c07840" title="Orange"></div>
+      </div>
+    </div>
+    <div class="set-row">
+      <div class="set-lbl" data-i18n="appLangLbl">App-Sprache</div>
+      <select id="set-lang" class="set-sel" onchange="setAppLang(this.value)">
+        <option value="de">Deutsch</option>
+        <option value="en">English</option>
+        <option value="sk">Slovenčina</option>
+      </select>
+    </div>
+    <div class="sec-title" style="margin-top:18px" data-i18n="notifications">Benachrichtigungen</div>
+    <div class="set-row">
+      <div class="set-lbl" data-i18n="notifLbl">Tägliche Erinnerung</div>
+      <div class="set-desc" data-i18n="notifDesc">Einmal täglich erinnern wie viele Karten fällig sind</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn btn-p" id="notif-btn" onclick="requestNotifPermission()" style="font-size:13px">
+          <span data-i18n="notifEnable">Aktivieren</span>
+        </button>
+        <span id="notif-status" style="font-size:12px;color:var(--dim)"></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px" data-i18n="notifHint">Funktioniert nur wenn App zum Home-Bildschirm hinzugefügt (iOS 16.4+)</div>
+    </div>
+    <div class="sec-title" style="margin-top:18px" data-i18n="dataSection">Daten</div>
+    <div class="set-row">
+      <div class="set-lbl" data-i18n="resetLbl">Alle Daten zurücksetzen</div>
+      <div class="set-desc" data-i18n="resetDesc">Löscht alle Vokabeln, Statistiken und Einstellungen</div>
+      <button class="btn" style="margin-top:10px;background:rgba(184,85,85,.15);color:var(--red)" onclick="resetAll()" data-i18n="resetBtn">Alles zurücksetzen</button>
+    </div>
+    <div class="set-row">
+      <div class="set-lbl">Tutorial</div>
+      <button class="btn btn-s btn-full" style="margin-top:8px" onclick="openTutorial()" data-i18n="showTutorial">Tutorial anzeigen</button>
+    </div>
+    <div class="set-row">
+      <div class="set-lbl">Slovník</div>
+      <div class="set-desc">Version 2.1 · DE→SK & SK→EN Offline · Spaced Repetition</div>
+    </div>
+  </div>
+</div>
+
+<!-- PACKS -->
+<div id="packs" class="screen">
+  <div class="tb">
+    <button class="btn btn-g" onclick="showScreen('home')"><svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+    <h1 data-i18n="packs">Vokabel-Packs</h1>
+    <div style="width:38px"></div>
+  </div>
+  <div class="scroll" id="packs-list"></div>
+</div>
+
+<!-- TUTORIAL -->
+<div id="tutorial" class="screen">
+  <div class="tb">
+    <button class="btn btn-g" onclick="closeTutorial()"><svg class="ic" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h1>Tutorial</h1>
+    <div style="width:38px"></div>
+  </div>
+  <div class="scroll" id="tut-content"></div>
+  <div style="padding:12px 16px;flex-shrink:0;display:flex;gap:8px">
+    <button class="btn btn-s" id="tut-back" onclick="tutStep(-1)" disabled data-i18n="back">← Zurück</button>
+    <button class="btn btn-p btn-full" id="tut-next" onclick="tutStep(1)" data-i18n="next">Weiter →</button>
+  </div>
+</div>
+
+<!-- MODAL: DETAIL -->
+<div class="modal-ov" id="m-detail">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <h2 id="m-detail-title">—</h2>
+    <div id="m-detail-body"></div>
+    <div class="sec-title" style="margin-top:12px" data-i18n="setStageManual">Stufe manuell setzen</div>
+    <div class="stage-grid" id="m-stage-grid"></div>
+    <div class="modal-acts">
+      <button class="btn btn-s" style="flex:1" onclick="editFromDetail()"><svg class="ic" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span data-i18n="edit">Bearbeiten</span></button>
+      <button class="btn" style="flex:1;background:rgba(184,85,85,.15);color:var(--red)" onclick="deleteFromDetail()"><svg class="ic" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg><span data-i18n="delete">Löschen</span></button>
+      <button class="btn btn-g" onclick="closeModal('m-detail')">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: LANG -->
+<div class="modal-ov" id="m-lang">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <h2 data-i18n="langPairs">Sprachenpaare</h2>
+    <div id="lang-list-modal"></div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--sf3)">
+      <div class="sec-title" data-i18n="newPair">Neues Sprachpaar</div>
+      <div class="lf-row">
+        <div class="field"><label data-i18n="nativeLang">Muttersprache</label><input type="text" id="new-nat" placeholder="Deutsch" autocorrect="off"></div>
+        <div class="field"><label data-i18n="foreignLang">Fremdsprache</label><input type="text" id="new-for" placeholder="Slowakisch" autocorrect="off"></div>
+      </div>
+      <div class="field">
+        <label data-i18n="langCode">Sprachcode</label>
+        <select id="new-lc">
+          <option value="sk">Slowakisch (sk)</option><option value="cs">Tschechisch (cs)</option>
+          <option value="pl">Polnisch (pl)</option><option value="hu">Ungarisch (hu)</option>
+          <option value="hr">Kroatisch (hr)</option><option value="ru">Russisch (ru)</option>
+          <option value="fr">Französisch (fr)</option><option value="es">Spanisch (es)</option>
+          <option value="it">Italienisch (it)</option><option value="pt">Portugiesisch (pt)</option>
+          <option value="nl">Niederländisch (nl)</option><option value="sv">Schwedisch (sv)</option>
+          <option value="tr">Türkisch (tr)</option><option value="ar">Arabisch (ar)</option>
+          <option value="zh">Chinesisch (zh)</option><option value="ja">Japanisch (ja)</option>
+          <option value="ko">Koreanisch (ko)</option><option value="en">Englisch (en)</option>
+        </select>
+      </div>
+      <button class="btn btn-p btn-full" onclick="addLangPair()" data-i18n="addPair">Hinzufügen</button>
+    </div>
+    <button class="btn btn-g btn-full" style="margin-top:7px" onclick="closeModal('m-lang')" data-i18n="close">Schließen</button>
+  </div>
+</div>
+
+<!-- MODAL: IE -->
+<div class="modal-ov" id="m-ie">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <h2 data-i18n="importExport">Import / Export</h2>
+    <p style="font-size:12px;color:var(--dim);margin-bottom:11px" data-i18n="currentPair">Aktuelles Paar:</p>
+    <div class="sec-title" data-i18n="export">Export</div>
+    <div class="ie-row">
+      <button class="btn btn-s btn-full" onclick="exportJSON()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> JSON</button>
+      <button class="btn btn-s btn-full" onclick="exportCSV()"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> CSV</button>
+    </div>
+    <div class="sec-title" style="margin-top:12px" data-i18n="import">Import</div>
+    <button class="btn btn-s btn-full" onclick="document.getElementById('file-import-input').click()">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span data-i18n="chooseFile">Datei wählen…</span>
+    </button>
+    <input type="file" id="file-import-input" accept=".json,.csv" style="display:none" onchange="importFile(event)">
+    <div id="ie-preview" style="display:none;margin-top:11px">
+      <div class="sec-title" data-i18n="preview">Vorschau</div>
+      <div id="ie-prev-list" style="max-height:150px;overflow-y:auto;margin-bottom:8px"></div>
+      <div style="font-size:11px;color:var(--dim);margin-bottom:8px" id="ie-summary"></div>
+      <div class="ie-row">
+        <button class="btn btn-s" style="flex:1" onclick="importMerge()" data-i18n="merge">Zusammenführen</button>
+        <button class="btn btn-p" style="flex:1" onclick="importReplace()" data-i18n="replace">Ersetzen</button>
+      </div>
+    </div>
+    <button class="btn btn-g btn-full" style="margin-top:7px" onclick="closeModal('m-ie')" data-i18n="close">Schließen</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+// ════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════
+const STAGES=[{d:0},{d:1},{d:7},{d:30},{d:60},{d:180},{d:365}];
+const STAGE_DONE=7;
+const SK='sv6',LK='sv6log',LNGK='sv6langs',APK='sv6pair',SETK='sv6set',TUTK='sv6tut';
+const STAGE_KEYS=['stNew','st1Day','st1Week','st1Month','st2Month','st6Month','st1Year','stDone'];
+
+// ════════════════════════════════════════════
+// I18N — complete translations
+// ════════════════════════════════════════════
+const I18N={
+de:{
+  learn:'Lernen',vocab:'Vokabeln',stats:'Statistik',add:'Neu',addWord:'Hinzufügen',
+  quick:'Schnell lernen',quickSub:'Fällige Karten, zufällig gemischt',
+  deep:'Gezielt üben',deepSub:'Erst kennenlernen, dann üben',
+  total:'Gesamt',due:'Fällig',mastered:'Gelernt',learnMode:'Lernmodus',
+  settings:'Einstellungen',packs:'Vokabel-Packs',save:'Speichern',cancel:'Abbrechen',
+  delete:'Löschen',edit:'Bearbeiten',search:'Suchen…',correct:'Richtig',wrong:'Falsch',
+  next:'Weiter →',back:'← Zurück',learned:'Gelernt – weiter zum Üben',
+  noCards:'Keine fälligen Karten!',translate:'Übersetzen',txHint:'Vorschlag via Wörterbuch',
+  nativeLang:'Muttersprache',foreignLang:'Fremdsprache',
+  repeatIntervalLbl:'Wiederholungen pro Wort',
+  repeatIntervalDesc:'Wie oft muss ein Wort richtig beantwortet werden bevor es aufsteigt (3–20)',
+  learnModesLbl:'Lernmodi (Schnell-Lernen)',
+  modeFlip:'Umdrehen',modeType:'Eintippen',modeLetters:'Buchstaben',
+  appearance:'Erscheinungsbild',accentColor:'Akzentfarbe',appLangLbl:'App-Sprache',
+  dataSection:'Daten',resetLbl:'Alle Daten zurücksetzen',
+  resetDesc:'Löscht alle Vokabeln, Statistiken und Einstellungen',
+  resetBtn:'Alles zurücksetzen',showTutorial:'Tutorial anzeigen',
+  langPairs:'Sprachenpaare',newPair:'Neues Sprachpaar',langCode:'Sprachcode (für Übersetzung)',
+  addPair:'Hinzufügen',close:'Schließen',importExport:'Import / Export',
+  currentPair:'Aktuelles Paar',export:'Export',import:'Import',
+  chooseFile:'Datei wählen…',preview:'Vorschau',merge:'Zusammenführen',replace:'Ersetzen',
+  setStageManual:'Stufe manuell setzen',selectAll:'Alle wählen',start:'Starten',
+  all:'Alle',new:'Neu',fail:'Oft falsch',
+  stNew:'Neu',st1Day:'1 Tag',st1Week:'1 Woche',st1Month:'1 Monat',st2Month:'2 Monate',st6Month:'6 Monate',st2Month:'2 Monate',st6Month:'6 Monate',st1Year:'1 Jahr',stDone:'✓ Fertig',
+  stageAsc:'Stufe ↑',stageDesc:'Stufe ↓',mostWrong:'Oft falsch',newest:'Neueste',
+  stageDistrib:'Verteilung nach Stufe',
+  noVocab:'Noch keine Vokabeln.',noResults:'Keine Treffer.',
+  similar:'Ähnlich vorhanden','identical':'Identisch vorhanden — trotzdem speichern?',
+  offlineDict:'📖 Wörterbuch (offline)',onlineTx:'⏳ Online-Übersetzung…',noConn:'Keine Verbindung',
+  savedOk:'Gespeichert ✓',deleted:'Gelöscht',stageSet:'Stufe gesetzt',
+  jsonExported:'JSON exportiert',csvExported:'CSV exportiert',imported:'importiert',
+  newImported:'neue importiert',pairAdded:'Sprachpaar hinzugefügt',pairDeleted:'Gelöscht',
+  confirmReplace:'Alle Vokabeln ersetzen?',confirmReset:'Wirklich alle Daten löschen?',
+  confirmDeletePair:'Sprachpaar und alle Vokabeln löschen?',
+  learnPhase:'Kennenlernphase',learnHint:'Tippe zum Umdrehen',learnHintBack:'Tippe zum Zurückdrehen',
+  learnBtn:'Gelernt – weiter zum Üben',practiceRound:'Übungsrunde',of:'von',
+  checkBtn:'Prüfen →',nextBtn:'Weiter →',
+  wrongFb:'✗ Richtig: ',correctFb:'✓ Richtig!',enterNext:'→ Enter für weiter',
+  back2:'← Zurück',clear:'Leeren',check:'Prüfen →',
+  doneQuick:'Alle fälligen Karten erledigt.',doneDeep:'Alle Wörter gelernt und geübt.',
+  rightTotal:'Richtig gesamt',wrongTotal:'Falsch gesamt',hitRate:'Trefferquote',
+  nextRev:'Nächste Wiederholung',chartLbl:'Karten gelernt – letzte',days:'Tage',
+  packImportAll:'Ganzes Pack importieren',packSelect:'Auswahl treffen',packImportSel:'Auswahl importieren',
+  packAvail:'bereits vorhanden',packWords:'Wörter',
+  tutTitle0:'Willkommen bei Slovník',tutTitle1:'Vokabeln hinzufügen',tutTitle2:'Vokabel-Packs',
+  tutTitle3:'Schnell lernen',tutTitle4:'Gezielt üben',tutTitle5:'Spaced Repetition',
+  tutText0:'Deine persönliche Vokabel-App mit intelligentem Lernsystem. Dieses Tutorial erklärt die wichtigsten Funktionen.',
+  tutText1:'Tippe auf "+ Neu" um Wörter einzugeben. Die App schlägt sofort Übersetzungen vor — offline oder via Internet. Ähnliche Wörter werden erkannt.',
+  tutText2:'Starte schnell mit fertigen Packs: Zahlen, Farben, Familie, Essen, Reisen, Körper, Haus und Tiere.',
+  tutText3:'Lernt alle fälligen Karten. Jede Karte muss so oft richtig beantwortet werden wie in den Einstellungen festgelegt — in beide Richtungen.',
+  tutText4:'Phase 1: Alle gewählten Wörter kennenlernen (umdrehen so oft du willst). Phase 2: Alle Wörter zufällig gemischt üben bis jedes die eingestellte Anzahl mal richtig war.',
+  tutText5:'Richtig → Stufe steigt: Neu → 1 Tag → 1 Woche → 1 Monat → 1 Jahr → Fertig. Falsch → zurück zu Neu.',
+  colorSet:'Farbe gesetzt',
+dontKnow:'Weiß nicht',
+stageLbl:'Stufe',
+freqSuggestTitle:'Häufige Vokabeln',
+notifications:'Benachrichtigungen',
+notifLbl:'Tägliche Erinnerung',
+notifDesc:'Einmal täglich erinnern wie viele Karten fällig sind',
+notifEnable:'Aktivieren',
+notifDisable:'Deaktivieren',
+notifHint:'Nur wenn App zum Home-Bildschirm hinzugefügt (iOS 16.4+)',
+notifActive:'Aktiv',
+notifBlocked:'Blockiert',
+notifBlockedDesc:'Einstellungen → Benachrichtigungen → freigeben',
+notifEnabled:'Benachrichtigungen aktiviert ✓',
+notifDenied:'Berechtigung verweigert',
+notifDisabled:'Deaktiviert',
+notifNotSupported:'Nicht unterstützt auf diesem Gerät',
+dueBannerText2:'Vokabeln fällig – jetzt lernen!',
+noDueToday:'Heute nichts fällig. Alles gut! ✓',
+freqSuggestSub:'noch nicht in deiner Liste',
+showAll:'Alle anzeigen',
+importAllSugg:'Alle importieren'
+},
+en:{
+  learn:'Learn',vocab:'Vocabulary',stats:'Statistics',add:'New',addWord:'Add word',
+  quick:'Quick learn',quickSub:'Due cards, shuffled',
+  deep:'Targeted practice',deepSub:'Learn first, then practice',
+  total:'Total',due:'Due',mastered:'Mastered',learnMode:'Learn mode',
+  settings:'Settings',packs:'Vocab Packs',save:'Save',cancel:'Cancel',
+  delete:'Delete',edit:'Edit',search:'Search…',correct:'Correct',wrong:'Wrong',
+  next:'Next →',back:'← Back',learned:'Learned – start practice',
+  noCards:'No due cards!',translate:'Translate',txHint:'Suggestion via dictionary',
+  nativeLang:'Native language',foreignLang:'Target language',
+  repeatIntervalLbl:'Repetitions per word',
+  repeatIntervalDesc:'How many times a word must be answered correctly before advancing (3–20)',
+  learnModesLbl:'Learn modes (Quick learn)',
+  modeFlip:'Flip card',modeType:'Type answer',modeLetters:'Letter tiles',
+  appearance:'Appearance',accentColor:'Accent color',appLangLbl:'App language',
+  dataSection:'Data',resetLbl:'Reset all data',
+  resetDesc:'Deletes all vocabulary, statistics and settings',
+  resetBtn:'Reset everything',showTutorial:'Show tutorial',
+  langPairs:'Language pairs',newPair:'New language pair',langCode:'Language code (for translation)',
+  addPair:'Add',close:'Close',importExport:'Import / Export',
+  currentPair:'Current pair',export:'Export',import:'Import',
+  chooseFile:'Choose file…',preview:'Preview',merge:'Merge',replace:'Replace',
+  setStageManual:'Set stage manually',selectAll:'Select all',start:'Start',
+  all:'All',new:'New',fail:'Often wrong',
+  stNew:'New',st1Day:'1 Day',st1Week:'1 Week',st1Month:'1 Month',st2Month:'2 Months',st6Month:'6 Months',st2Month:'2 Months',st6Month:'6 Months',st1Year:'1 Year',stDone:'✓ Done',
+  stageAsc:'Stage ↑',stageDesc:'Stage ↓',mostWrong:'Often wrong',newest:'Newest',
+  stageDistrib:'Distribution by stage',
+  noVocab:'No vocabulary yet.',noResults:'No results.',
+  similar:'Similar entry exists','identical':'Identical entry — save anyway?',
+  offlineDict:'📖 Dictionary (offline)',onlineTx:'⏳ Translating…',noConn:'No connection',
+  savedOk:'Saved ✓',deleted:'Deleted',stageSet:'Stage set',
+  jsonExported:'JSON exported',csvExported:'CSV exported',imported:'imported',
+  newImported:'new imported',pairAdded:'Language pair added',pairDeleted:'Deleted',
+  confirmReplace:'Replace all vocabulary?',confirmReset:'Really delete all data?',
+  confirmDeletePair:'Delete language pair and all vocabulary?',
+  learnPhase:'Learning phase',learnHint:'Tap to flip',learnHintBack:'Tap to flip back',
+  learnBtn:'Learned – start practice',practiceRound:'Practice round',of:'of',
+  checkBtn:'Check →',nextBtn:'Next →',
+  wrongFb:'✗ Correct: ',correctFb:'✓ Correct!',enterNext:'→ Enter to continue',
+  back2:'← Back',clear:'Clear',check:'Check →',
+  doneQuick:'All due cards done.',doneDeep:'All words learned and practiced.',
+  rightTotal:'Correct total',wrongTotal:'Wrong total',hitRate:'Hit rate',
+  nextRev:'Next review',chartLbl:'Cards learned – last',days:'days',
+  packImportAll:'Import whole pack',packSelect:'Select words',packImportSel:'Import selection',
+  packAvail:'already in list',packWords:'words',
+  tutTitle0:'Welcome to Slovník',tutTitle1:'Adding vocabulary',tutTitle2:'Vocab Packs',
+  tutTitle3:'Quick learn',tutTitle4:'Targeted practice',tutTitle5:'Spaced Repetition',
+  tutText0:'Your personal vocabulary app with intelligent learning system.',
+  tutText1:'Tap "+ New" to add words. The app instantly suggests translations — offline or online. Similar words are detected.',
+  tutText2:'Start quickly with ready-made packs: Numbers, Colors, Family, Food, Travel, Body, Home and Animals.',
+  tutText3:'Studies all due cards. Each card must be answered correctly as many times as set in preferences — in both directions.',
+  tutText4:'Phase 1: Learn all selected words (flip as many times as you want). Phase 2: All words shuffled and practiced until each reaches the set count.',
+  tutText5:'Correct → stage rises: New → 1 Day → 1 Week → 1 Month → 1 Year → Done. Wrong → back to New.',
+  colorSet:'Color set',
+dontKnow:'Don\'t know',
+stageLbl:'Stage',
+freqSuggestTitle:'Frequent vocabulary',
+notifications:'Notifications',
+notifLbl:'Daily reminder',
+notifDesc:'Remind once daily how many cards are due',
+notifEnable:'Enable',
+notifDisable:'Disable',
+notifHint:'Only works if app is added to home screen (iOS 16.4+)',
+notifActive:'Active',
+notifBlocked:'Blocked',
+notifBlockedDesc:'Settings → Notifications → allow',
+notifEnabled:'Notifications enabled ✓',
+notifDenied:'Permission denied',
+notifDisabled:'Disabled',
+notifNotSupported:'Not supported on this device',
+dueBannerText2:'cards due – time to learn!',
+noDueToday:'Nothing due today. All good! ✓',
+freqSuggestSub:'not yet in your list',
+showAll:'Show all',
+importAllSugg:'Import all'
+},
+sk:{
+  learn:'Učiť sa',vocab:'Slovíčka',stats:'Štatistika',add:'Nové',addWord:'Pridať slovíčko',
+  quick:'Rýchle učenie',quickSub:'Karta na opakovanie, náhodne',
+  deep:'Cielené precvičovanie',deepSub:'Najprv poznať, potom precvičovať',
+  total:'Celkom',due:'Na opakovanie',mastered:'Naučené',learnMode:'Spôsob učenia',
+  settings:'Nastavenia',packs:'Balíčky slov',save:'Uložiť',cancel:'Zrušiť',
+  delete:'Zmazať',edit:'Upraviť',search:'Hľadať…',correct:'Správne',wrong:'Nesprávne',
+  next:'Ďalej →',back:'← Späť',learned:'Naučené – začať precvičovanie',
+  noCards:'Žiadne karta na opakovanie!',translate:'Preložiť',txHint:'Návrh zo slovníka',
+  nativeLang:'Materinský jazyk',foreignLang:'Cudzí jazyk',
+  repeatIntervalLbl:'Opakovania na slovo',
+  repeatIntervalDesc:'Koľkokrát musí byť slovo správne zodpovedané pred postúpením (3–20)',
+  learnModesLbl:'Spôsoby učenia (Rýchle učenie)',
+  modeFlip:'Otočiť kartu',modeType:'Písať odpoveď',modeLetters:'Písmená',
+  appearance:'Vzhľad',accentColor:'Farba zvýraznenia',appLangLbl:'Jazyk aplikácie',
+  dataSection:'Dáta',resetLbl:'Obnoviť všetky dáta',
+  resetDesc:'Vymaže všetky slovíčka, štatistiky a nastavenia',
+  resetBtn:'Obnoviť všetko',showTutorial:'Zobraziť tutorial',
+  langPairs:'Jazykové páry',newPair:'Nový jazykový pár',langCode:'Kód jazyka (pre preklad)',
+  addPair:'Pridať',close:'Zavrieť',importExport:'Import / Export',
+  currentPair:'Aktuálny pár',export:'Export',import:'Import',
+  chooseFile:'Vybrať súbor…',preview:'Náhľad',merge:'Zlúčiť',replace:'Nahradiť',
+  setStageManual:'Nastaviť stupeň ručne',selectAll:'Vybrať všetko',start:'Začať',
+  all:'Všetko',new:'Nové',fail:'Často zlé',
+  stNew:'Nové',st1Day:'1 Deň',st1Week:'1 Týždeň',st1Month:'1 Mesiac',st2Month:'2 Mesiace',st6Month:'6 Mesiacov',st2Month:'2 Mesiace',st6Month:'6 Mesiacov',st1Year:'1 Rok',stDone:'✓ Hotovo',
+  stageAsc:'Stupeň ↑',stageDesc:'Stupeň ↓',mostWrong:'Často zlé',newest:'Najnovšie',
+  stageDistrib:'Rozdelenie podľa stupňa',
+  noVocab:'Zatiaľ žiadne slovíčka.',noResults:'Žiadne výsledky.',
+  similar:'Podobná položka existuje','identical':'Identická položka — napriek tomu uložiť?',
+  offlineDict:'📖 Slovník (offline)',onlineTx:'⏳ Prekladám…',noConn:'Žiadne pripojenie',
+  savedOk:'Uložené ✓',deleted:'Zmazané',stageSet:'Stupeň nastavený',
+  jsonExported:'JSON exportovaný',csvExported:'CSV exportovaný',imported:'importovaných',
+  newImported:'nových importovaných',pairAdded:'Jazykový pár pridaný',pairDeleted:'Zmazané',
+  confirmReplace:'Nahradiť všetky slovíčka?',confirmReset:'Naozaj vymazať všetky dáta?',
+  confirmDeletePair:'Zmazať jazykový pár a všetky slovíčka?',
+  learnPhase:'Fáza učenia',learnHint:'Ťukni pre otočenie',learnHintBack:'Ťukni pre otočenie späť',
+  learnBtn:'Naučené – začať precvičovanie',practiceRound:'Kolo precvičovania',of:'z',
+  checkBtn:'Skontrolovať →',nextBtn:'Ďalej →',
+  wrongFb:'✗ Správne: ',correctFb:'✓ Správne!',enterNext:'→ Enter pre pokračovanie',
+  back2:'← Späť',clear:'Vyčistiť',check:'Skontrolovať →',
+  doneQuick:'Všetky karty na opakovanie splnené.',doneDeep:'Všetky slová naučené a precvičené.',
+  rightTotal:'Správne celkom',wrongTotal:'Nesprávne celkom',hitRate:'Úspešnosť',
+  nextRev:'Ďalšie opakovanie',chartLbl:'Karty naučené – posledné',days:'dní',
+  packImportAll:'Importovať celý balíček',packSelect:'Vybrať slová',packImportSel:'Importovať výber',
+  packAvail:'už v zozname',packWords:'slov',
+  tutTitle0:'Vitajte v Slovníku',tutTitle1:'Pridávanie slovíčok',tutTitle2:'Balíčky slov',
+  tutTitle3:'Rýchle učenie',tutTitle4:'Cielené precvičovanie',tutTitle5:'Spaced Repetition',
+  tutText0:'Vaša osobná aplikácia na slovíčka s inteligentným systémom učenia.',
+  tutText1:'Ťuknite na "+ Nové" pre pridanie slov. Aplikácia okamžite navrhuje preklady — offline alebo online.',
+  tutText2:'Začnite rýchlo s hotovými balíčkami: Čísla, Farby, Rodina, Jedlo, Cestovanie, Telo, Dom a Zvieratá.',
+  tutText3:'Precvičuje všetky karty na opakovanie. Každá karta musí byť správne zodpovedaná toľkokrát, koľko je nastavené.',
+  tutText4:'Fáza 1: Naučiť sa všetky vybrané slová (otáčať koľkokrát chcete). Fáza 2: Všetky slová náhodne zamiešané a precvičované.',
+  tutText5:'Správne → stupeň stúpa: Nové → 1 Deň → 1 Týždeň → 1 Mesiac → 1 Rok → Hotovo. Nesprávne → späť na Nové.',
+  colorSet:'Farba nastavená',
+dontKnow:'Neviem',
+stageLbl:'Stupeň',
+freqSuggestTitle:'Časté slovíčka',
+notifications:'Oznámenia',
+notifLbl:'Denná pripomienka',
+notifDesc:'Raz denne pripomenúť koľko kariet je na opakovanie',
+notifEnable:'Aktivovať',
+notifDisable:'Deaktivovať',
+notifHint:'Funguje len keď je app pridaná na plochu (iOS 16.4+)',
+notifActive:'Aktívne',
+notifBlocked:'Blokované',
+notifBlockedDesc:'Nastavenia → Oznámenia → povoliť',
+notifEnabled:'Oznámenia aktivované ✓',
+notifDenied:'Povolenie zamietnuté',
+notifDisabled:'Deaktivované',
+notifNotSupported:'Nepodporované na tomto zariadení',
+dueBannerText2:'slovíčok na opakovanie – učiť sa!',
+noDueToday:'Dnes nič na opakovanie. Všetko v poriadku! ✓',
+freqSuggestSub:'ešte nie sú v zozname',
+showAll:'Zobraziť všetko',
+importAllSugg:'Importovať všetko'
+}};
+
+function t(k){const s=loadSettings();return(I18N[s.appLang||'de']||I18N.de)[k]||k}
+
+function applyI18N(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.dataset.i18n;const v=t(k);
+    if(v&&v!==k)el.textContent=v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k=el.dataset.i18nPh;el.placeholder=t(k);
+  });
+}
+
+// ════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════
+const SET_DEF={repeatInterval:5,modeFlip:true,modeType:true,modeLetters:true,accent:'#c9a84c',accentDim:'#7a6330',accentLight:'#e8c96a',appLang:'de'};
+function loadSettings(){try{return Object.assign({},SET_DEF,JSON.parse(localStorage.getItem(SETK)||'{}'))}catch{return{...SET_DEF}}}
+function saveSetting(k,v){const s=loadSettings();s[k]=v;localStorage.setItem(SETK,JSON.stringify(s))}
+
+function applySettings(){
+  const s=loadSettings();
+  document.documentElement.style.setProperty('--gold',s.accent);
+  document.documentElement.style.setProperty('--gold-d',s.accentDim);
+  document.documentElement.style.setProperty('--gold-l',s.accentLight);
+}
+function setAccent(c,d,l){
+  saveSetting('accent',c);saveSetting('accentDim',d);saveSetting('accentLight',l);
+  applySettings();
+  // update active indicator
+  document.querySelectorAll('.clr').forEach(el=>el.classList.toggle('active-clr',el.dataset.accent===c));
+  showToast(t('colorSet'));
+}
+function updateRILabel(v){
+  document.getElementById('ri-val').textContent=v+'×';
+  saveSetting('repeatInterval',parseInt(v));
+}
+function setAppLang(lang){
+  saveSetting('appLang',lang);applyI18N();renderHome();showToast(t('savedOk'));
+}
+function openSettings(){
+  // Update notification status display
+  if('Notification' in window) updateNotifUI(Notification.permission);
+  const s=loadSettings();
+  document.getElementById('set-ri').value=s.repeatInterval||5;
+  document.getElementById('ri-val').textContent=(s.repeatInterval||5)+'×';
+  document.getElementById('set-flip').checked=s.modeFlip!==false;
+  document.getElementById('set-type').checked=s.modeType!==false;
+  document.getElementById('set-letters').checked=s.modeLetters!==false;
+  document.getElementById('set-lang').value=s.appLang||'de';
+  document.querySelectorAll('.clr').forEach(el=>el.classList.toggle('active-clr',el.dataset.accent===s.accent));
+  applyI18N();
+  showScreen('settings');
+}
+function resetAll(){
+  if(!confirm(t('confirmReset')))return;
+  const langs=loadLangs()||[];
+  langs.forEach(l=>localStorage.removeItem(SK+'_'+l.id));
+  [LNGK,APK,LK,SETK,TUTK,'sv6_statdays'].forEach(k=>localStorage.removeItem(k));
+  ensureDefaultLangs();applySettings();applyI18N();renderHome();showToast(t('savedOk'));showScreen('home');
+}
+
+// ════════════════════════════════════════════
+// STORAGE HELPERS
+// ════════════════════════════════════════════
+function loadLangs(){try{return JSON.parse(localStorage.getItem(LNGK)||'null')}catch{return null}}
+function saveLangs(l){localStorage.setItem(LNGK,JSON.stringify(l))}
+function getActivePairId(){return localStorage.getItem(APK)||null}
+function setActivePairId(id){localStorage.setItem(APK,id)}
+function ensureDefaultLangs(){
+  let l=loadLangs();
+  if(!l||!l.length){l=[{id:'de-sk',native:'Deutsch',foreign:'Slowakisch',langcode:'sk'}];saveLangs(l);setActivePairId('de-sk')}
+  if(!getActivePairId())setActivePairId(l[0].id);
+  return l;
+}
+function getActivePair(){const l=ensureDefaultLangs(),id=getActivePairId();return l.find(x=>x.id===id)||l[0]}
+function loadVocab(pid){pid=pid||getActivePairId();try{return JSON.parse(localStorage.getItem(SK+'_'+pid)||'[]')}catch{return[]}}
+function saveVocab(v,pid){pid=pid||getActivePairId();localStorage.setItem(SK+'_'+pid,JSON.stringify(v))}
+function loadLog(){try{return JSON.parse(localStorage.getItem(LK)||'{}')}catch{return{}}}
+function saveLog(l){localStorage.setItem(LK,JSON.stringify(l))}
+function logActivity(vocabIdx){
+  const l=loadLog(),k=new Date().toISOString().slice(0,10);
+  if(!l[k])l[k]={count:0,seen:[]};
+  if(typeof l[k]==='number')l[k]={count:l[k],seen:[]};
+  if(!l[k].seen.includes(vocabIdx)){l[k].seen.push(vocabIdx);l[k].count++;}
+  saveLog(l);
+}
+
+// ════════════════════════════════════════════
+// DIACRITICS (for comparison only — no auto-expand)
+// ════════════════════════════════════════════
+const DM={á:'a',ä:'a',č:'c',ď:'d',é:'e',í:'i',ĺ:'l',ľ:'l',ň:'n',ó:'o',ô:'o',ŕ:'r',š:'s',ť:'t',ú:'u',ý:'y',ž:'z'};
+function norm(s){return String(s).toLowerCase().split('').map(c=>DM[c]||c).join('').trim()}
+function checkAns(a,b){return norm(a)===norm(b)||a.trim().toLowerCase()===b.trim().toLowerCase()}
+function lev(a,b){const m=a.length,n=b.length,d=[];for(let i=0;i<=m;i++){d[i]=[i];for(let j=1;j<=n;j++)d[i][j]=i===0?j:0}for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=a[i-1]===b[j-1]?d[i-1][j-1]:1+Math.min(d[i-1][j],d[i][j-1],d[i-1][j-1]);return d[m][n]}
+function similar(a,b){const na=norm(a),nb=norm(b);if(na===nb)return true;const mx=Math.max(na.length,nb.length);return mx>0&&lev(na,nb)/mx<=0.25}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function isDue(c){if(c.stage>=STAGE_DONE)return false;if(c.stage===0)return true;return Date.now()>=c.lastReviewed+STAGES[c.stage].d*86400000}
+
+// ════════════════════════════════════════════
+// NAV
+// ════════════════════════════════════════════
+let _tab='tl';
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='home')renderHome();
+  else if(id==='picker')renderPicker();
+  else if(id==='packs')renderPacks();
+}
+function switchTab(id){
+  _tab=id;
+  const ids=['tl','tv','ts'];
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',ids[i]===id));
+  document.querySelectorAll('.tab-c').forEach(el=>el.classList.toggle('active',el.id===id));
+  if(id==='tv')renderVocabList();
+  else if(id==='ts')renderStats();
+}
+
+// ════════════════════════════════════════════
+// LANG BAR & MANAGER
+// ════════════════════════════════════════════
+function renderLangBar(){
+  const langs=ensureDefaultLangs(),aid=getActivePairId();
+  document.getElementById('lang-bar').innerHTML=
+    langs.map(l=>`<div class="lchip${l.id===aid?' active':''}" onclick="switchPair('${l.id}')">${esc(l.native)} → ${esc(l.foreign)}</div>`).join('')+
+    `<div class="lchip-add" onclick="openLangMgr()">+ ${t('foreignLang')}</div>`;
+}
+function switchPair(id){setActivePairId(id);renderLangBar();renderHome();updateAddLabels()}
+function openLangMgr(){renderLangListModal();openModal('m-lang')}
+function renderLangListModal(){
+  const langs=ensureDefaultLangs(),aid=getActivePairId();
+  document.getElementById('lang-list-modal').innerHTML=langs.map(l=>`
+    <div class="ll-item">
+      <div class="ll-name">${esc(l.native)} → ${esc(l.foreign)}${l.id===aid?` <span style="font-size:10px;color:var(--gold)">✓</span>`:''}</div>
+      <div class="ll-count">${loadVocab(l.id).length} ${t('packWords')}</div>
+      ${langs.length>1?`<button class="btn btn-g" style="padding:3px 7px;font-size:12px;color:var(--red)" onclick="deleteLangPair('${l.id}')">✕</button>`:''}
+    </div>`).join('');
+}
+function addLangPair(){
+  const native=document.getElementById('new-nat').value.trim();
+  const foreign=document.getElementById('new-for').value.trim();
+  const langcode=document.getElementById('new-lc').value;
+  if(!native||!foreign){showToast(t('cancel'));return}
+  const langs=ensureDefaultLangs();
+  const id=native.toLowerCase().replace(/\s+/g,'')+'-'+foreign.toLowerCase().replace(/\s+/g,'')+'-'+Date.now();
+  langs.push({id,native,foreign,langcode});saveLangs(langs);setActivePairId(id);
+  document.getElementById('new-nat').value='';document.getElementById('new-for').value='';
+  renderLangListModal();renderLangBar();renderHome();updateAddLabels();
+  showToast(t('pairAdded'));
+}
+function deleteLangPair(id){
+  if(!confirm(t('confirmDeletePair')))return;
+  let langs=ensureDefaultLangs().filter(l=>l.id!==id);
+  if(!langs.length)langs=[{id:'de-sk',native:'Deutsch',foreign:'Slowakisch',langcode:'sk'}];
+  saveLangs(langs);localStorage.removeItem(SK+'_'+id);
+  if(getActivePairId()===id)setActivePairId(langs[0].id);
+  renderLangListModal();renderLangBar();renderHome();showToast(t('pairDeleted'));
+}
+
+// ════════════════════════════════════════════
+// HOME
+// ════════════════════════════════════════════
+function renderHome(){
+  renderLangBar();applyI18N();
+  const pair=getActivePair();
+  document.getElementById('home-title').textContent=pair.native+' → '+pair.foreign+' ✦';
+  const v=loadVocab();
+  const due=v.filter(isDue).length;
+  const mastered=v.filter(c=>c.stage>=STAGE_DONE).length;
+  const problematic=v.filter(c=>c.stage===0||((c.stats?.wrong||0)>(c.stats?.correct||0)&&(c.stats?.wrong||0)>0)).length;
+  document.getElementById('h-tot').textContent=v.length;
+  document.getElementById('h-due').textContent=due;
+  document.getElementById('h-mas').textContent=mastered;
+  setBadge('badge-q',due);
+  setBadge('badge-d',problematic);
+  if(_tab==='tv')renderVocabList();
+  else if(_tab==='ts')renderStats();
+}
+function setBadge(id,n){const e=document.getElementById(id);e.textContent=n;e.className='badge'+(n===0?' zero':'')}
+
+function renderVocabList(){
+  let v=loadVocab();
+  const el=document.getElementById('vocab-list');
+  if(!v.length){el.innerHTML=`<div class="empty"><div class="empty-ic">📚</div><p>${t('noVocab')}</p></div>`;return}
+  const search=(document.getElementById('vsearch')?.value||'').toLowerCase();
+  const sort=document.getElementById('vsort')?.value||'az';
+  const filter=document.getElementById('vfilter')?.value||'all';
+  let items=v.map((c,i)=>({c,i}));
+  if(filter==='due')items=items.filter(x=>isDue(x.c));
+  else if(filter==='new')items=items.filter(x=>x.c.stage===0);
+  else if(filter==='fail')items=items.filter(x=>(x.c.stats?.wrong||0)>(x.c.stats?.correct||0)&&(x.c.stats?.wrong||0)>0);
+  else if(filter==='mastered')items=items.filter(x=>x.c.stage>=STAGE_DONE);
+  if(search)items=items.filter(x=>x.c.native.toLowerCase().includes(search)||x.c.foreign.toLowerCase().includes(search));
+  if(sort==='az')items.sort((a,b)=>a.c.native.localeCompare(b.c.native));
+  else if(sort==='za')items.sort((a,b)=>b.c.native.localeCompare(a.c.native));
+  else if(sort==='s-asc')items.sort((a,b)=>a.c.stage-b.c.stage);
+  else if(sort==='s-desc')items.sort((a,b)=>b.c.stage-a.c.stage);
+  else if(sort==='wrong')items.sort((a,b)=>(b.c.stats?.wrong||0)-(a.c.stats?.wrong||0));
+  else if(sort==='new')items.sort((a,b)=>b.i-a.i);
+  if(!items.length){el.innerHTML=`<div class="empty"><div class="empty-ic">🔍</div><p>${t('noResults')}</p></div>`;return}
+  el.innerHTML=items.map(({c,i})=>{
+    const tot=(c.stats?.correct||0)+(c.stats?.wrong||0);
+    const pct=tot>0?Math.round(c.stats.correct/tot*100):null;
+    const si=Math.min(c.stage,7);
+    return`<div class="vi" onclick="openDetail(${i})">
+      <div class="vi-w"><strong>${esc(c.native)}</strong><span>${esc(c.foreign)}</span></div>
+      <div class="vi-r"><span class="vstage s${si}">${t(STAGE_KEYS[si])}</span><span style="font-size:10px;color:var(--muted)">${pct!==null?pct+'% ('+tot+'×)':'—'}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function renderStats(){
+  const v=loadVocab();
+  // Count unique words: ever answered correctly vs ever answered wrong
+  const wordsCorrect=v.filter(c=>(c.stats?.correct||0)>0).length;
+  const wordsWrong=v.filter(c=>(c.stats?.wrong||0)>0&&(c.stats?.correct||0)===0).length;
+  const mastered=v.filter(c=>c.stage>=STAGE_DONE).length;
+  const studied=v.filter(c=>(c.stats?.correct||0)+(c.stats?.wrong||0)>0).length;
+  const hitRate=studied>0?Math.round(wordsCorrect/studied*100):0;
+  document.getElementById('stats-grid').innerHTML=`
+    <div class="sg"><div class="sg-n">${wordsCorrect}</div><div class="sg-l">${t('rightTotal')}</div></div>
+    <div class="sg"><div class="sg-n">${wordsWrong}</div><div class="sg-l">${t('wrongTotal')}</div></div>
+    <div class="sg"><div class="sg-n">${mastered}</div><div class="sg-l">${t('mastered')}</div></div>
+    <div class="sg"><div class="sg-n">${hitRate}%</div><div class="sg-l">${t('hitRate')}</div></div>`;
+  const days=parseInt(document.getElementById('stat-days')?.value||'14');
+  document.getElementById('chart-lbl').textContent=t('chartLbl')+' '+days+' '+t('days');
+  const log=loadLog(),bars=[];
+  for(let i=days-1;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().slice(0,10);const entry=log[k];const n=entry?(typeof entry==='object'?entry.count:entry):0;bars.push({n,l:d.getDate()+'.'+(d.getMonth()+1)+'.'});}
+  const mx=Math.max(...bars.map(b=>b.n),1);
+  document.getElementById('chart-bars').innerHTML=bars.map(b=>`<div class="cbc"><div style="font-size:8px;color:var(--dim);min-height:12px">${b.n||''}</div><div class="cb" style="height:${Math.round(b.n/mx*58)+2}px;opacity:${b.n?1:.2}"></div><div class="cbl">${b.l}</div></div>`).join('');
+  const sc=STAGE_KEYS.map((_,i)=>v.filter(c=>c.stage===i).length);
+  const mxS=Math.max(...sc,1);
+  const colors=['var(--red)','var(--blue)','var(--orange)','var(--green)','#5a9e9e','#9a6abf','var(--gold)','var(--gold-d)'];
+  document.getElementById('stage-bars').innerHTML=STAGE_KEYS.map((k,i)=>`
+    <div class="sbrow"><span class="sbl">${t(k)}</span><div class="sbo"><div class="sbi" style="width:${Math.round(sc[i]/mxS*100)}%;background:${colors[i]}"></div></div><span class="sbc">${sc[i]}</span></div>`).join('');
+}
+
+// ════════════════════════════════════════════
+// ADD / EDIT
+// ════════════════════════════════════════════
+let _detailIdx=-1;
+function updateAddLabels(){
+  const p=getActivePair();
+  document.getElementById('lbl-nat').textContent=p.native;
+  document.getElementById('lbl-for').textContent=p.foreign;
+  document.getElementById('inp-nat').placeholder=p.native+'…';
+  document.getElementById('inp-for').placeholder=p.foreign+'…';
+  document.getElementById('inp-for').lang=p.langcode||'sk';
+}
+function openAdd(){
+  document.getElementById('edit-idx').value='-1';
+  document.getElementById('inp-nat').value='';
+  document.getElementById('inp-for').value='';
+  document.getElementById('save-btn').textContent=t('save');
+  document.getElementById('add-title').textContent=t('addWord');
+  document.getElementById('dup-warn').className='dup-warn';
+  document.getElementById('sugg-box').classList.remove('show');
+  document.getElementById('tx-hint').textContent=t('txHint');
+  updateAddLabels();applyI18N();
+  showScreen('add');
+  setTimeout(()=>document.getElementById('inp-nat').focus(),120);
+}
+function cancelAdd(){document.getElementById('edit-idx').value='-1';showScreen('home')}
+
+document.getElementById('inp-nat').addEventListener('input',()=>{checkDup();scheduleTranslate()});
+document.getElementById('inp-for').addEventListener('input',checkDup);
+document.getElementById('inp-nat').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('inp-for').focus()});
+document.getElementById('inp-for').addEventListener('keydown',e=>{if(e.key==='Enter')saveEntry()});
+
+function checkDup(){
+  const nat=document.getElementById('inp-nat').value.trim();
+  const forv=document.getElementById('inp-for').value.trim();
+  const ei=parseInt(document.getElementById('edit-idx').value);
+  const w=document.getElementById('dup-warn');
+  if(!nat&&!forv){w.className='dup-warn';return}
+  const vocab=loadVocab();
+  const exact=vocab.filter((_,i)=>i!==ei&&(norm(nat)===norm(_.native)||norm(forv)===norm(_.foreign)));
+  if(exact.length){
+    w.textContent='⛔ '+t('identical').replace('—','')+'— '+exact.map(x=>x.native+'/'+x.foreign).join(', ');
+    w.className='dup-warn show dup-red';return;
+  }
+  const sim=vocab.filter((_,i)=>i!==ei&&(similar(nat,_.native)||similar(forv,_.foreign)));
+  if(sim.length){
+    w.textContent='⚠️ '+t('similar')+': '+sim.map(x=>x.native+'/'+x.foreign).join(', ');
+    w.className='dup-warn show dup-orange';
+  } else {
+    w.className='dup-warn';
+  }
+}
+
+function saveEntry(){
+  const nat=document.getElementById('inp-nat').value.trim();
+  const forv=document.getElementById('inp-for').value.trim();
+  if(!nat||!forv){showToast(t('cancel'));return}
+  const w=document.getElementById('dup-warn');
+  if(w.classList.contains('dup-red')&&!confirm(t('identical')))return;
+  const natF=nat.charAt(0).toUpperCase()+nat.slice(1);
+  const forF=forv.charAt(0).toLowerCase()+forv.slice(1);
+  const v=loadVocab();
+  const ei=parseInt(document.getElementById('edit-idx').value);
+  if(ei>=0){
+    v[ei].native=natF;v[ei].foreign=forF;saveVocab(v);
+    showToast(t('savedOk'));cancelAdd();
+  } else {
+    v.push({native:natF,foreign:forF,stage:0,lastReviewed:0,stats:{correct:0,wrong:0}});
+    saveVocab(v);showToast(t('savedOk'));
+    document.getElementById('inp-nat').value='';
+    document.getElementById('inp-for').value='';
+    document.getElementById('dup-warn').className='dup-warn';
+    document.getElementById('sugg-box').classList.remove('show');
+    document.getElementById('tx-hint').textContent=t('txHint');
+    document.getElementById('inp-nat').focus();
+  }
+}
+
+// ════════════════════════════════════════════
+// TRANSLATION
+// ════════════════════════════════════════════
+const DICT_DE_SK={
+"Abend":"večer","Adresse":"adresa","Angst":"strach","Antwort":"odpoveď",
+"Apfel":"jablko","Arbeit":"práca","Arzt":"lekár","Auge":"oko","Auto":"auto",
+"Bahnhof":"železničná stanica","Baum":"strom","Bein":"noha","Berg":"hora",
+"Bett":"posteľ","Bier":"pivo","Bild":"obrázok","Blume":"kvetina","Blut":"krv",
+"Brot":"chlieb","Brücke":"most","Brust":"hrudník","Buch":"kniha","Bus":"autobus",
+"Butter":"maslo","Danke":"ďakujem","Datum":"dátum","Dorf":"dedina",
+"Ei":"vajce","Ende":"koniec","Erde":"zem","Essen":"jedlo","Familie":"rodina",
+"Farbe":"farba","Fehler":"chyba","Fenster":"okno","Feuer":"oheň","Fisch":"ryba",
+"Flasche":"fľaša","Fleisch":"mäso","Flugzeug":"lietadlo","Fluss":"rieka",
+"Frau":"žena","Freund":"priateľ","Freundin":"priateľka","Frühling":"jar",
+"Frühstück":"raňajky","Fuß":"noha","Garten":"záhrada","Geld":"peniaze",
+"Gesicht":"tvár","Glas":"pohár","Glück":"šťastie","Groß":"veľký","Gruppe":"skupina",
+"Hals":"krk","Hand":"ruka","Haus":"dom","Herz":"srdce","Hilfe":"pomoc",
+"Himmel":"nebo","Hund":"pes","Jahr":"rok","Jacke":"bunda","Junge":"chlapec",
+"Kaffee":"káva","Katze":"mačka","Kind":"dieťa","Kirche":"kostol","Kleid":"šaty",
+"Klein":"malý","Kopf":"hlava","Körper":"telo","Krankenhaus":"nemocnica",
+"Küche":"kuchyňa","Kuchen":"koláč","Land":"krajina","Leben":"život",
+"Lehrer":"učiteľ","Licht":"svetlo","Liebe":"láska","Mann":"muž","Meer":"more",
+"Messer":"nôž","Milch":"mlieko","Morgen":"ráno","Mutter":"matka","Nacht":"noc",
+"Name":"meno","Nase":"nos","Obst":"ovocie","Ohr":"ucho","Pause":"prestávka",
+"Polizei":"polícia","Post":"pošta","Problem":"problém","Regen":"dážď",
+"Reis":"ryža","Restaurant":"reštaurácia","Rücken":"chrbát","Saft":"džús",
+"Salz":"soľ","Schnee":"sneh","Schule":"škola","Schwester":"sestra","See":"jazero",
+"Sommer":"leto","Sonne":"slnko","Sprache":"jazyk","Stadt":"mesto",
+"Stift":"pero","Strand":"pláž","Straße":"ulica","Stuhl":"stolička","Suppe":"polievka",
+"Tag":"deň","Tante":"teta","Tasche":"taška","Tasse":"šálka","Tisch":"stôl",
+"Tochter":"dcéra","Tür":"dvere","Urlaub":"dovolenka","Vater":"otec","Vogel":"vták",
+"Wasser":"voda","Wein":"víno","Winter":"zima","Woche":"týždeň","Wohnung":"byt",
+"Wort":"slovo","Zahn":"zub","Zeit":"čas","Zimmer":"izba","Zucker":"cukor","Zug":"vlak",
+"arbeiten":"pracovať","beginnen":"začať","bleiben":"zostať","brauchen":"potrebovať",
+"bringen":"priniesť","denken":"myslieť","erzählen":"rozprávať","essen":"jesť",
+"fahren":"jazdiť","finden":"nájsť","fragen":"pýtať sa","geben":"dať","gehen":"ísť",
+"haben":"mať","helfen":"pomôcť","hören":"počuť","kaufen":"kúpiť","kommen":"prísť",
+"können":"môcť","laufen":"bežať","lesen":"čítať","lieben":"milovať","machen":"robiť",
+"müssen":"musieť","nehmen":"vziať","reden":"hovoriť","schlafen":"spať",
+"schreiben":"písať","sehen":"vidieť","sein":"byť","singen":"spievať","spielen":"hrať",
+"sprechen":"hovoriť","suchen":"hľadať","trinken":"piť","verstehen":"rozumieť",
+"wissen":"vedieť","wohnen":"bývať","wollen":"chcieť","zeigen":"ukázať",
+"alt":"starý","arm":"chudobný","billig":"lacný","dunkel":"tmavý","einfach":"jednoduchý",
+"fertig":"hotový","froh":"šťastný","früh":"skoro","gesund":"zdravý","gut":"dobrý",
+"heiß":"horúci","hoch":"vysoký","jung":"mladý","krank":"chorý","kurz":"krátky",
+"lang":"dlhý","langsam":"pomaly","laut":"hlasný","leicht":"ľahký","lecker":"chutný",
+"müde":"unavený","neu":"nový","nett":"milý","reich":"bohatý","richtig":"správny",
+"ruhig":"tichý","sauber":"čistý","schnell":"rýchly","schön":"pekný","schwer":"ťažký",
+"stark":"silný","süß":"sladký","teuer":"drahý","toll":"skvelý","warm":"teplý",
+"wichtig":"dôležitý","eins":"jedna","zwei":"dva","drei":"tri","vier":"štyri",
+"fünf":"päť","sechs":"šesť","sieben":"sedem","acht":"osem","neun":"deväť",
+"zehn":"desať","zwanzig":"dvadsať","hundert":"sto","Montag":"pondelok",
+"Dienstag":"utorok","Mittwoch":"streda","Donnerstag":"štvrtok","Freitag":"piatok",
+"Samstag":"sobota","Sonntag":"nedeľa","heute":"dnes","gestern":"včera",
+"morgen":"zajtra","jetzt":"teraz","hier":"tu","dort":"tam","sehr":"veľmi",
+"auch":"tiež","nur":"len","noch":"ešte","schon":"už","immer":"vždy",
+"nie":"nikdy","oft":"často","viel":"veľa","wenig":"málo","alles":"všetko"
+};
+const DICT_SK_EN={
+"áno":"yes","nie":"no","prosím":"please","ďakujem":"thank you",
+"dobrý deň":"good day","ahoj":"hello","dovidenia":"goodbye","pomoc":"help",
+"voda":"water","jedlo":"food","dom":"house","auto":"car","práca":"work",
+"škola":"school","rodina":"family","priateľ":"friend","dieťa":"child",
+"muž":"man","žena":"woman","deň":"day","noc":"night","ráno":"morning",
+"večer":"evening","čas":"time","rok":"year","mesiac":"month","týždeň":"week",
+"dnes":"today","zajtra":"tomorrow","včera":"yesterday","tu":"here","tam":"there",
+"veľký":"big","malý":"small","dobrý":"good","zlý":"bad","nový":"new",
+"starý":"old","rýchly":"fast","pomalý":"slow","teplý":"warm","studený":"cold",
+"ísť":"to go","prísť":"to come","jesť":"to eat","piť":"to drink","spať":"to sleep",
+"hovoriť":"to speak","rozumieť":"to understand","vidieť":"to see","vedieť":"to know",
+"mať":"to have","byť":"to be","robiť":"to do","hlava":"head","ruka":"hand",
+"noha":"leg/foot","oko":"eye","ucho":"ear","nos":"nose","ústa":"mouth",
+"srdce":"heart","mesto":"city","dedina":"village","ulica":"street","more":"sea",
+"hora":"mountain","rieka":"river","jazero":"lake","les":"forest","záhrada":"garden",
+"červený":"red","modrý":"blue","zelený":"green","žltý":"yellow","čierny":"black",
+"biely":"white","sivý":"grey","hnedý":"brown","pes":"dog","mačka":"cat",
+"vták":"bird","ryba":"fish","kôň":"horse","krava":"cow","strom":"tree",
+"kvetina":"flower","slnko":"sun","mesiac":"moon","hviezda":"star","oblak":"cloud",
+"dážď":"rain","sneh":"snow","jablko":"apple","chlieb":"bread","mäso":"meat",
+"mlieko":"milk","maslo":"butter","soľ":"salt","cukor":"sugar","jeden":"one",
+"dva":"two","tri":"three","štyri":"four","päť":"five","šesť":"six",
+"sedem":"seven","osem":"eight","deväť":"nine","desať":"ten",
+"pondelok":"Monday","utorok":"Tuesday","streda":"Wednesday","štvrtok":"Thursday",
+"piatok":"Friday","sobota":"Saturday","nedeľa":"Sunday"
+};
+
+function nativeLangCode(pair){
+  const n=(pair.native||'').toLowerCase();
+  if(n.includes('deutsch')||n.includes('german'))return'de';
+  if(n.includes('slowak')||n.includes('slovak'))return'sk';
+  if(n.includes('english')||n.includes('englisch'))return'en';
+  if(n.includes('französ')||n.includes('french'))return'fr';
+  if(n.includes('spanisch')||n.includes('spanish'))return'es';
+  if(n.includes('tschech')||n.includes('czech'))return'cs';
+  if(n.includes('polnisch')||n.includes('polish'))return'pl';
+  if(n.includes('russisch')||n.includes('russian'))return'ru';
+  if(n.includes('italienisch')||n.includes('italian'))return'it';
+  return'de';
+}
+function getOfflineDict(pair){
+  const from=nativeLangCode(pair),to=pair.langcode||'sk';
+  if(from==='de'&&to==='sk')return DICT_DE_SK;
+  if(from==='sk'&&to==='en')return DICT_SK_EN;
+  return null;
+}
+function dictLookupIn(text,dict){
+  const tl=text.trim().toLowerCase();
+  for(const[k,v]of Object.entries(dict)){if(k.toLowerCase()===tl)return[v]}
+  return Object.entries(dict).filter(([k])=>k.toLowerCase().startsWith(tl)).map(([,v])=>v).slice(0,3);
+}
+function showSuggestions(list){
+  const box=document.getElementById('sugg-box');
+  box.innerHTML=list.map(s=>`<div class="sugg-item" onclick="pickSugg(this)">${esc(s)}</div>`).join('');
+  box.classList.add('show');
+}
+function pickSugg(el){document.getElementById('inp-for').value=el.textContent;document.getElementById('sugg-box').classList.remove('show');checkDup()}
+
+let _txTimer=null;
+function scheduleTranslate(){
+  const val=document.getElementById('inp-nat').value.trim();
+  if(val.length<2)return;
+  const p=getActivePair();
+  const dict=getOfflineDict(p);
+  if(dict){
+    const res=dictLookupIn(val,dict);
+    if(res.length){showSuggestions(res);document.getElementById('tx-hint').textContent=t('offlineDict');return}
+  }
+  clearTimeout(_txTimer);
+  if(val.length>=3)_txTimer=setTimeout(()=>autoTranslate(val),800);
+}
+async function doTranslate(){const v=document.getElementById('inp-nat').value.trim();if(!v)return;await autoTranslate(v)}
+async function autoTranslate(text){
+  document.getElementById('tx-hint').textContent=t('onlineTx');
+  try{
+    const p=getActivePair(),from=nativeLangCode(p),to=p.langcode||'sk';
+    const res=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+from+'|'+to);
+    const data=await res.json();
+    if(data.responseStatus===200){
+      const suggs=[...new Set((data.matches||[]).filter(m=>m.quality>=50).map(m=>m.translation).filter(t=>t&&norm(t)!==norm(text)))].slice(0,4);
+      if(suggs.length){showSuggestions(suggs);document.getElementById('tx-hint').textContent=suggs.length+' Vorschläge (online)'}
+      else{const top=data.responseData?.translatedText;if(top){showSuggestions([top]);document.getElementById('tx-hint').textContent='1 Vorschlag (online)'}else document.getElementById('tx-hint').textContent='—'}
+    }
+  }catch{document.getElementById('tx-hint').textContent=t('noConn')}
+}
+
+// ════════════════════════════════════════════
+// DETAIL MODAL
+// ════════════════════════════════════════════
+function openDetail(i){
+  _detailIdx=i;const v=loadVocab(),c=v[i];
+  const tot=(c.stats?.correct||0)+(c.stats?.wrong||0);
+  const pct=tot>0?Math.round(c.stats.correct/tot*100):null;
+  const nxt=c.stage>0&&c.stage<STAGE_DONE?new Date(c.lastReviewed+STAGES[c.stage].d*86400000).toLocaleDateString('de-DE'):'—';
+  const si=Math.min(c.stage,7);
+  document.getElementById('m-detail-title').textContent=c.native+' / '+c.foreign;
+  document.getElementById('m-detail-body').innerHTML=`
+    <div class="drow"><span class="dk">${t('stageLbl')}</span><span>${t(STAGE_KEYS[si])}</span></div>
+    <div class="drow"><span class="dk">${t('correct')}</span><span style="color:var(--green)">${c.stats?.correct||0}</span></div>
+    <div class="drow"><span class="dk">${t('wrong')}</span><span style="color:var(--red)">${c.stats?.wrong||0}</span></div>
+    <div class="drow"><span class="dk">${t('hitRate')}</span><span>${pct!==null?pct+'%':'—'}</span></div>
+    <div class="drow"><span class="dk">${t('nextRev')}</span><span>${nxt}</span></div>`;
+  document.getElementById('m-stage-grid').innerHTML=STAGE_KEYS.map((k,s)=>`<button class="sgbtn${c.stage===s?' active':''}" onclick="setStage(${i},${s})">${t(k)}</button>`).join('');
+  openModal('m-detail');
+}
+function setStage(i,s){const v=loadVocab();v[i].stage=s;v[i].lastReviewed=Date.now();saveVocab(v);showToast(t('stageSet')+': '+t(STAGE_KEYS[Math.min(s,5)]));closeModal('m-detail');renderHome()}
+function editFromDetail(){
+  closeModal('m-detail');const v=loadVocab(),c=v[_detailIdx];
+  document.getElementById('edit-idx').value=_detailIdx;
+  document.getElementById('inp-nat').value=c.native;
+  document.getElementById('inp-for').value=c.foreign;
+  document.getElementById('add-title').textContent=t('edit');
+  document.getElementById('save-btn').textContent=t('save');
+  updateAddLabels();applyI18N();showScreen('add');
+}
+function deleteFromDetail(){const v=loadVocab();v.splice(_detailIdx,1);saveVocab(v);closeModal('m-detail');renderHome();showToast(t('deleted'))}
+
+// ════════════════════════════════════════════
+// PICKER
+// ════════════════════════════════════════════
+let _pf=new Set(['new','fail']),_ps=new Set();
+function toggleFilter(f){
+  _pf.has(f)?_pf.delete(f):_pf.add(f);
+  ['new','fail','due','all'].forEach(x=>document.getElementById('fc-'+x)?.classList.toggle('on',_pf.has(x)));
+  renderPicker();
+}
+function renderPicker(){
+  const v=loadVocab();
+  let cands=v.map((c,i)=>({c,i})).filter(({c})=>{
+    if(_pf.has('all'))return true;
+    if(_pf.has('new')&&c.stage===0)return true;
+    if(_pf.has('fail')&&(c.stats?.wrong||0)>(c.stats?.correct||0)&&(c.stats?.wrong||0)>0)return true;
+    if(_pf.has('due')&&isDue(c))return true;
+    return false;
+  });
+  cands.sort((a,b)=>{
+    if(a.c.stage===0&&b.c.stage!==0)return -1;
+    if(b.c.stage===0&&a.c.stage!==0)return 1;
+    return((b.c.stats?.wrong||0)-(b.c.stats?.correct||0))-((a.c.stats?.wrong||0)-(a.c.stats?.correct||0));
+  });
+  const validIdx=new Set(cands.map(x=>x.i));
+  _ps.forEach(i=>{if(!validIdx.has(i))_ps.delete(i)});
+  const el=document.getElementById('picker-list');
+  if(!cands.length){el.innerHTML=`<div class="empty"><div class="empty-ic">🔍</div><p>${t('noResults')}</p></div>`;updatePickerBtn();return}
+  el.innerHTML=cands.map(({c,i})=>{
+    const sel=_ps.has(i);
+    const badge=c.stage===0?`<span style="font-size:9px;color:var(--red);margin-left:3px">${t('stNew')}</span>`:
+      ((c.stats?.wrong||0)>(c.stats?.correct||0)?`<span style="font-size:9px;color:var(--orange);margin-left:3px">${t('fail').toUpperCase()}</span>`:'');
+    return`<div class="pi${sel?' sel':''}" id="pi${i}" onclick="togglePi(${i})">
+      <div class="picheck">${sel?'<svg style="width:11px;height:11px;fill:none;stroke:#0f0e0c;stroke-width:3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>':''}</div>
+      <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">${esc(c.native)}${badge}</div><div style="font-size:11px;color:var(--dim)">${esc(c.foreign)}</div></div>
+      <span class="vstage s${Math.min(c.stage,7)}" style="font-size:9px">${t(STAGE_KEYS[Math.min(c.stage,7)])}</span>
+    </div>`;
+  }).join('');
+  updatePickerBtn();
+}
+function togglePi(i){_ps.has(i)?_ps.delete(i):_ps.add(i);renderPicker()}
+function toggleAllPicker(){
+  const allIdx=[...document.querySelectorAll('.pi')].map(el=>{const m=el.id.match(/\d+/);return m?parseInt(m[0]):-1}).filter(i=>i>=0);
+  if(allIdx.every(i=>_ps.has(i)))allIdx.forEach(i=>_ps.delete(i));else allIdx.forEach(i=>_ps.add(i));
+  renderPicker();
+}
+function updatePickerBtn(){
+  const n=_ps.size,b=document.getElementById('picker-btn');
+  b.textContent=t('start')+' ('+n+')';b.disabled=n===0;
+}
+
+// ════════════════════════════════════════════
+// LEARN ENGINE
+// ════════════════════════════════════════════
+/*
+  QUICK: fällige Karten. Each card needs repeatInterval correct answers (both directions tracked).
+         Wrong → back to New in SRS, reshuffled to end.
+
+  DEEP:
+    Phase 1 (kennenlernen): ALL selected cards first — flip freely, tap "Gelernt" to mark each done.
+                            Once ALL cards marked, switch to Phase 2.
+    Phase 2 (üben):        ALL selected cards shuffled randomly. Each card needs repeatInterval correct.
+                            Wrong → card goes to end of queue (not reset, just re-queued).
+                            When all cards have reached repeatInterval correct → done. SRS promoted.
+*/
+let L={};
+
+function getModes(){
+  const s=loadSettings();const m=[];
+  if(s.modeFlip!==false)m.push('flip');
+  if(s.modeType!==false)m.push('type');
+  if(s.modeLetters!==false)m.push('letters');
+  return m.length?m:['flip'];
+}
+function getRI(){return Math.max(3,Math.min(20,parseInt(loadSettings().repeatInterval)||5))}
+
+function startQuickLearn(){
+  const v=loadVocab(),due=v.filter(isDue);
+  if(!due.length){showToast(t('noCards'));return}
+  const ri=getRI();
+  const queue=due.map(c=>({idx:v.indexOf(c),correct:0,dirs:[]})).sort(()=>Math.random()-.5);
+  L={mode:'quick',queue,pos:0,total:queue.length,origTotal:queue.length,completed:0,ri};
+  showScreen('learn');_nextCard();
+}
+
+function startDeepLearn(){
+  if(!_ps.size)return;
+  const ri=getRI();
+  const idxs=[..._ps];
+  // Phase 1: learn queue — each card once
+  const learnQueue=idxs.map(i=>({idx:i,done:false}));
+  // Phase 2: practice queue — built after phase 1
+  L={
+    mode:'deep',
+    phase:1,
+    learnQueue,
+    learnPos:0,
+    practiceQueue:null,
+    pos:0,
+    total:learnQueue.length,
+    origTotal:learnQueue.length,
+    completed:0,
+    ri
+  };
+  showScreen('learn');_nextCard();
+}
+
+function exitLearn(){showScreen('home')}
+
+function _nextCard(){
+  if(L.mode==='quick'){
+    _updateProg();
+    if(L.queue.length===0){_showDone();return}
+    const e=L.queue[0];
+    if(!e){_showDone();return}
+    if(!Array.isArray(e.dirs))e.dirs=[];
+    L.curIdx=e.idx;
+    L.card=loadVocab()[L.curIdx];
+    // pick direction not yet done if possible (dirs is array)
+    const doneDir0=e.dirs.includes(0),doneDir1=e.dirs.includes(1);
+    L.cardDir=(!doneDir0)?0:(!doneDir1)?1:(Math.random()>.5?0:1);
+    const modes=getModes();
+    L.cardMode=modes[Math.floor(Math.random()*modes.length)];
+    L.flipped=false;L.typeAnswered=false;L.ls=null;
+    _renderCard();
+  } else {
+    // deep mode
+    if(L.phase===1){
+      _updateProg();
+      if(L.learnPos>=L.learnQueue.length){
+        // All learned — build practice queue
+        const ri=L.ri;
+        L.phase=2;
+        L.practiceQueue=L.learnQueue.map(e=>({idx:e.idx,correct:0})).sort(()=>Math.random()-.5);
+        L.pos=0;L.total=L.practiceQueue.length;
+        _updateProg();
+      }
+    }
+    if(L.phase===2){
+      _updateProg();
+      if(L.practiceQueue.length===0){_showDone();return}
+      const e=L.practiceQueue[0];
+      if(!e){_showDone();return}
+      L.curIdx=e.idx;
+      L.card=loadVocab()[L.curIdx];
+      L.cardDir=Math.random()>.5?0:1;
+      const modes=getModes();
+      L.cardMode=modes[Math.floor(Math.random()*modes.length)];
+      L.flipped=false;L.typeAnswered=false;L.ls=null;
+      _renderCard();
+    }
+    if(L.phase===1){
+      // show learn card
+      _updateProg();
+      const e=L.learnQueue[L.learnPos];
+      L.curIdx=e.idx;L.card=loadVocab()[L.curIdx];
+      L.learnSide=0;L.learnFlipCount=0;L.flipped=false;
+      _renderCard();
+    }
+  }
+}
+
+function _updateProg(){
+  let pct=0,lbl='0/0';
+  if(L.mode==='quick'){
+    // completed = done words, total = original count
+    const done=L.completed||0;
+    const total=L.origTotal||L.total||1;
+    pct=done/total*100;
+    lbl=done+'/'+total;
+  } else if(L.phase===1){
+    pct=L.learnQueue.length>0?L.learnPos/L.learnQueue.length*100:0;
+    lbl=L.learnPos+'/'+L.learnQueue.length;
+  } else {
+    const done=L.completed||0;
+    const total=L.origTotal||L.total||1;
+    pct=done/total*100;
+    lbl=done+'/'+total;
+  }
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-lbl').textContent=lbl;
+}
+
+function _renderCard(){
+  const z=document.getElementById('card-zone');z.innerHTML='';
+  if(L.mode==='deep'&&L.phase===1)_renderLearnFlip(z);
+  else if(L.cardMode==='flip')_renderFlip(z);
+  else if(L.cardMode==='type')_renderType(z);
+  else _renderLetters(z);
+}
+
+/* ── LEARN FLIP (phase 1) ── */
+function _renderLearnFlip(z){
+  const p=getActivePair();
+  const showing=L.learnSide===0?L.card.native:L.card.foreign;
+  const showingLang=L.learnSide===0?p.native:p.foreign;
+  const backW=L.learnSide===0?L.card.foreign:L.card.native;
+  const backL=L.learnSide===0?p.foreign:p.native;
+  const prog=L.learnPos+'/'+L.learnQueue.length;
+  z.innerHTML=`
+    <div class="info-badge info-blue" style="width:100%;max-width:400px">${t('learnPhase')} ${prog}</div>
+    <div class="fcw">
+      <div class="fc${L.learnSide===1?' flipped':''}" id="fc" onclick="doLearnFlip()" style="cursor:pointer">
+        <div class="ff"><div class="clang">${esc(showingLang)}</div><div class="cword">${esc(showing)}</div><div class="chint">${t('learnHint')}</div></div>
+        <div class="ff fb"><div class="clang">${esc(backL)}</div><div class="cword">${esc(backW)}</div><div class="chint">${t('learnHintBack')}</div></div>
+      </div>
+    </div>
+    <button class="btn btn-learned btn-full" style="width:100%;max-width:400px;margin-top:11px;flex-shrink:0" onclick="markLearned()">${t('learnBtn')}</button>`;
+}
+function doLearnFlip(){
+  L.learnSide=L.learnSide===0?1:0;L.learnFlipCount=(L.learnFlipCount||0)+1;
+  const fc=document.getElementById('fc');if(!fc)return;
+  if(L.learnSide===1)fc.classList.add('flipped');else fc.classList.remove('flipped');
+}
+function markLearned(){
+  L.learnQueue[L.learnPos].done=true;
+  L.learnPos++;
+  _nextCard();
+}
+
+/* ── FLIP (practice) ── */
+function _renderFlip(z){
+  const p=getActivePair();
+  const df=L.cardDir===0;
+  const front=df?L.card.native:L.card.foreign,fl=df?p.native:p.foreign;
+  const back=df?L.card.foreign:L.card.native,bl=df?p.foreign:p.native;
+  const badge=L.mode==='deep'?`<div class="info-badge info-gold" style="width:100%;max-width:400px">${t('practiceRound')} ${L.practiceQueue[L.pos].correct+1} ${t('of')} ${L.ri}</div>`:'';
+  z.innerHTML=`${badge}
+    <div class="fcw anim"><div class="fc" id="fc" onclick="doFlip()">
+      <div class="ff"><div class="clang">${esc(fl)}</div><div class="cword">${esc(front)}</div><div class="chint">${t('learnHint')}</div></div>
+      <div class="ff fb"><div class="clang">${esc(bl)}</div><div class="cword">${esc(back)}</div></div>
+    </div></div>
+    <div class="facts" id="facts" style="display:none">
+      <button class="btn btn-wrong" onclick="answerFlip(false)"><svg class="ic" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>${t('wrong')}</button>
+      <button class="btn btn-ok" onclick="answerFlip(true)"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>${t('correct')}</button>
+    </div>`;
+}
+function doFlip(){if(L.flipped)return;L.flipped=true;document.getElementById('fc').classList.add('flipped');setTimeout(()=>{const f=document.getElementById('facts');if(f)f.style.display='flex'},340)}
+function answerFlip(correct){_recordAnswer(correct);_advance(correct)}
+
+/* ── TYPE ── */
+function _renderType(z){
+  const p=getActivePair();
+  const badge=L.mode==='deep'?`<div class="info-badge info-gold" style="width:100%;max-width:400px">${t('practiceRound')} ${L.practiceQueue[L.pos].correct+1} ${t('of')} ${L.ri}</div>`:'';
+  z.innerHTML=`${badge}
+    <div class="tcard anim"><div class="clang">${esc(p.native)}</div><div class="cword">${esc(L.card.native)}</div></div>
+    <div class="tinrow">
+      <input type="text" id="ti" class="tinput" placeholder="${esc(p.foreign)}…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" lang="${p.langcode||'sk'}" oninput="onTI()" onkeydown="onTIKey(event)">
+      <button class="tchk" id="tchk" onclick="submitType()">${t('checkBtn')}</button>
+    </div>
+    <button class="btn btn-s btn-full" style="max-width:400px;margin-bottom:6px;font-size:13px;color:var(--dim)" onclick="dontKnow()" id="dontknow-btn">${t('dontKnow')}</button>
+    <div class="tfb" id="tfb"></div>`;
+  setTimeout(()=>{const i=document.getElementById('ti');if(i)i.focus()},80);
+}
+function onTI(){const i=document.getElementById('ti');if(!i||L.typeAnswered)return;if(checkAns(i.value,L.card.foreign))submitType()}
+function onTIKey(e){if(e.key==='Enter'){if(L.typeAnswered)_doTypeNext();else{const v=document.getElementById('ti')?.value.trim();if(v)submitType()}}}
+function submitType(){
+  if(L.typeAnswered)return;
+  const v=document.getElementById('ti')?.value.trim()||'';if(!v)return;
+  L.typeAnswered=true;
+  const ok=checkAns(v,L.card.foreign);
+  const i=document.getElementById('ti'),fb=document.getElementById('tfb'),tchk=document.getElementById('tchk');
+  if(i){i.disabled=true;i.className='tinput '+(ok?'ok':'bad')}
+  if(fb){fb.className='tfb '+(ok?'ok':'bad');fb.textContent=ok?t('correctFb')+' '+t('enterNext'):t('wrongFb')+L.card.foreign;fb.addEventListener('click',_doTypeNext,{once:true})}
+  if(tchk){tchk.textContent=t('nextBtn');tchk.onclick=_doTypeNext}
+  _recordAnswer(ok);
+}
+function _doTypeNext(){_advance(checkAns(document.getElementById('ti')?.value||'',L.card.foreign))}
+function dontKnow(){
+  // Mark as wrong, show the answer
+  if(L.typeAnswered)return;
+  L.typeAnswered=true;
+  const i=document.getElementById('ti'),fb=document.getElementById('tfb'),tchk=document.getElementById('tchk');
+  const dk=document.getElementById('dontknow-btn');
+  if(i){i.value='';i.disabled=true;i.className='tinput bad'}
+  if(fb){fb.className='tfb bad';fb.textContent=t('wrongFb')+L.card.foreign;fb.addEventListener('click',_doTypeNext,{once:true})}
+  if(tchk){tchk.textContent=t('nextBtn');tchk.onclick=_doTypeNext}
+  if(dk)dk.style.display='none';
+  _recordAnswer(false);
+}
+
+/* ── LETTERS ── */
+function _renderLetters(z){
+  const p=getActivePair(),word=L.card.foreign;
+  const letters=word.split('').sort(()=>Math.random()-.5);
+  L.ls={word,letters,chosen:[],used:new Array(letters.length).fill(false)};
+  const badge=L.mode==='deep'?`<div class="info-badge info-gold" style="width:100%;max-width:400px">${t('practiceRound')} ${L.practiceQueue[L.pos].correct+1} ${t('of')} ${L.ri}</div>`:'';
+  z.innerHTML=`${badge}
+    <div class="lcard anim"><div class="clang">${esc(p.native)} → ${esc(p.foreign)}</div><div class="cword">${esc(L.card.native)}</div><div class="lans" id="la">_</div></div>
+    <div class="ltiles" id="lt">${letters.map((_,i)=>`<button class="ltile" id="lt${i}" onclick="pickL(${i})">${esc(letters[i])}</button>`).join('')}</div>
+    <div class="lacts">
+      <button class="btn btn-s" style="flex:1" onclick="lBack()">${t('back2')}</button>
+      <button class="btn btn-s" style="flex:1" onclick="lClear()">${t('clear')}</button>
+      <button class="btn btn-p" style="flex:1" onclick="submitLetters()">${t('check')}</button>
+    </div>`;
+}
+function pickL(i){const s=L.ls;if(s.used[i])return;s.used[i]=true;s.chosen.push({l:s.letters[i],i});document.getElementById('lt'+i).classList.add('used');_updLA();if(s.chosen.length===s.word.length)submitLetters()}
+function lBack(){const s=L.ls;if(!s.chosen.length)return;const x=s.chosen.pop();s.used[x.i]=false;document.getElementById('lt'+x.i).classList.remove('used');_updLA()}
+function lClear(){const s=L.ls;s.chosen=[];s.used.fill(false);document.querySelectorAll('.ltile').forEach(t=>t.classList.remove('used'));_updLA()}
+function _updLA(){const s=L.ls,el=document.getElementById('la');if(el)el.textContent=s.chosen.length?s.chosen.map(c=>c.l).join(''):'_'}
+function submitLetters(){
+  const s=L.ls,attempt=s.chosen.map(c=>c.l).join(''),ok=checkAns(attempt,s.word);
+  _recordAnswer(ok);
+  const la=document.getElementById('la');
+  if(la){la.style.color=ok?'var(--green)':'var(--red)';la.textContent=(ok?'✓ ':'✗ ')+s.word}
+  setTimeout(()=>_advance(ok),800);
+}
+
+/* ── ANSWER RECORDING & ADVANCE ── */
+function _recordAnswer(correct){
+  const v=loadVocab(),c=v[L.curIdx];
+  if(!c)return;
+  if(!c.stats)c.stats={correct:0,wrong:0};
+  if(correct)c.stats.correct++;else c.stats.wrong++;
+  saveVocab(v);
+  // Only log when answer is correct (word was actively learned today)
+  if(correct)logActivity(L.curIdx);
+}
+
+function _advance(correct){
+  const ri=L.ri||getRI();
+  if(L.mode==='quick'){
+    // Always work on queue[0] — simpler and reliable
+    const e=L.queue[0];
+    if(!Array.isArray(e.dirs))e.dirs=[];
+    if(correct){
+      if(!e.dirs.includes(L.cardDir))e.dirs.push(L.cardDir);
+      e.correct=(e.correct||0)+1;
+      const bothDirs=e.dirs.includes(0)&&e.dirs.includes(1);
+      if(e.correct>=ri&&bothDirs){
+        // Word done — promote SRS, remove from queue
+        const v=loadVocab(),c=v[e.idx];
+        if(c){c.stage=Math.min(c.stage+1,STAGE_DONE);c.lastReviewed=Date.now();saveVocab(v)}
+        L.queue.shift();
+        L.completed=(L.completed||0)+1;
+      } else {
+        // Re-insert after gap cards
+        L.queue.shift();
+        const gap=Math.min(ri-e.correct+1,L.queue.length);
+        L.queue.splice(gap,0,e);
+      }
+    } else {
+      // Wrong: reset progress, move to end
+      e.correct=0;e.dirs=[];
+      const v=loadVocab(),c=v[e.idx];
+      if(c){c.stage=0;c.lastReviewed=Date.now();saveVocab(v)}
+      L.queue.shift();
+      L.queue.push(e);
+    }
+    _updateProg();_nextCard();
+  } else {
+    // Deep phase 2
+    const e=L.practiceQueue[0];
+    if(correct){
+      e.correct++;
+      if(e.correct>=ri){
+        const v=loadVocab(),c=v[e.idx];
+        if(c){c.stage=Math.min(c.stage+1,STAGE_DONE);c.lastReviewed=Date.now();saveVocab(v)}
+        L.practiceQueue.shift();
+        L.completed=(L.completed||0)+1;
+      } else {
+        L.practiceQueue.shift();
+        const gap=Math.min(ri-e.correct+1,L.practiceQueue.length);
+        L.practiceQueue.splice(gap,0,e);
+      }
+    } else {
+      L.practiceQueue.shift();
+      L.practiceQueue.push(e);
+    }
+    _updateProg();_nextCard();
+  }
+}
+
+function _showDone(){
+  document.getElementById('card-zone').innerHTML=`<div class="done"><div class="done-ic">🎉</div><h2>${t('mastered')}</h2><p>${L.mode==='deep'?t('doneDeep'):t('doneQuick')}</p><button class="btn btn-p" onclick="exitLearn()">${t('back')}</button></div>`;
+  document.getElementById('prog-fill').style.width='100%';
+  const total=L.origTotal||1;
+  document.getElementById('prog-lbl').textContent=total+'/'+total;
+}
+
+// ════════════════════════════════════════════
+// VOCAB PACKS
+// ════════════════════════════════════════════
+const PACKS=[
+  {id:'zahlen',icon:'🔢',title:'Zahlen & Zeit',type:'Substantive / Adjektive',words:[
+    {de:'die Sekunde',sk:'sekunda'},{de:'die Minute',sk:'minúta'},{de:'die Stunde',sk:'hodina'},
+    {de:'der Tag',sk:'deň'},{de:'die Woche',sk:'týždeň'},{de:'der Monat',sk:'mesiac'},
+    {de:'das Jahr',sk:'rok'},{de:'heute',sk:'dnes'},{de:'gestern',sk:'včera'},{de:'morgen',sk:'zajtra'},
+    {de:'jetzt',sk:'teraz'},{de:'früh',sk:'skoro'},{de:'spät',sk:'neskoro'},
+    {de:'eins',sk:'jedna'},{de:'zwei',sk:'dva'},{de:'drei',sk:'tri'},{de:'vier',sk:'štyri'},
+    {de:'fünf',sk:'päť'},{de:'zehn',sk:'desať'},{de:'zwanzig',sk:'dvadsať'},{de:'hundert',sk:'sto'},
+    {de:'Montag',sk:'pondelok'},{de:'Dienstag',sk:'utorok'},{de:'Mittwoch',sk:'streda'},
+    {de:'Donnerstag',sk:'štvrtok'},{de:'Freitag',sk:'piatok'},{de:'Samstag',sk:'sobota'},{de:'Sonntag',sk:'nedeľa'}
+  ]},
+  {id:'farben',icon:'🎨',title:'Farben & Formen',type:'Adjektive',words:[
+    {de:'rot',sk:'červený'},{de:'blau',sk:'modrý'},{de:'grün',sk:'zelený'},
+    {de:'gelb',sk:'žltý'},{de:'schwarz',sk:'čierny'},{de:'weiß',sk:'biely'},
+    {de:'grau',sk:'sivý'},{de:'braun',sk:'hnedý'},{de:'rosa',sk:'ružový'},
+    {de:'orange',sk:'oranžový'},{de:'lila',sk:'fialový'},{de:'rund',sk:'okrúhly'},
+    {de:'eckig',sk:'hranatý'},{de:'groß',sk:'veľký'},{de:'klein',sk:'malý'},
+    {de:'lang',sk:'dlhý'},{de:'kurz',sk:'krátky'},{de:'breit',sk:'široký'},
+    {de:'schmal',sk:'úzky'},{de:'dick',sk:'hrubý'},{de:'dünn',sk:'tenký'}
+  ]},
+  {id:'familie',icon:'👨‍👩‍👧',title:'Familie & Menschen',type:'Substantive',words:[
+    {de:'die Mutter',sk:'matka'},{de:'der Vater',sk:'otec'},{de:'die Schwester',sk:'sestra'},
+    {de:'der Bruder',sk:'brat'},{de:'die Großmutter',sk:'stará mama'},{de:'der Großvater',sk:'starý otec'},
+    {de:'die Tante',sk:'teta'},{de:'der Onkel',sk:'strýko'},{de:'die Tochter',sk:'dcéra'},
+    {de:'der Sohn',sk:'syn'},{de:'das Kind',sk:'dieťa'},{de:'der Mann',sk:'muž'},
+    {de:'die Frau',sk:'žena'},{de:'der Freund',sk:'priateľ'},{de:'die Freundin',sk:'priateľka'},
+    {de:'der Nachbar',sk:'sused'},{de:'der Kollege',sk:'kolega'},{de:'der Chef',sk:'šéf'},
+    {de:'die Person',sk:'osoba'},{de:'der Mensch',sk:'človek'}
+  ]},
+  {id:'essen',icon:'🍽️',title:'Essen & Trinken',type:'Substantive',words:[
+    {de:'das Brot',sk:'chlieb'},{de:'die Butter',sk:'maslo'},{de:'der Käse',sk:'syr'},
+    {de:'das Fleisch',sk:'mäso'},{de:'der Fisch',sk:'ryba'},{de:'das Ei',sk:'vajce'},
+    {de:'die Milch',sk:'mlieko'},{de:'das Wasser',sk:'voda'},{de:'der Saft',sk:'džús'},
+    {de:'der Kaffee',sk:'káva'},{de:'der Tee',sk:'čaj'},{de:'das Bier',sk:'pivo'},
+    {de:'der Wein',sk:'víno'},{de:'der Apfel',sk:'jablko'},{de:'die Banane',sk:'banán'},
+    {de:'die Tomate',sk:'paradajka'},{de:'die Kartoffel',sk:'zemiak'},
+    {de:'die Suppe',sk:'polievka'},{de:'der Salat',sk:'šalát'},{de:'der Kuchen',sk:'koláč'},
+    {de:'das Salz',sk:'soľ'},{de:'der Zucker',sk:'cukor'},{de:'das Frühstück',sk:'raňajky'},
+    {de:'das Mittagessen',sk:'obed'},{de:'das Abendessen',sk:'večera'}
+  ]},
+  {id:'reisen',icon:'✈️',title:'Reisen & Transport',type:'Substantive',words:[
+    {de:'das Auto',sk:'auto'},{de:'der Bus',sk:'autobus'},{de:'der Zug',sk:'vlak'},
+    {de:'das Flugzeug',sk:'lietadlo'},{de:'das Fahrrad',sk:'bicykel'},{de:'das Schiff',sk:'loď'},
+    {de:'der Bahnhof',sk:'železničná stanica'},{de:'der Flughafen',sk:'letisko'},
+    {de:'das Hotel',sk:'hotel'},{de:'die Straße',sk:'ulica'},{de:'die Karte',sk:'mapa'},
+    {de:'das Ticket',sk:'lístok'},{de:'der Koffer',sk:'kufor'},{de:'der Pass',sk:'pas'},
+    {de:'die Grenze',sk:'hranica'},{de:'das Land',sk:'krajina'},{de:'die Stadt',sk:'mesto'},
+    {de:'das Dorf',sk:'dedina'},{de:'links',sk:'vľavo'},{de:'rechts',sk:'vpravo'},
+    {de:'geradeaus',sk:'rovno'},{de:'die Unterkunft',sk:'ubytovanie'}
+  ]},
+  {id:'koerper',icon:'🫀',title:'Körper & Gesundheit',type:'Substantive',words:[
+    {de:'der Kopf',sk:'hlava'},{de:'das Gesicht',sk:'tvár'},{de:'das Auge',sk:'oko'},
+    {de:'das Ohr',sk:'ucho'},{de:'die Nase',sk:'nos'},{de:'der Mund',sk:'ústa'},
+    {de:'der Zahn',sk:'zub'},{de:'der Hals',sk:'krk'},{de:'die Schulter',sk:'rameno'},
+    {de:'der Arm',sk:'ruka'},{de:'die Hand',sk:'dlaň'},{de:'der Finger',sk:'prst'},
+    {de:'der Rücken',sk:'chrbát'},{de:'der Bauch',sk:'brucho'},{de:'das Bein',sk:'noha'},
+    {de:'das Knie',sk:'koleno'},{de:'der Fuß',sk:'chodidlo'},{de:'das Herz',sk:'srdce'},
+    {de:'der Schmerz',sk:'bolesť'},{de:'krank',sk:'chorý'},{de:'gesund',sk:'zdravý'},
+    {de:'der Arzt',sk:'lekár'},{de:'das Krankenhaus',sk:'nemocnica'}
+  ]},
+  {id:'haus',icon:'🏠',title:'Haus & Wohnen',type:'Substantive',words:[
+    {de:'das Haus',sk:'dom'},{de:'die Wohnung',sk:'byt'},{de:'das Zimmer',sk:'izba'},
+    {de:'die Küche',sk:'kuchyňa'},{de:'das Badezimmer',sk:'kúpeľňa'},
+    {de:'das Schlafzimmer',sk:'spálňa'},{de:'das Wohnzimmer',sk:'obývacia izba'},
+    {de:'der Tisch',sk:'stôl'},{de:'der Stuhl',sk:'stolička'},{de:'das Bett',sk:'posteľ'},
+    {de:'der Schrank',sk:'skriňa'},{de:'das Fenster',sk:'okno'},{de:'die Tür',sk:'dvere'},
+    {de:'der Boden',sk:'podlaha'},{de:'die Wand',sk:'stena'},{de:'das Dach',sk:'strecha'},
+    {de:'der Garten',sk:'záhrada'},{de:'die Treppe',sk:'schody'},{de:'der Keller',sk:'pivnica'},
+    {de:'die Waschmaschine',sk:'práčka'},{de:'der Kühlschrank',sk:'chladnička'},
+    {de:'der Herd',sk:'sporák'},{de:'die Lampe',sk:'lampa'}
+  ]},
+  {id:'tiere',icon:'🐾',title:'Tiere & Natur',type:'Substantive',words:[
+    {de:'der Hund',sk:'pes'},{de:'die Katze',sk:'mačka'},{de:'der Vogel',sk:'vták'},
+    {de:'der Fisch',sk:'ryba'},{de:'das Pferd',sk:'kôň'},{de:'die Kuh',sk:'krava'},
+    {de:'das Schwein',sk:'prasa'},{de:'das Schaf',sk:'ovca'},{de:'die Biene',sk:'včela'},
+    {de:'der Schmetterling',sk:'motýľ'},{de:'der Baum',sk:'strom'},{de:'die Blume',sk:'kvetina'},
+    {de:'das Gras',sk:'tráva'},{de:'der Wald',sk:'les'},{de:'der Berg',sk:'hora'},
+    {de:'der Fluss',sk:'rieka'},{de:'der See',sk:'jazero'},{de:'das Meer',sk:'more'},
+    {de:'die Sonne',sk:'slnko'},{de:'der Mond',sk:'mesiac'},{de:'der Stern',sk:'hviezda'},
+    {de:'die Wolke',sk:'oblak'},{de:'der Regen',sk:'dážď'},{de:'der Schnee',sk:'sneh'}
+  ]}
+];
+
+let _packExp=null,_packSel={};
+function renderPacks(){
+  const vocab=loadVocab();
+  const existing=new Set(vocab.map(v=>norm(v.foreign)));
+  const el=document.getElementById('packs-list');
+  // Show frequent vocab suggestions if any packs fully imported
+  const suggested=getSuggestedVocab();
+  const allPacksDone=PACKS.every(p=>{
+    const existing=new Set(loadVocab().map(v=>norm(v.foreign)));
+    return p.words.filter(w=>!existing.has(norm(w.sk))).length===0;
+  });
+  let suggestHtml='';
+  if(suggested.length>0){
+    const showAll=el.dataset.showAllSugg==='1';
+    const display=showAll?suggested:suggested.slice(0,10);
+    suggestHtml=`<div style="background:var(--sf);border-radius:var(--r);padding:14px;margin-bottom:11px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:22px">💡</span>
+        <div><div style="font-size:15px;font-weight:600">${t('freqSuggestTitle')}</div>
+        <div style="font-size:11px;color:var(--dim)">${suggested.length} ${t('freqSuggestSub')}</div></div>
+      </div>
+      ${display.map((w,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--sf3);font-size:13px">
+        <div style="flex:1">${esc(w.de)} → ${esc(w.sk)}</div>
+        <button class="btn btn-p" style="padding:3px 10px;font-size:11px" onclick="importFreqWord(${i+(showAll?0:0)})">${t('add')}</button>
+      </div>`).join('')}
+      ${suggested.length>10&&!showAll?`<button class="btn btn-s btn-full" style="margin-top:8px;font-size:12px" onclick="document.getElementById('packs-list').dataset.showAllSugg='1';renderPacks()">${t('showAll')} (${suggested.length})</button>`:''}
+      <button class="btn btn-p btn-full" style="margin-top:10px;font-size:13px" onclick="importAllFreq()">${t('importAllSugg')}</button>
+    </div>`;
+  }
+  el.innerHTML=suggestHtml+PACKS.map(pack=>{
+    const have=pack.words.filter(w=>existing.has(norm(w.sk))).length;
+    const pct=Math.round(have/pack.words.length*100);
+    const exp=_packExp===pack.id;
+    return`<div class="pack" id="pk-${pack.id}">
+      <div onclick="togglePack('${pack.id}')" style="cursor:pointer">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:5px">
+          <span style="font-size:26px">${pack.icon}</span>
+          <div style="flex:1"><div class="pack-title">${pack.title}</div><div class="pack-meta">${pack.type} · ${pack.words.length} ${t('packWords')} · ${pct}% ${t('packAvail')}</div></div>
+          <svg style="width:16px;height:16px;fill:none;stroke:var(--dim);stroke-width:2;transition:transform .2s;${exp?'transform:rotate(180deg)':''}" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div style="height:4px;background:var(--sf3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--gold);border-radius:2px"></div></div>
+      </div>
+      ${exp?`<div style="margin-top:12px;border-top:1px solid var(--sf3);padding-top:12px">
+        <div style="display:flex;gap:7px;margin-bottom:10px">
+          <button class="btn btn-p" style="flex:1;font-size:12px" onclick="importPack('${pack.id}',false)">${t('packImportAll')}</button>
+          <button class="btn btn-s" style="flex:1;font-size:12px" onclick="initPackSel('${pack.id}')">${t('packSelect')}</button>
+        </div>
+        <div id="pwl-${pack.id}">${renderPackWords(pack,existing)}</div>
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+function renderPackWords(pack,existing){
+  return pack.words.map((w,wi)=>{
+    const have=existing.has(norm(w.sk));
+    const sel=_packSel[pack.id]&&_packSel[pack.id].mode==='select';
+    if(!sel)return`<div style="display:flex;gap:7px;align-items:center;padding:5px 0;border-bottom:1px solid var(--sf3);font-size:13px"><div style="flex:1">${esc(w.de)} → ${esc(w.sk)}</div>${have?`<span style="font-size:10px;color:var(--muted)">${t('packAvail')}</span>`:''}</div>`;
+    const isSelected=_packSel[pack.id]?.selected?.has(wi);
+    return`<div class="pi${isSelected?' sel':''}" id="pws-${pack.id}-${wi}" onclick="togglePackWord('${pack.id}',${wi})" style="margin-bottom:5px">
+      <div class="picheck">${isSelected?'<svg style="width:11px;height:11px;fill:none;stroke:#0f0e0c;stroke-width:3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>':''}</div>
+      <div style="flex:1;font-size:13px">${esc(w.de)} → ${esc(w.sk)}</div>
+      ${have?`<span style="font-size:10px;color:var(--muted)">${t('packAvail')}</span>`:''}
+    </div>`;
+  }).join('')+(_packSel[pack.id]?.mode==='select'?`<button class="btn btn-p btn-full" style="margin-top:8px" onclick="importPackSel('${pack.id}')">${t('packImportSel')}</button>`:'');
+}
+function togglePack(id){_packExp=_packExp===id?null:id;renderPacks()}
+function importFreqWord(i){
+  const suggested=getSuggestedVocab();
+  const w=suggested[i];if(!w)return;
+  const vocab=loadVocab();
+  vocab.push({native:w.de,foreign:w.sk,stage:0,lastReviewed:0,stats:{correct:0,wrong:0}});
+  saveVocab(vocab);renderPacks();renderHome();showToast('1 '+t('newImported'));
+}
+function importAllFreq(){
+  const suggested=getSuggestedVocab();
+  const vocab=loadVocab();
+  suggested.forEach(w=>vocab.push({native:w.de,foreign:w.sk,stage:0,lastReviewed:0,stats:{correct:0,wrong:0}}));
+  saveVocab(vocab);renderPacks();renderHome();showToast(suggested.length+' '+t('newImported'));
+}
+function initPackSel(id){
+  const vocab=loadVocab(),existing=new Set(vocab.map(v=>norm(v.foreign)));
+  const pack=PACKS.find(p=>p.id===id);
+  const presel=new Set(pack.words.map((_,i)=>i).filter(i=>!existing.has(norm(pack.words[i].sk))));
+  _packSel[id]={mode:'select',selected:presel};
+  renderPacks();
+}
+function togglePackWord(id,wi){
+  if(!_packSel[id])return;
+  if(_packSel[id].selected.has(wi))_packSel[id].selected.delete(wi);else _packSel[id].selected.add(wi);
+  const pack=PACKS.find(p=>p.id===id);
+  const vocab=loadVocab(),existing=new Set(vocab.map(v=>norm(v.foreign)));
+  const el=document.getElementById('pwl-'+id);
+  if(el)el.innerHTML=renderPackWords(pack,existing);
+}
+function importPack(id,selOnly,selSet){
+  const pack=PACKS.find(p=>p.id===id);if(!pack)return;
+  const vocab=loadVocab(),existing=new Set(vocab.map(v=>norm(v.foreign)));
+  const words=selOnly?pack.words.filter((_,i)=>selSet.has(i)):pack.words;
+  let added=0;
+  words.forEach(w=>{if(!existing.has(norm(w.sk))){vocab.push({native:w.de,foreign:w.sk,stage:0,lastReviewed:0,stats:{correct:0,wrong:0}});added++}});
+  saveVocab(vocab);_packSel[id]=null;_packExp=null;renderPacks();renderHome();
+  showToast(added+' '+t('newImported'));
+}
+function importPackSel(id){importPack(id,true,_packSel[id]?.selected||new Set())}
+
+// ════════════════════════════════════════════
+// TUTORIAL
+// ════════════════════════════════════════════
+const TUT_STEPS=['0','1','2','3','4','5'];
+let _tutStep=0;
+function openTutorial(){_tutStep=0;_renderTut();showScreen('tutorial')}
+function closeTutorial(){localStorage.setItem(TUTK,'done');showScreen('home')}
+function tutStep(dir){_tutStep=Math.max(0,Math.min(TUT_STEPS.length-1,_tutStep+dir));_renderTut()}
+function _renderTut(){
+  const s=TUT_STEPS[_tutStep];
+  document.getElementById('tut-content').innerHTML=`
+    <div class="tut-step">
+      <div class="tut-ic">${['👋','➕','📦','⚡','🎯','📈'][_tutStep]}</div>
+      <div class="tut-title">${t('tutTitle'+s)}</div>
+      <div class="tut-txt">${t('tutText'+s)}</div>
+      <div class="tut-dots">${TUT_STEPS.map((_,i)=>`<div class="tut-dot${i===_tutStep?' on':''}"></div>`).join('')}</div>
+    </div>`;
+  document.getElementById('tut-back').disabled=_tutStep===0;
+  const nb=document.getElementById('tut-next');
+  if(_tutStep===TUT_STEPS.length-1){nb.textContent='✓ '+t('close');nb.onclick=closeTutorial}
+  else{nb.textContent=t('next');nb.onclick=()=>tutStep(1)}
+  document.getElementById('tut-back').textContent=t('back');
+}
+
+// ════════════════════════════════════════════
+// DUE BANNER + VOCAB SUGGESTIONS
+// ════════════════════════════════════════════
+// Frequent vocabulary suggestions
+const FREQ_VOCAB=[
+  {de:'bitte',sk:'prosím'},{de:'danke',sk:'ďakujem'},{de:'ja',sk:'áno'},
+  {de:'nein',sk:'nie'},{de:'gut',sk:'dobre'},{de:'schlecht',sk:'zle'},
+  {de:'vielleicht',sk:'možno'},{de:'natürlich',sk:'samozrejme'},
+  {de:'verstehen',sk:'rozumieť'},{de:'sprechen',sk:'hovoriť'},
+  {de:'wiederholen',sk:'opakovať'},{de:'lernen',sk:'učiť sa'},
+  {de:'vergessen',sk:'zabudnúť'},{de:'erinnern',sk:'pamätať si'},
+  {de:'öffnen',sk:'otvoriť'},{de:'schließen',sk:'zatvoriť'},
+  {de:'kaufen',sk:'kúpiť'},{de:'bezahlen',sk:'zaplatiť'},
+  {de:'helfen',sk:'pomôcť'},{de:'brauchen',sk:'potrebovať'},
+  {de:'wollen',sk:'chcieť'},{de:'können',sk:'môcť'},
+  {de:'müssen',sk:'musieť'},{de:'dürfen',sk:'smieť'},
+  {de:'die Nummer',sk:'číslo'},{de:'die Uhrzeit',sk:'čas'},
+  {de:'der Preis',sk:'cena'},{de:'die Rechnung',sk:'účet'},
+  {de:'das Telefon',sk:'telefón'},{de:'die Adresse',sk:'adresa'},
+  {de:'links',sk:'vľavo'},{de:'rechts',sk:'vpravo'},
+  {de:'oben',sk:'hore'},{de:'unten',sk:'dolu'},
+  {de:'weit',sk:'ďaleko'},{de:'nah',sk:'blízko'},
+  {de:'teuer',sk:'drahý'},{de:'billig',sk:'lacný'},
+  {de:'groß',sk:'veľký'},{de:'klein',sk:'malý'},
+  {de:'schnell',sk:'rýchly'},{de:'langsam',sk:'pomalý'},
+  {de:'laut',sk:'hlasný'},{de:'leise',sk:'tichý'},
+  {de:'heiß',sk:'horúci'},{de:'kalt',sk:'studený'},
+  {de:'sauber',sk:'čistý'},{de:'schmutzig',sk:'špinavý'},
+  {de:'müde',sk:'unavený'},{de:'wach',sk:'hore'},
+  {de:'hungrig',sk:'hladný'},{de:'durstig',sk:'smädný'},
+  {de:'glücklich',sk:'šťastný'},{de:'traurig',sk:'smutný'},
+  {de:'krank',sk:'chorý'},{de:'gesund',sk:'zdravý'},
+  {de:'allein',sk:'sám'},{de:'zusammen',sk:'spolu'},
+  {de:'immer',sk:'vždy'},{de:'nie',sk:'nikdy'},
+  {de:'oft',sk:'často'},{de:'manchmal',sk:'niekedy'},
+  {de:'heute Morgen',sk:'dnes ráno'},{de:'heute Abend',sk:'dnes večer'},
+  {de:'übermorgen',sk:'pozajtra'},{de:'vorgestern',sk:'predvčerom'},
+];
+
+function getSuggestedVocab(){
+  const vocab=loadVocab();
+  const existing=new Set(vocab.map(v=>norm(v.foreign)));
+  // Return words not yet in vocab
+  return FREQ_VOCAB.filter(w=>!existing.has(norm(w.sk)));
+}
+
+// ════════════════════════════════════════════
+// IMPORT / EXPORT
+// ════════════════════════════════════════════
+let _importData=[];
+function openIE(){
+  document.getElementById('ie-preview').style.display='none';_importData=[];
+  const p=getActivePair();
+  document.getElementById('ie-summary').textContent='';
+  // Update current pair label
+  const lbl=document.querySelector('#m-ie p');
+  if(lbl)lbl.textContent=t('currentPair')+': '+p.native+' → '+p.foreign;
+  openModal('m-ie');
+}
+function exportJSON(){const v=loadVocab();dlBlob(new Blob([JSON.stringify(v,null,2)],{type:'application/json'}),'slovnik.json');showToast(t('jsonExported'))}
+function exportCSV(){
+  const v=loadVocab(),p=getActivePair();
+  const rows=[[p.native,p.foreign,'Stage','Correct','Wrong'],...v.map(c=>[c.native,c.foreign,c.stage,c.stats?.correct||0,c.stats?.wrong||0])];
+  dlBlob(new Blob(['\uFEFF'+rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n')],{type:'text/csv'}),'slovnik.csv');
+  showToast(t('csvExported'));
+}
+function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importFile(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      if(f.name.endsWith('.json')){
+        const d=JSON.parse(ev.target.result);if(!Array.isArray(d))throw 0;
+        _importData=d.map(c=>({native:c.native||c.de||'',foreign:c.foreign||c.sk||'',stage:c.stage||0,lastReviewed:c.lastReviewed||0,stats:c.stats||{correct:0,wrong:0}})).filter(c=>c.native&&c.foreign);
+      } else {
+        const lines=ev.target.result.replace(/\r/g,'').split('\n').filter(l=>l.trim());
+        _importData=lines.slice(1).map(l=>{const cols=l.split(',').map(v=>v.replace(/^"|"$/g,'').trim());return{native:cols[0]||'',foreign:cols[1]||'',stage:parseInt(cols[2])||0,lastReviewed:0,stats:{correct:parseInt(cols[3])||0,wrong:parseInt(cols[4])||0}}}).filter(c=>c.native&&c.foreign);
+      }
+      const ex=loadVocab(),nw=_importData.filter(c=>!ex.some(e=>similar(e.native,c.native)&&similar(e.foreign,c.foreign)));
+      document.getElementById('ie-summary').textContent=_importData.length+' Einträge, '+nw.length+' '+t('newImported');
+      document.getElementById('ie-prev-list').innerHTML=_importData.slice(0,8).map(c=>`<div style="font-size:11px;padding:4px 0;border-bottom:1px solid var(--sf3)">${esc(c.native)} → ${esc(c.foreign)}</div>`).join('')+(_importData.length>8?`<div style="font-size:10px;color:var(--muted)">+${_importData.length-8}...</div>`:'');
+      document.getElementById('ie-preview').style.display='block';
+    }catch(err){showToast('Fehler: '+err)}
+  };
+  r.readAsText(f,'utf-8');e.target.value='';
+}
+function importMerge(){const v=loadVocab();let n=0;_importData.forEach(c=>{if(!v.some(e=>similar(e.native,c.native)&&similar(e.foreign,c.foreign))){v.push(c);n++}});saveVocab(v);closeModal('m-ie');renderHome();showToast(n+' '+t('newImported'))}
+function importReplace(){if(!confirm(t('confirmReplace')))return;saveVocab(_importData);closeModal('m-ie');renderHome();showToast(_importData.length+' '+t('imported'))}
+
+// ════════════════════════════════════════════
+// MODAL / TOAST
+// ════════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+
+// ════════════════════════════════════════════
+// SERVICE WORKER + PUSH NOTIFICATIONS
+// ════════════════════════════════════════════
+if('serviceWorker' in navigator){
+  window.addEventListener('load',async()=>{
+    try{
+      const reg=await navigator.serviceWorker.register('./sw.js',{scope:'./'});
+      window._swReg=reg;
+      navigator.serviceWorker.addEventListener('message',e=>{
+        if(e.data?.type==='GET_DUE_COUNT'){
+          const due=loadVocab().filter(isDue).length;
+          e.source?.postMessage({type:'DUE_COUNT',count:due});
+        }
+      });
+      if('periodicSync' in reg){
+        try{await reg.periodicSync.register('daily-reminder',{minInterval:86400000})}catch(e){}
+      }
+    }catch(e){console.log('SW failed:',e)}
+  });
+}
+
+async function requestNotifPermission(){
+  if(!('Notification' in window)){showToast(t('notifNotSupported'));return}
+  const perm=await Notification.requestPermission();
+  updateNotifUI(perm);
+  if(perm==='granted'){
+    saveSetting('notifEnabled',true);
+    showToast(t('notifEnabled'));
+    sendTestNotif();
+  } else {
+    showToast(t('notifDenied'));
+  }
+}
+function disableNotif(){
+  saveSetting('notifEnabled',false);
+  showToast(t('notifDisabled'));
+  updateNotifUI('default');
+}
+function updateNotifUI(perm){
+  const btn=document.getElementById('notif-btn');
+  const st=document.getElementById('notif-status');
+  if(!btn||!st)return;
+  if(perm==='granted'){
+    btn.innerHTML='<span data-i18n="notifDisable">Deaktivieren</span>';
+    btn.onclick=disableNotif;
+    btn.style.cssText='font-size:13px;background:rgba(90,158,111,.2);color:var(--green)';
+    st.textContent='✓ '+t('notifActive');st.style.color='var(--green)';
+  } else if(perm==='denied'){
+    btn.innerHTML='<span data-i18n="notifBlocked">Blockiert</span>';
+    btn.disabled=true;
+    st.textContent=t('notifBlockedDesc');
+  } else {
+    btn.innerHTML='<span data-i18n="notifEnable">Aktivieren</span>';
+    btn.onclick=requestNotifPermission;
+    btn.style.cssText='font-size:13px';
+    btn.disabled=false;
+    st.textContent='';
+  }
+}
+function sendTestNotif(){
+  if(Notification.permission!=='granted')return;
+  const due=loadVocab().filter(isDue).length;
+  const body=due>0?due+' '+t('dueBannerText2'):t('noDueToday');
+  if(window._swReg){
+    window._swReg.showNotification('Slovník ✦',{body,icon:'./icon-192.png',tag:'slovnik-test'});
+  } else {
+    new Notification('Slovník ✦',{body,icon:'./icon-192.png',tag:'slovnik-test'});
+  }
+}
+function checkDailyNotif(){
+  if(Notification.permission!=='granted')return;
+  if(!loadSettings().notifEnabled)return;
+  const today=new Date().toISOString().slice(0,10);
+  if(localStorage.getItem('sv6_ns')===today)return;
+  localStorage.setItem('sv6_ns',today);
+  const due=loadVocab().filter(isDue).length;
+  if(!due)return;
+  setTimeout(()=>{
+    const body=due+' '+t('dueBannerText2');
+    if(window._swReg){
+      window._swReg.showNotification('Slovník ✦',{body,icon:'./icon-192.png',tag:'slovnik-daily',renotify:true});
+    } else {
+      new Notification('Slovník ✦',{body,icon:'./icon-192.png'});
+    }
+  },2000);
+}
+function initNotif(){
+  if(!('Notification' in window))return;
+  updateNotifUI(Notification.permission);
+  checkDailyNotif();
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+ensureDefaultLangs();
+updateAddLabels();
+applySettings();
+applyI18N();
+renderHome();
+if(!localStorage.getItem(TUTK))setTimeout(openTutorial,500);
+setTimeout(initNotif,800);
+</script>
+</body>
+</html>

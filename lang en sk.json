@@ -1,0 +1,604 @@
+{
+  "packs": [
+    {
+      "id": "numbers",
+      "icon": "🔢",
+      "name": "Numbers & Time",
+      "words": [
+        {
+          "n": "one",
+          "f": "jeden"
+        },
+        {
+          "n": "two",
+          "f": "dva"
+        },
+        {
+          "n": "three",
+          "f": "tri"
+        },
+        {
+          "n": "four",
+          "f": "štyri"
+        },
+        {
+          "n": "five",
+          "f": "päť"
+        },
+        {
+          "n": "six",
+          "f": "šesť"
+        },
+        {
+          "n": "seven",
+          "f": "sedem"
+        },
+        {
+          "n": "eight",
+          "f": "osem"
+        },
+        {
+          "n": "nine",
+          "f": "deväť"
+        },
+        {
+          "n": "ten",
+          "f": "desať"
+        },
+        {
+          "n": "Monday",
+          "f": "pondelok"
+        },
+        {
+          "n": "Tuesday",
+          "f": "utorok"
+        },
+        {
+          "n": "Wednesday",
+          "f": "streda"
+        },
+        {
+          "n": "Thursday",
+          "f": "štvrtok"
+        },
+        {
+          "n": "Friday",
+          "f": "piatok"
+        },
+        {
+          "n": "Saturday",
+          "f": "sobota"
+        },
+        {
+          "n": "Sunday",
+          "f": "nedeľa"
+        },
+        {
+          "n": "today",
+          "f": "dnes"
+        },
+        {
+          "n": "yesterday",
+          "f": "včera"
+        },
+        {
+          "n": "tomorrow",
+          "f": "zajtra"
+        },
+        {
+          "n": "hour",
+          "f": "hodina"
+        },
+        {
+          "n": "minute",
+          "f": "minúta"
+        },
+        {
+          "n": "day",
+          "f": "deň"
+        },
+        {
+          "n": "week",
+          "f": "týždeň"
+        },
+        {
+          "n": "month",
+          "f": "mesiac"
+        },
+        {
+          "n": "year",
+          "f": "rok"
+        },
+        {
+          "n": "spring",
+          "f": "jar"
+        },
+        {
+          "n": "summer",
+          "f": "leto"
+        },
+        {
+          "n": "autumn",
+          "f": "jeseň"
+        },
+        {
+          "n": "winter",
+          "f": "zima"
+        }
+      ]
+    },
+    {
+      "id": "family",
+      "icon": "👨‍👩‍👧",
+      "name": "Family",
+      "words": [
+        {
+          "n": "mother",
+          "f": "mama"
+        },
+        {
+          "n": "father",
+          "f": "otec"
+        },
+        {
+          "n": "child",
+          "f": "dieťa"
+        },
+        {
+          "n": "son",
+          "f": "syn"
+        },
+        {
+          "n": "daughter",
+          "f": "dcéra"
+        },
+        {
+          "n": "brother",
+          "f": "brat"
+        },
+        {
+          "n": "sister",
+          "f": "sestra"
+        },
+        {
+          "n": "grandmother",
+          "f": "babička"
+        },
+        {
+          "n": "grandfather",
+          "f": "dedko"
+        },
+        {
+          "n": "uncle",
+          "f": "strýko"
+        },
+        {
+          "n": "aunt",
+          "f": "teta"
+        },
+        {
+          "n": "family",
+          "f": "rodina"
+        },
+        {
+          "n": "husband",
+          "f": "manžel"
+        },
+        {
+          "n": "wife",
+          "f": "manželka"
+        },
+        {
+          "n": "baby",
+          "f": "bábätko"
+        }
+      ]
+    },
+    {
+      "id": "food",
+      "icon": "🍽️",
+      "name": "Food & Drink",
+      "words": [
+        {
+          "n": "bread",
+          "f": "chlieb"
+        },
+        {
+          "n": "butter",
+          "f": "maslo"
+        },
+        {
+          "n": "cheese",
+          "f": "syr"
+        },
+        {
+          "n": "milk",
+          "f": "mlieko"
+        },
+        {
+          "n": "egg",
+          "f": "vajce"
+        },
+        {
+          "n": "meat",
+          "f": "mäso"
+        },
+        {
+          "n": "fish",
+          "f": "ryba"
+        },
+        {
+          "n": "apple",
+          "f": "jablko"
+        },
+        {
+          "n": "banana",
+          "f": "banán"
+        },
+        {
+          "n": "potato",
+          "f": "zemiaky"
+        },
+        {
+          "n": "tomato",
+          "f": "paradajka"
+        },
+        {
+          "n": "water",
+          "f": "voda"
+        },
+        {
+          "n": "coffee",
+          "f": "káva"
+        },
+        {
+          "n": "tea",
+          "f": "čaj"
+        },
+        {
+          "n": "beer",
+          "f": "pivo"
+        },
+        {
+          "n": "wine",
+          "f": "víno"
+        },
+        {
+          "n": "breakfast",
+          "f": "raňajky"
+        },
+        {
+          "n": "lunch",
+          "f": "obed"
+        },
+        {
+          "n": "dinner",
+          "f": "večera"
+        },
+        {
+          "n": "delicious",
+          "f": "chutný"
+        }
+      ]
+    },
+    {
+      "id": "travel",
+      "icon": "✈️",
+      "name": "Travel",
+      "words": [
+        {
+          "n": "airplane",
+          "f": "lietadlo"
+        },
+        {
+          "n": "train",
+          "f": "vlak"
+        },
+        {
+          "n": "bus",
+          "f": "autobus"
+        },
+        {
+          "n": "car",
+          "f": "auto"
+        },
+        {
+          "n": "hotel",
+          "f": "hotel"
+        },
+        {
+          "n": "room",
+          "f": "izba"
+        },
+        {
+          "n": "luggage",
+          "f": "batožina"
+        },
+        {
+          "n": "passport",
+          "f": "pas"
+        },
+        {
+          "n": "ticket",
+          "f": "lístok"
+        },
+        {
+          "n": "departure",
+          "f": "odchod"
+        },
+        {
+          "n": "arrival",
+          "f": "príchod"
+        },
+        {
+          "n": "left",
+          "f": "doľava"
+        },
+        {
+          "n": "right",
+          "f": "doprava"
+        },
+        {
+          "n": "straight",
+          "f": "rovno"
+        },
+        {
+          "n": "city",
+          "f": "mesto"
+        },
+        {
+          "n": "country",
+          "f": "krajina"
+        },
+        {
+          "n": "journey",
+          "f": "cesta"
+        }
+      ]
+    },
+    {
+      "id": "body",
+      "icon": "💪",
+      "name": "Body & Health",
+      "words": [
+        {
+          "n": "head",
+          "f": "hlava"
+        },
+        {
+          "n": "eye",
+          "f": "oko"
+        },
+        {
+          "n": "ear",
+          "f": "ucho"
+        },
+        {
+          "n": "nose",
+          "f": "nos"
+        },
+        {
+          "n": "mouth",
+          "f": "ústa"
+        },
+        {
+          "n": "hand",
+          "f": "ruka"
+        },
+        {
+          "n": "arm",
+          "f": "paža"
+        },
+        {
+          "n": "leg",
+          "f": "noha"
+        },
+        {
+          "n": "foot",
+          "f": "noha"
+        },
+        {
+          "n": "heart",
+          "f": "srdce"
+        },
+        {
+          "n": "blood",
+          "f": "krv"
+        },
+        {
+          "n": "doctor",
+          "f": "lekár"
+        },
+        {
+          "n": "hospital",
+          "f": "nemocnica"
+        },
+        {
+          "n": "medicine",
+          "f": "liek"
+        },
+        {
+          "n": "healthy",
+          "f": "zdravý"
+        },
+        {
+          "n": "sick",
+          "f": "chorý"
+        }
+      ]
+    },
+    {
+      "id": "home",
+      "icon": "🏠",
+      "name": "Home",
+      "words": [
+        {
+          "n": "house",
+          "f": "dom"
+        },
+        {
+          "n": "apartment",
+          "f": "byt"
+        },
+        {
+          "n": "room",
+          "f": "izba"
+        },
+        {
+          "n": "kitchen",
+          "f": "kuchyňa"
+        },
+        {
+          "n": "bathroom",
+          "f": "kúpeľňa"
+        },
+        {
+          "n": "bedroom",
+          "f": "spálňa"
+        },
+        {
+          "n": "table",
+          "f": "stôl"
+        },
+        {
+          "n": "chair",
+          "f": "stolička"
+        },
+        {
+          "n": "bed",
+          "f": "posteľ"
+        },
+        {
+          "n": "window",
+          "f": "okno"
+        },
+        {
+          "n": "door",
+          "f": "dvere"
+        },
+        {
+          "n": "garden",
+          "f": "záhrada"
+        }
+      ]
+    },
+    {
+      "id": "animals",
+      "icon": "🐾",
+      "name": "Animals",
+      "words": [
+        {
+          "n": "dog",
+          "f": "pes"
+        },
+        {
+          "n": "cat",
+          "f": "mačka"
+        },
+        {
+          "n": "horse",
+          "f": "kôň"
+        },
+        {
+          "n": "cow",
+          "f": "krava"
+        },
+        {
+          "n": "bird",
+          "f": "vták"
+        },
+        {
+          "n": "fish",
+          "f": "ryba"
+        },
+        {
+          "n": "lion",
+          "f": "lev"
+        },
+        {
+          "n": "elephant",
+          "f": "slon"
+        },
+        {
+          "n": "bear",
+          "f": "medveď"
+        },
+        {
+          "n": "wolf",
+          "f": "vlk"
+        },
+        {
+          "n": "rabbit",
+          "f": "zajac"
+        },
+        {
+          "n": "mouse",
+          "f": "myš"
+        }
+      ]
+    },
+    {
+      "id": "communication",
+      "icon": "💬",
+      "name": "Communication",
+      "words": [
+        {
+          "n": "Hello",
+          "f": "Ahoj"
+        },
+        {
+          "n": "Goodbye",
+          "f": "Dovidenia"
+        },
+        {
+          "n": "Thank you",
+          "f": "Ďakujem"
+        },
+        {
+          "n": "Please",
+          "f": "Prosím"
+        },
+        {
+          "n": "Yes",
+          "f": "Áno"
+        },
+        {
+          "n": "No",
+          "f": "Nie"
+        },
+        {
+          "n": "Excuse me",
+          "f": "Prepáčte"
+        },
+        {
+          "n": "Good morning",
+          "f": "Dobré ráno"
+        },
+        {
+          "n": "Good evening",
+          "f": "Dobrý večer"
+        },
+        {
+          "n": "How are you?",
+          "f": "Ako sa máš?"
+        },
+        {
+          "n": "I am fine",
+          "f": "Mám sa dobre"
+        },
+        {
+          "n": "I don't understand",
+          "f": "Nerozumiem"
+        },
+        {
+          "n": "to speak",
+          "f": "hovoriť"
+        },
+        {
+          "n": "to understand",
+          "f": "rozumieť"
+        }
+      ]
+    }
+  ]
+}

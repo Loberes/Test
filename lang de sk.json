@@ -1,0 +1,6159 @@
+{
+  "packs": [
+    {
+      "id": "zahlen",
+      "icon": "🔢",
+      "name": "Zahlen & Zeit",
+      "words": [
+        {
+          "n": "null",
+          "f": "nula"
+        },
+        {
+          "n": "eins",
+          "f": "jeden"
+        },
+        {
+          "n": "zwei",
+          "f": "dva"
+        },
+        {
+          "n": "drei",
+          "f": "tri"
+        },
+        {
+          "n": "vier",
+          "f": "štyri"
+        },
+        {
+          "n": "fünf",
+          "f": "päť"
+        },
+        {
+          "n": "sechs",
+          "f": "šesť"
+        },
+        {
+          "n": "sieben",
+          "f": "sedem"
+        },
+        {
+          "n": "acht",
+          "f": "osem"
+        },
+        {
+          "n": "neun",
+          "f": "deväť"
+        },
+        {
+          "n": "zehn",
+          "f": "desať"
+        },
+        {
+          "n": "elf",
+          "f": "jedenásť"
+        },
+        {
+          "n": "zwölf",
+          "f": "dvanásť"
+        },
+        {
+          "n": "dreizehn",
+          "f": "trinásť"
+        },
+        {
+          "n": "vierzehn",
+          "f": "štrnásť"
+        },
+        {
+          "n": "fünfzehn",
+          "f": "pätnásť"
+        },
+        {
+          "n": "sechzehn",
+          "f": "šestnásť"
+        },
+        {
+          "n": "siebzehn",
+          "f": "sedemnásť"
+        },
+        {
+          "n": "achtzehn",
+          "f": "osemnásť"
+        },
+        {
+          "n": "neunzehn",
+          "f": "devätnásť"
+        },
+        {
+          "n": "zwanzig",
+          "f": "dvadsať"
+        },
+        {
+          "n": "dreißig",
+          "f": "tridsať"
+        },
+        {
+          "n": "vierzig",
+          "f": "štyridsať"
+        },
+        {
+          "n": "fünfzig",
+          "f": "päťdesiat"
+        },
+        {
+          "n": "sechzig",
+          "f": "šesťdesiat"
+        },
+        {
+          "n": "siebzig",
+          "f": "sedemdesiat"
+        },
+        {
+          "n": "achtzig",
+          "f": "osemdesiat"
+        },
+        {
+          "n": "neunzig",
+          "f": "deväťdesiat"
+        },
+        {
+          "n": "hundert",
+          "f": "sto"
+        },
+        {
+          "n": "tausend",
+          "f": "tisíc"
+        },
+        {
+          "n": "Million",
+          "f": "milión"
+        },
+        {
+          "n": "Milliarde",
+          "f": "miliarda"
+        },
+        {
+          "n": "Montag",
+          "f": "pondelok",
+          "a": "der"
+        },
+        {
+          "n": "Dienstag",
+          "f": "utorok",
+          "a": "der"
+        },
+        {
+          "n": "Mittwoch",
+          "f": "streda",
+          "a": "die"
+        },
+        {
+          "n": "Donnerstag",
+          "f": "štvrtok",
+          "a": "der"
+        },
+        {
+          "n": "Freitag",
+          "f": "piatok",
+          "a": "der"
+        },
+        {
+          "n": "Samstag",
+          "f": "sobota",
+          "a": "die"
+        },
+        {
+          "n": "Sonntag",
+          "f": "nedeľa",
+          "a": "die"
+        },
+        {
+          "n": "Januar",
+          "f": "január",
+          "a": "der"
+        },
+        {
+          "n": "Februar",
+          "f": "február",
+          "a": "der"
+        },
+        {
+          "n": "März",
+          "f": "marec",
+          "a": "der"
+        },
+        {
+          "n": "April",
+          "f": "apríl",
+          "a": "der"
+        },
+        {
+          "n": "Mai",
+          "f": "máj",
+          "a": "der"
+        },
+        {
+          "n": "Juni",
+          "f": "jún",
+          "a": "der"
+        },
+        {
+          "n": "Juli",
+          "f": "júl",
+          "a": "der"
+        },
+        {
+          "n": "August",
+          "f": "august",
+          "a": "der"
+        },
+        {
+          "n": "September",
+          "f": "september",
+          "a": "der"
+        },
+        {
+          "n": "Oktober",
+          "f": "október",
+          "a": "der"
+        },
+        {
+          "n": "November",
+          "f": "november",
+          "a": "der"
+        },
+        {
+          "n": "Dezember",
+          "f": "december",
+          "a": "der"
+        },
+        {
+          "n": "Uhr",
+          "f": "hodiny",
+          "a": "die"
+        },
+        {
+          "n": "Stunde",
+          "f": "hodina",
+          "a": "die"
+        },
+        {
+          "n": "Minute",
+          "f": "minúta",
+          "a": "die"
+        },
+        {
+          "n": "Sekunde",
+          "f": "sekunda",
+          "a": "die"
+        },
+        {
+          "n": "Tag",
+          "f": "deň",
+          "a": "der"
+        },
+        {
+          "n": "Woche",
+          "f": "týždeň",
+          "a": "die"
+        },
+        {
+          "n": "Monat",
+          "f": "mesiac",
+          "a": "der"
+        },
+        {
+          "n": "Jahr",
+          "f": "rok",
+          "a": "das"
+        },
+        {
+          "n": "Jahrhundert",
+          "f": "storočie",
+          "a": "das"
+        },
+        {
+          "n": "Jahrtausend",
+          "f": "tisícročie",
+          "a": "das"
+        },
+        {
+          "n": "Morgen",
+          "f": "ráno",
+          "a": "der"
+        },
+        {
+          "n": "Mittag",
+          "f": "poludnie",
+          "a": "der"
+        },
+        {
+          "n": "Abend",
+          "f": "večer",
+          "a": "der"
+        },
+        {
+          "n": "Nacht",
+          "f": "noc",
+          "a": "die"
+        },
+        {
+          "n": "Mitternacht",
+          "f": "polnoc",
+          "a": "die"
+        },
+        {
+          "n": "Nachmittag",
+          "f": "popoludnie",
+          "a": "der"
+        },
+        {
+          "n": "Vormittag",
+          "f": "predpoludnie",
+          "a": "der"
+        },
+        {
+          "n": "gestern",
+          "f": "včera"
+        },
+        {
+          "n": "heute",
+          "f": "dnes"
+        },
+        {
+          "n": "morgen",
+          "f": "zajtra"
+        },
+        {
+          "n": "übermorgen",
+          "f": "pozajtra"
+        },
+        {
+          "n": "vorgestern",
+          "f": "predvčerom"
+        },
+        {
+          "n": "früh",
+          "f": "skoro"
+        },
+        {
+          "n": "spät",
+          "f": "neskoro"
+        },
+        {
+          "n": "jetzt",
+          "f": "teraz"
+        },
+        {
+          "n": "bald",
+          "f": "čoskoro"
+        },
+        {
+          "n": "manchmal",
+          "f": "niekedy"
+        },
+        {
+          "n": "immer",
+          "f": "vždy"
+        },
+        {
+          "n": "nie",
+          "f": "nikdy"
+        },
+        {
+          "n": "oft",
+          "f": "často"
+        },
+        {
+          "n": "selten",
+          "f": "zriedka"
+        },
+        {
+          "n": "täglich",
+          "f": "denne"
+        },
+        {
+          "n": "wöchentlich",
+          "f": "týždenne"
+        },
+        {
+          "n": "monatlich",
+          "f": "mesačne"
+        },
+        {
+          "n": "jährlich",
+          "f": "ročne"
+        },
+        {
+          "n": "Anfang",
+          "f": "začiatok",
+          "a": "der"
+        },
+        {
+          "n": "Ende",
+          "f": "koniec",
+          "a": "das"
+        },
+        {
+          "n": "Mitte",
+          "f": "stred",
+          "a": "die"
+        },
+        {
+          "n": "Frühling",
+          "f": "jar",
+          "a": "der"
+        },
+        {
+          "n": "Sommer",
+          "f": "leto",
+          "a": "der"
+        },
+        {
+          "n": "Herbst",
+          "f": "jeseň",
+          "a": "der"
+        },
+        {
+          "n": "Winter",
+          "f": "zima",
+          "a": "der"
+        },
+        {
+          "n": "Jahreszeit",
+          "f": "ročné obdobie",
+          "a": "die"
+        },
+        {
+          "n": "Kalender",
+          "f": "kalendár",
+          "a": "der"
+        },
+        {
+          "n": "Datum",
+          "f": "dátum",
+          "a": "das"
+        },
+        {
+          "n": "Wochenende",
+          "f": "víkend",
+          "a": "das"
+        },
+        {
+          "n": "Werktag",
+          "f": "pracovný deň",
+          "a": "der"
+        },
+        {
+          "n": "Feiertag",
+          "f": "sviatok",
+          "a": "der"
+        },
+        {
+          "n": "Urlaub",
+          "f": "dovolenka",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "farben",
+      "icon": "🎨",
+      "name": "Farben & Formen",
+      "words": [
+        {
+          "n": "rot",
+          "f": "červený"
+        },
+        {
+          "n": "blau",
+          "f": "modrý"
+        },
+        {
+          "n": "grün",
+          "f": "zelený"
+        },
+        {
+          "n": "gelb",
+          "f": "žltý"
+        },
+        {
+          "n": "weiß",
+          "f": "biely"
+        },
+        {
+          "n": "schwarz",
+          "f": "čierny"
+        },
+        {
+          "n": "grau",
+          "f": "sivý"
+        },
+        {
+          "n": "braun",
+          "f": "hnedý"
+        },
+        {
+          "n": "orange",
+          "f": "oranžový"
+        },
+        {
+          "n": "lila",
+          "f": "fialový"
+        },
+        {
+          "n": "rosa",
+          "f": "ružový"
+        },
+        {
+          "n": "pink",
+          "f": "ružový"
+        },
+        {
+          "n": "türkis",
+          "f": "tyrkysový"
+        },
+        {
+          "n": "gold",
+          "f": "zlatý"
+        },
+        {
+          "n": "silber",
+          "f": "strieborný"
+        },
+        {
+          "n": "beige",
+          "f": "béžový"
+        },
+        {
+          "n": "dunkelblau",
+          "f": "tmavomodrý"
+        },
+        {
+          "n": "hellblau",
+          "f": "svetlomodrý"
+        },
+        {
+          "n": "dunkelgrün",
+          "f": "tmavozelený"
+        },
+        {
+          "n": "hellgrün",
+          "f": "svetlozelený"
+        },
+        {
+          "n": "dunkelrot",
+          "f": "tmavočervený"
+        },
+        {
+          "n": "hellrot",
+          "f": "svetločervený"
+        },
+        {
+          "n": "bunt",
+          "f": "farebný"
+        },
+        {
+          "n": "einfarbig",
+          "f": "jednofarebný"
+        },
+        {
+          "n": "Farbe",
+          "f": "farba",
+          "a": "die"
+        },
+        {
+          "n": "Farbton",
+          "f": "odtieň",
+          "a": "der"
+        },
+        {
+          "n": "Kreis",
+          "f": "kruh",
+          "a": "der"
+        },
+        {
+          "n": "Quadrat",
+          "f": "štvorec",
+          "a": "das"
+        },
+        {
+          "n": "Dreieck",
+          "f": "trojuholník",
+          "a": "das"
+        },
+        {
+          "n": "Rechteck",
+          "f": "obdĺžnik",
+          "a": "das"
+        },
+        {
+          "n": "Oval",
+          "f": "ovál",
+          "a": "das"
+        },
+        {
+          "n": "Linie",
+          "f": "čiara",
+          "a": "die"
+        },
+        {
+          "n": "Punkt",
+          "f": "bod",
+          "a": "der"
+        },
+        {
+          "n": "Stern",
+          "f": "hviezda",
+          "a": "der"
+        },
+        {
+          "n": "Herz",
+          "f": "srdce",
+          "a": "das"
+        },
+        {
+          "n": "Pfeil",
+          "f": "šípka",
+          "a": "der"
+        },
+        {
+          "n": "Würfel",
+          "f": "kocka",
+          "a": "der"
+        },
+        {
+          "n": "Kugel",
+          "f": "guľa",
+          "a": "die"
+        },
+        {
+          "n": "Zylinder",
+          "f": "valec",
+          "a": "der"
+        },
+        {
+          "n": "Kegel",
+          "f": "kužeľ",
+          "a": "der"
+        },
+        {
+          "n": "groß",
+          "f": "veľký"
+        },
+        {
+          "n": "klein",
+          "f": "malý"
+        },
+        {
+          "n": "rund",
+          "f": "okrúhly"
+        },
+        {
+          "n": "eckig",
+          "f": "hranatý"
+        },
+        {
+          "n": "flach",
+          "f": "plochý"
+        },
+        {
+          "n": "spitz",
+          "f": "špicatý"
+        },
+        {
+          "n": "gerade",
+          "f": "rovný"
+        },
+        {
+          "n": "schief",
+          "f": "krivý"
+        },
+        {
+          "n": "breit",
+          "f": "široký"
+        },
+        {
+          "n": "schmal",
+          "f": "úzky"
+        },
+        {
+          "n": "lang",
+          "f": "dlhý"
+        },
+        {
+          "n": "kurz",
+          "f": "krátky"
+        },
+        {
+          "n": "hoch",
+          "f": "vysoký"
+        },
+        {
+          "n": "tief",
+          "f": "hlboký"
+        },
+        {
+          "n": "dick",
+          "f": "hrubý"
+        },
+        {
+          "n": "dünn",
+          "f": "tenký"
+        },
+        {
+          "n": "voll",
+          "f": "plný"
+        },
+        {
+          "n": "leer",
+          "f": "prázdny"
+        }
+      ]
+    },
+    {
+      "id": "familie",
+      "icon": "👨‍👩‍👧",
+      "name": "Familie",
+      "words": [
+        {
+          "n": "Mutter",
+          "f": "mama",
+          "a": "die"
+        },
+        {
+          "n": "Vater",
+          "f": "otec",
+          "a": "der"
+        },
+        {
+          "n": "Kind",
+          "f": "dieťa",
+          "a": "das"
+        },
+        {
+          "n": "Sohn",
+          "f": "syn",
+          "a": "der"
+        },
+        {
+          "n": "Tochter",
+          "f": "dcéra",
+          "a": "die"
+        },
+        {
+          "n": "Bruder",
+          "f": "brat",
+          "a": "der"
+        },
+        {
+          "n": "Schwester",
+          "f": "sestra",
+          "a": "die"
+        },
+        {
+          "n": "Eltern",
+          "f": "rodičia"
+        },
+        {
+          "n": "Großmutter",
+          "f": "babička",
+          "a": "die"
+        },
+        {
+          "n": "Großvater",
+          "f": "dedko",
+          "a": "der"
+        },
+        {
+          "n": "Großeltern",
+          "f": "starí rodičia"
+        },
+        {
+          "n": "Enkel",
+          "f": "vnuk",
+          "a": "der"
+        },
+        {
+          "n": "Enkelin",
+          "f": "vnučka",
+          "a": "die"
+        },
+        {
+          "n": "Onkel",
+          "f": "strýko",
+          "a": "der"
+        },
+        {
+          "n": "Tante",
+          "f": "teta",
+          "a": "die"
+        },
+        {
+          "n": "Cousin",
+          "f": "bratranec",
+          "a": "der"
+        },
+        {
+          "n": "Cousine",
+          "f": "sesternica",
+          "a": "die"
+        },
+        {
+          "n": "Neffe",
+          "f": "synovec",
+          "a": "der"
+        },
+        {
+          "n": "Nichte",
+          "f": "neter",
+          "a": "die"
+        },
+        {
+          "n": "Familie",
+          "f": "rodina",
+          "a": "die"
+        },
+        {
+          "n": "Ehemann",
+          "f": "manžel",
+          "a": "der"
+        },
+        {
+          "n": "Ehefrau",
+          "f": "manželka",
+          "a": "die"
+        },
+        {
+          "n": "Ehepaar",
+          "f": "manželia",
+          "a": "das"
+        },
+        {
+          "n": "Partner",
+          "f": "partner",
+          "a": "der"
+        },
+        {
+          "n": "Partnerin",
+          "f": "partnerka",
+          "a": "die"
+        },
+        {
+          "n": "Freund",
+          "f": "priateľ",
+          "a": "der"
+        },
+        {
+          "n": "Freundin",
+          "f": "priateľka",
+          "a": "die"
+        },
+        {
+          "n": "Verlobter",
+          "f": "snúbenec",
+          "a": "der"
+        },
+        {
+          "n": "Verlobte",
+          "f": "snúbenica",
+          "a": "die"
+        },
+        {
+          "n": "Hochzeit",
+          "f": "svadba",
+          "a": "die"
+        },
+        {
+          "n": "Ehe",
+          "f": "manželstvo",
+          "a": "die"
+        },
+        {
+          "n": "Scheidung",
+          "f": "rozvod",
+          "a": "die"
+        },
+        {
+          "n": "Witwe",
+          "f": "vdova",
+          "a": "die"
+        },
+        {
+          "n": "Witwer",
+          "f": "vdovec",
+          "a": "der"
+        },
+        {
+          "n": "Baby",
+          "f": "bábätko",
+          "a": "das"
+        },
+        {
+          "n": "Kleinkind",
+          "f": "batoľa",
+          "a": "das"
+        },
+        {
+          "n": "Jugendlicher",
+          "f": "mladistvý",
+          "a": "der"
+        },
+        {
+          "n": "Erwachsener",
+          "f": "dospelý",
+          "a": "der"
+        },
+        {
+          "n": "Rentner",
+          "f": "dôchodca",
+          "a": "der"
+        },
+        {
+          "n": "Generation",
+          "f": "generácia",
+          "a": "die"
+        },
+        {
+          "n": "Geschwister",
+          "f": "súrodenci"
+        },
+        {
+          "n": "Einzelkind",
+          "f": "jedináčik",
+          "a": "das"
+        },
+        {
+          "n": "Zwilling",
+          "f": "dvojča",
+          "a": "der"
+        },
+        {
+          "n": "Adoptivkind",
+          "f": "adoptované dieťa",
+          "a": "das"
+        },
+        {
+          "n": "Schwiegermutter",
+          "f": "svokra",
+          "a": "die"
+        },
+        {
+          "n": "Schwiegervater",
+          "f": "svokor",
+          "a": "der"
+        },
+        {
+          "n": "Schwiegertochter",
+          "f": "nevesta",
+          "a": "die"
+        },
+        {
+          "n": "Schwiegersohn",
+          "f": "zať",
+          "a": "der"
+        },
+        {
+          "n": "Stiefsohn",
+          "f": "nevlastný syn",
+          "a": "der"
+        },
+        {
+          "n": "Stieftochter",
+          "f": "nevlastná dcéra",
+          "a": "die"
+        },
+        {
+          "n": "Stiefmutter",
+          "f": "nevlastná matka",
+          "a": "die"
+        },
+        {
+          "n": "Stiefvater",
+          "f": "nevlastný otec",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "essen",
+      "icon": "🍽️",
+      "name": "Essen & Trinken",
+      "words": [
+        {
+          "n": "Brot",
+          "f": "chlieb",
+          "a": "das"
+        },
+        {
+          "n": "Brötchen",
+          "f": "rožok",
+          "a": "das"
+        },
+        {
+          "n": "Butter",
+          "f": "maslo",
+          "a": "die"
+        },
+        {
+          "n": "Käse",
+          "f": "syr",
+          "a": "der"
+        },
+        {
+          "n": "Milch",
+          "f": "mlieko",
+          "a": "die"
+        },
+        {
+          "n": "Joghurt",
+          "f": "jogurt",
+          "a": "der"
+        },
+        {
+          "n": "Ei",
+          "f": "vajce",
+          "a": "das"
+        },
+        {
+          "n": "Fleisch",
+          "f": "mäso",
+          "a": "das"
+        },
+        {
+          "n": "Rindfleisch",
+          "f": "hovädzie mäso",
+          "a": "das"
+        },
+        {
+          "n": "Schweinefleisch",
+          "f": "bravčové mäso",
+          "a": "das"
+        },
+        {
+          "n": "Hühnchen",
+          "f": "kura",
+          "a": "das"
+        },
+        {
+          "n": "Fisch",
+          "f": "ryba",
+          "a": "der"
+        },
+        {
+          "n": "Lachs",
+          "f": "losos",
+          "a": "der"
+        },
+        {
+          "n": "Thunfisch",
+          "f": "tuniak",
+          "a": "der"
+        },
+        {
+          "n": "Wurst",
+          "f": "klobása",
+          "a": "die"
+        },
+        {
+          "n": "Schinken",
+          "f": "šunka",
+          "a": "der"
+        },
+        {
+          "n": "Apfel",
+          "f": "jablko",
+          "a": "der"
+        },
+        {
+          "n": "Birne",
+          "f": "hruška",
+          "a": "die"
+        },
+        {
+          "n": "Banane",
+          "f": "banán",
+          "a": "die"
+        },
+        {
+          "n": "Orange",
+          "f": "pomaranč",
+          "a": "die"
+        },
+        {
+          "n": "Erdbeere",
+          "f": "jahoda",
+          "a": "die"
+        },
+        {
+          "n": "Kirsche",
+          "f": "čerešňa",
+          "a": "die"
+        },
+        {
+          "n": "Traube",
+          "f": "hrozno",
+          "a": "die"
+        },
+        {
+          "n": "Zitrone",
+          "f": "citrón",
+          "a": "die"
+        },
+        {
+          "n": "Ananas",
+          "f": "ananás",
+          "a": "die"
+        },
+        {
+          "n": "Mango",
+          "f": "mango",
+          "a": "die"
+        },
+        {
+          "n": "Kartoffel",
+          "f": "zemiaky",
+          "a": "die"
+        },
+        {
+          "n": "Tomate",
+          "f": "paradajka",
+          "a": "die"
+        },
+        {
+          "n": "Gurke",
+          "f": "uhorka",
+          "a": "die"
+        },
+        {
+          "n": "Zwiebel",
+          "f": "cibuľa",
+          "a": "die"
+        },
+        {
+          "n": "Knoblauch",
+          "f": "cesnak",
+          "a": "der"
+        },
+        {
+          "n": "Karotte",
+          "f": "mrkva",
+          "a": "die"
+        },
+        {
+          "n": "Salat",
+          "f": "šalát",
+          "a": "der"
+        },
+        {
+          "n": "Spinat",
+          "f": "špenát",
+          "a": "der"
+        },
+        {
+          "n": "Pilz",
+          "f": "huba",
+          "a": "der"
+        },
+        {
+          "n": "Paprika",
+          "f": "paprika",
+          "a": "die"
+        },
+        {
+          "n": "Bohne",
+          "f": "fazuľa",
+          "a": "die"
+        },
+        {
+          "n": "Erbse",
+          "f": "hrášok",
+          "a": "die"
+        },
+        {
+          "n": "Mais",
+          "f": "kukurica",
+          "a": "der"
+        },
+        {
+          "n": "Reis",
+          "f": "ryža",
+          "a": "der"
+        },
+        {
+          "n": "Nudeln",
+          "f": "cestoviny"
+        },
+        {
+          "n": "Spaghetti",
+          "f": "špagety"
+        },
+        {
+          "n": "Suppe",
+          "f": "polievka",
+          "a": "die"
+        },
+        {
+          "n": "Salz",
+          "f": "soľ",
+          "a": "das"
+        },
+        {
+          "n": "Pfeffer",
+          "f": "korenie",
+          "a": "der"
+        },
+        {
+          "n": "Zucker",
+          "f": "cukor",
+          "a": "der"
+        },
+        {
+          "n": "Mehl",
+          "f": "múka",
+          "a": "das"
+        },
+        {
+          "n": "Öl",
+          "f": "olej",
+          "a": "das"
+        },
+        {
+          "n": "Essig",
+          "f": "ocot",
+          "a": "der"
+        },
+        {
+          "n": "Sauce",
+          "f": "omáčka",
+          "a": "die"
+        },
+        {
+          "n": "Ketchup",
+          "f": "kečup",
+          "a": "der"
+        },
+        {
+          "n": "Marmelade",
+          "f": "džem",
+          "a": "die"
+        },
+        {
+          "n": "Honig",
+          "f": "med",
+          "a": "der"
+        },
+        {
+          "n": "Schokolade",
+          "f": "čokoláda",
+          "a": "die"
+        },
+        {
+          "n": "Kuchen",
+          "f": "koláč",
+          "a": "der"
+        },
+        {
+          "n": "Torte",
+          "f": "torta",
+          "a": "die"
+        },
+        {
+          "n": "Keks",
+          "f": "sušienka",
+          "a": "der"
+        },
+        {
+          "n": "Eis",
+          "f": "zmrzlina",
+          "a": "das"
+        },
+        {
+          "n": "Wasser",
+          "f": "voda",
+          "a": "das"
+        },
+        {
+          "n": "Saft",
+          "f": "džús",
+          "a": "der"
+        },
+        {
+          "n": "Kaffee",
+          "f": "káva",
+          "a": "der"
+        },
+        {
+          "n": "Tee",
+          "f": "čaj",
+          "a": "der"
+        },
+        {
+          "n": "Bier",
+          "f": "pivo",
+          "a": "das"
+        },
+        {
+          "n": "Wein",
+          "f": "víno",
+          "a": "der"
+        },
+        {
+          "n": "Sekt",
+          "f": "šumivé víno",
+          "a": "der"
+        },
+        {
+          "n": "Schnaps",
+          "f": "pálenka",
+          "a": "der"
+        },
+        {
+          "n": "Cola",
+          "f": "kola",
+          "a": "die"
+        },
+        {
+          "n": "Limonade",
+          "f": "limonáda",
+          "a": "die"
+        },
+        {
+          "n": "Mineralwasser",
+          "f": "minerálna voda",
+          "a": "das"
+        },
+        {
+          "n": "Frühstück",
+          "f": "raňajky",
+          "a": "das"
+        },
+        {
+          "n": "Mittagessen",
+          "f": "obed",
+          "a": "das"
+        },
+        {
+          "n": "Abendessen",
+          "f": "večera",
+          "a": "das"
+        },
+        {
+          "n": "Mahlzeit",
+          "f": "jedlo",
+          "a": "die"
+        },
+        {
+          "n": "Rezept",
+          "f": "recept",
+          "a": "das"
+        },
+        {
+          "n": "Zutaten",
+          "f": "ingrediencie"
+        },
+        {
+          "n": "kochen",
+          "f": "variť"
+        },
+        {
+          "n": "backen",
+          "f": "piecť"
+        },
+        {
+          "n": "braten",
+          "f": "smažiť"
+        },
+        {
+          "n": "schneiden",
+          "f": "krájať"
+        },
+        {
+          "n": "mischen",
+          "f": "miešať"
+        },
+        {
+          "n": "Teller",
+          "f": "tanier",
+          "a": "der"
+        },
+        {
+          "n": "Glas",
+          "f": "pohár",
+          "a": "das"
+        },
+        {
+          "n": "Tasse",
+          "f": "šálka",
+          "a": "die"
+        },
+        {
+          "n": "Besteck",
+          "f": "príbor",
+          "a": "das"
+        },
+        {
+          "n": "Messer",
+          "f": "nôž",
+          "a": "das"
+        },
+        {
+          "n": "Gabel",
+          "f": "vidlička",
+          "a": "die"
+        },
+        {
+          "n": "Löffel",
+          "f": "lyžica",
+          "a": "der"
+        },
+        {
+          "n": "Topf",
+          "f": "hrniec",
+          "a": "der"
+        },
+        {
+          "n": "Pfanne",
+          "f": "panvica",
+          "a": "die"
+        },
+        {
+          "n": "Restaurant",
+          "f": "reštaurácia",
+          "a": "das"
+        },
+        {
+          "n": "Speisekarte",
+          "f": "jedálny lístok",
+          "a": "die"
+        },
+        {
+          "n": "Kellner",
+          "f": "čašník",
+          "a": "der"
+        },
+        {
+          "n": "Trinkgeld",
+          "f": "prepitné",
+          "a": "das"
+        },
+        {
+          "n": "Rechnung",
+          "f": "účet",
+          "a": "die"
+        },
+        {
+          "n": "Vegetarier",
+          "f": "vegetarián",
+          "a": "der"
+        },
+        {
+          "n": "vegan",
+          "f": "vegánsky"
+        },
+        {
+          "n": "lecker",
+          "f": "chutný"
+        },
+        {
+          "n": "süß",
+          "f": "sladký"
+        },
+        {
+          "n": "sauer",
+          "f": "kyslý"
+        },
+        {
+          "n": "bitter",
+          "f": "horký"
+        },
+        {
+          "n": "scharf",
+          "f": "pikantný"
+        },
+        {
+          "n": "salzig",
+          "f": "slaný"
+        },
+        {
+          "n": "frisch",
+          "f": "čerstvý"
+        },
+        {
+          "n": "roh",
+          "f": "surový"
+        },
+        {
+          "n": "gekocht",
+          "f": "uvarený"
+        }
+      ]
+    },
+    {
+      "id": "reisen",
+      "icon": "✈️",
+      "name": "Reisen & Verkehr",
+      "words": [
+        {
+          "n": "Flugzeug",
+          "f": "lietadlo",
+          "a": "das"
+        },
+        {
+          "n": "Zug",
+          "f": "vlak",
+          "a": "der"
+        },
+        {
+          "n": "Bus",
+          "f": "autobus",
+          "a": "der"
+        },
+        {
+          "n": "Auto",
+          "f": "auto",
+          "a": "das"
+        },
+        {
+          "n": "Fahrrad",
+          "f": "bicykel",
+          "a": "das"
+        },
+        {
+          "n": "Motorrad",
+          "f": "motorka",
+          "a": "das"
+        },
+        {
+          "n": "Schiff",
+          "f": "loď",
+          "a": "das"
+        },
+        {
+          "n": "U-Bahn",
+          "f": "metro",
+          "a": "die"
+        },
+        {
+          "n": "Straßenbahn",
+          "f": "električka",
+          "a": "die"
+        },
+        {
+          "n": "Taxi",
+          "f": "taxík",
+          "a": "das"
+        },
+        {
+          "n": "Flughafen",
+          "f": "letisko",
+          "a": "der"
+        },
+        {
+          "n": "Bahnhof",
+          "f": "železničná stanica",
+          "a": "der"
+        },
+        {
+          "n": "Busbahnhof",
+          "f": "autobusová stanica",
+          "a": "der"
+        },
+        {
+          "n": "Hafen",
+          "f": "prístav",
+          "a": "der"
+        },
+        {
+          "n": "Hotel",
+          "f": "hotel",
+          "a": "das"
+        },
+        {
+          "n": "Pension",
+          "f": "penzión",
+          "a": "die"
+        },
+        {
+          "n": "Jugendherberge",
+          "f": "hostel",
+          "a": "die"
+        },
+        {
+          "n": "Zimmer",
+          "f": "izba",
+          "a": "das"
+        },
+        {
+          "n": "Rezeption",
+          "f": "recepcia",
+          "a": "die"
+        },
+        {
+          "n": "Schlüssel",
+          "f": "kľúč",
+          "a": "der"
+        },
+        {
+          "n": "Gepäck",
+          "f": "batožina",
+          "a": "das"
+        },
+        {
+          "n": "Koffer",
+          "f": "kufor",
+          "a": "der"
+        },
+        {
+          "n": "Rucksack",
+          "f": "ruksak",
+          "a": "der"
+        },
+        {
+          "n": "Reisepass",
+          "f": "pas",
+          "a": "der"
+        },
+        {
+          "n": "Visum",
+          "f": "víza",
+          "a": "das"
+        },
+        {
+          "n": "Ticket",
+          "f": "lístok",
+          "a": "das"
+        },
+        {
+          "n": "Fahrkarte",
+          "f": "cestovný lístok",
+          "a": "die"
+        },
+        {
+          "n": "Bordkarte",
+          "f": "palubný lístok",
+          "a": "die"
+        },
+        {
+          "n": "Abflug",
+          "f": "odlet",
+          "a": "der"
+        },
+        {
+          "n": "Ankunft",
+          "f": "prílet",
+          "a": "die"
+        },
+        {
+          "n": "Verspätung",
+          "f": "meškanie",
+          "a": "die"
+        },
+        {
+          "n": "Umsteigen",
+          "f": "prestúpenie",
+          "a": "das"
+        },
+        {
+          "n": "Hin- und Rückfahrt",
+          "f": "spiatočná cesta",
+          "a": "die"
+        },
+        {
+          "n": "Einfachfahrt",
+          "f": "jednosmerná cesta",
+          "a": "die"
+        },
+        {
+          "n": "Reise",
+          "f": "cesta",
+          "a": "die"
+        },
+        {
+          "n": "Urlaub",
+          "f": "dovolenka",
+          "a": "der"
+        },
+        {
+          "n": "Ausland",
+          "f": "zahraničie",
+          "a": "das"
+        },
+        {
+          "n": "Inland",
+          "f": "domáce prostredie",
+          "a": "das"
+        },
+        {
+          "n": "Grenze",
+          "f": "hranica",
+          "a": "die"
+        },
+        {
+          "n": "Zoll",
+          "f": "colnica",
+          "a": "der"
+        },
+        {
+          "n": "Karte",
+          "f": "mapa",
+          "a": "die"
+        },
+        {
+          "n": "Stadtplan",
+          "f": "plán mesta",
+          "a": "der"
+        },
+        {
+          "n": "Straße",
+          "f": "ulica",
+          "a": "die"
+        },
+        {
+          "n": "Platz",
+          "f": "námestie",
+          "a": "der"
+        },
+        {
+          "n": "Brücke",
+          "f": "most",
+          "a": "die"
+        },
+        {
+          "n": "Tunnel",
+          "f": "tunel",
+          "a": "der"
+        },
+        {
+          "n": "Kreuzung",
+          "f": "križovatka",
+          "a": "die"
+        },
+        {
+          "n": "Ampel",
+          "f": "semafor",
+          "a": "die"
+        },
+        {
+          "n": "links",
+          "f": "doľava"
+        },
+        {
+          "n": "rechts",
+          "f": "doprava"
+        },
+        {
+          "n": "geradeaus",
+          "f": "rovno"
+        },
+        {
+          "n": "nördlich",
+          "f": "severný"
+        },
+        {
+          "n": "südlich",
+          "f": "južný"
+        },
+        {
+          "n": "östlich",
+          "f": "východný"
+        },
+        {
+          "n": "westlich",
+          "f": "západný"
+        },
+        {
+          "n": "Entfernung",
+          "f": "vzdialenosť",
+          "a": "die"
+        },
+        {
+          "n": "Kilometer",
+          "f": "kilometer",
+          "a": "der"
+        },
+        {
+          "n": "Stau",
+          "f": "dopravná zápcha",
+          "a": "der"
+        },
+        {
+          "n": "Parkplatz",
+          "f": "parkovisko",
+          "a": "der"
+        },
+        {
+          "n": "Tankstelle",
+          "f": "čerpacia stanica",
+          "a": "die"
+        },
+        {
+          "n": "Führerschein",
+          "f": "vodičský preukaz",
+          "a": "der"
+        },
+        {
+          "n": "Sehenswürdigkeit",
+          "f": "pamiatka",
+          "a": "die"
+        },
+        {
+          "n": "Museum",
+          "f": "múzeum",
+          "a": "das"
+        },
+        {
+          "n": "Kirche",
+          "f": "kostol",
+          "a": "die"
+        },
+        {
+          "n": "Schloss",
+          "f": "hrad",
+          "a": "das"
+        },
+        {
+          "n": "Strand",
+          "f": "pláž",
+          "a": "der"
+        },
+        {
+          "n": "Berg",
+          "f": "hora",
+          "a": "der"
+        },
+        {
+          "n": "See",
+          "f": "jazero",
+          "a": "der"
+        },
+        {
+          "n": "Meer",
+          "f": "more",
+          "a": "das"
+        },
+        {
+          "n": "Stadtmitte",
+          "f": "centrum mesta",
+          "a": "die"
+        },
+        {
+          "n": "Vorort",
+          "f": "predmestie",
+          "a": "der"
+        },
+        {
+          "n": "Dorf",
+          "f": "dedina",
+          "a": "das"
+        },
+        {
+          "n": "Stadt",
+          "f": "mesto",
+          "a": "die"
+        },
+        {
+          "n": "Land",
+          "f": "krajina",
+          "a": "das"
+        },
+        {
+          "n": "Hauptstadt",
+          "f": "hlavné mesto",
+          "a": "die"
+        }
+      ]
+    },
+    {
+      "id": "koerper",
+      "icon": "💪",
+      "name": "Körper & Gesundheit",
+      "words": [
+        {
+          "n": "Kopf",
+          "f": "hlava",
+          "a": "der"
+        },
+        {
+          "n": "Gesicht",
+          "f": "tvár",
+          "a": "das"
+        },
+        {
+          "n": "Haare",
+          "f": "vlasy"
+        },
+        {
+          "n": "Auge",
+          "f": "oko",
+          "a": "das"
+        },
+        {
+          "n": "Ohr",
+          "f": "ucho",
+          "a": "das"
+        },
+        {
+          "n": "Nase",
+          "f": "nos",
+          "a": "die"
+        },
+        {
+          "n": "Mund",
+          "f": "ústa",
+          "a": "der"
+        },
+        {
+          "n": "Zahn",
+          "f": "zub",
+          "a": "der"
+        },
+        {
+          "n": "Zunge",
+          "f": "jazyk",
+          "a": "die"
+        },
+        {
+          "n": "Lippe",
+          "f": "pera",
+          "a": "die"
+        },
+        {
+          "n": "Wange",
+          "f": "líce",
+          "a": "die"
+        },
+        {
+          "n": "Stirn",
+          "f": "čelo",
+          "a": "die"
+        },
+        {
+          "n": "Kinn",
+          "f": "brada",
+          "a": "das"
+        },
+        {
+          "n": "Hals",
+          "f": "krk",
+          "a": "der"
+        },
+        {
+          "n": "Schulter",
+          "f": "rameno",
+          "a": "die"
+        },
+        {
+          "n": "Arm",
+          "f": "paža",
+          "a": "der"
+        },
+        {
+          "n": "Ellbogen",
+          "f": "lakeť",
+          "a": "der"
+        },
+        {
+          "n": "Hand",
+          "f": "ruka",
+          "a": "die"
+        },
+        {
+          "n": "Finger",
+          "f": "prst",
+          "a": "der"
+        },
+        {
+          "n": "Daumen",
+          "f": "palec",
+          "a": "der"
+        },
+        {
+          "n": "Nagel",
+          "f": "necht",
+          "a": "der"
+        },
+        {
+          "n": "Brust",
+          "f": "hrudník",
+          "a": "die"
+        },
+        {
+          "n": "Bauch",
+          "f": "brucho",
+          "a": "der"
+        },
+        {
+          "n": "Rücken",
+          "f": "chrbát",
+          "a": "der"
+        },
+        {
+          "n": "Wirbelsäule",
+          "f": "chrbtica",
+          "a": "die"
+        },
+        {
+          "n": "Hüfte",
+          "f": "bok",
+          "a": "die"
+        },
+        {
+          "n": "Bein",
+          "f": "noha",
+          "a": "das"
+        },
+        {
+          "n": "Knie",
+          "f": "koleno",
+          "a": "das"
+        },
+        {
+          "n": "Fuß",
+          "f": "noha",
+          "a": "der"
+        },
+        {
+          "n": "Zeh",
+          "f": "prst na nohe",
+          "a": "der"
+        },
+        {
+          "n": "Ferse",
+          "f": "päta",
+          "a": "die"
+        },
+        {
+          "n": "Haut",
+          "f": "koža",
+          "a": "die"
+        },
+        {
+          "n": "Knochen",
+          "f": "kosť",
+          "a": "der"
+        },
+        {
+          "n": "Muskel",
+          "f": "sval",
+          "a": "der"
+        },
+        {
+          "n": "Blut",
+          "f": "krv",
+          "a": "das"
+        },
+        {
+          "n": "Herz",
+          "f": "srdce",
+          "a": "das"
+        },
+        {
+          "n": "Lunge",
+          "f": "pľúca",
+          "a": "die"
+        },
+        {
+          "n": "Leber",
+          "f": "pečeň",
+          "a": "die"
+        },
+        {
+          "n": "Magen",
+          "f": "žalúdok",
+          "a": "der"
+        },
+        {
+          "n": "Niere",
+          "f": "oblička",
+          "a": "die"
+        },
+        {
+          "n": "Gehirn",
+          "f": "mozog",
+          "a": "das"
+        },
+        {
+          "n": "Nerv",
+          "f": "nerv",
+          "a": "der"
+        },
+        {
+          "n": "Arzt",
+          "f": "lekár",
+          "a": "der"
+        },
+        {
+          "n": "Ärztin",
+          "f": "lekárka",
+          "a": "die"
+        },
+        {
+          "n": "Krankenhaus",
+          "f": "nemocnica",
+          "a": "das"
+        },
+        {
+          "n": "Apotheke",
+          "f": "lekáreň",
+          "a": "die"
+        },
+        {
+          "n": "Medikament",
+          "f": "liek",
+          "a": "das"
+        },
+        {
+          "n": "Tablette",
+          "f": "tableta",
+          "a": "die"
+        },
+        {
+          "n": "Impfung",
+          "f": "očkovanie",
+          "a": "die"
+        },
+        {
+          "n": "Operation",
+          "f": "operácia",
+          "a": "die"
+        },
+        {
+          "n": "Verletzung",
+          "f": "zranenie",
+          "a": "die"
+        },
+        {
+          "n": "Wunde",
+          "f": "rana",
+          "a": "die"
+        },
+        {
+          "n": "Krankheit",
+          "f": "choroba",
+          "a": "die"
+        },
+        {
+          "n": "Fieber",
+          "f": "horúčka",
+          "a": "das"
+        },
+        {
+          "n": "Husten",
+          "f": "kašeľ",
+          "a": "der"
+        },
+        {
+          "n": "Schnupfen",
+          "f": "nádcha",
+          "a": "der"
+        },
+        {
+          "n": "Kopfschmerzen",
+          "f": "bolesti hlavy"
+        },
+        {
+          "n": "Bauchschmerzen",
+          "f": "bolesti brucha"
+        },
+        {
+          "n": "Rückenschmerzen",
+          "f": "bolesti chrbta"
+        },
+        {
+          "n": "Erkältung",
+          "f": "prechladnutie",
+          "a": "die"
+        },
+        {
+          "n": "Grippe",
+          "f": "chrípka",
+          "a": "die"
+        },
+        {
+          "n": "Allergie",
+          "f": "alergia",
+          "a": "die"
+        },
+        {
+          "n": "Diabetes",
+          "f": "cukrovka",
+          "a": "der"
+        },
+        {
+          "n": "Blutdruck",
+          "f": "krvný tlak",
+          "a": "der"
+        },
+        {
+          "n": "gesund",
+          "f": "zdravý"
+        },
+        {
+          "n": "krank",
+          "f": "chorý"
+        },
+        {
+          "n": "müde",
+          "f": "unavený"
+        },
+        {
+          "n": "stark",
+          "f": "silný"
+        },
+        {
+          "n": "schwach",
+          "f": "slabý"
+        },
+        {
+          "n": "fit",
+          "f": "fit"
+        },
+        {
+          "n": "übergewichtig",
+          "f": "obézny"
+        },
+        {
+          "n": "schlank",
+          "f": "štíhly"
+        },
+        {
+          "n": "Sport",
+          "f": "šport",
+          "a": "der"
+        },
+        {
+          "n": "Training",
+          "f": "tréning",
+          "a": "das"
+        },
+        {
+          "n": "Diät",
+          "f": "diéta",
+          "a": "die"
+        },
+        {
+          "n": "Erholung",
+          "f": "oddych",
+          "a": "die"
+        },
+        {
+          "n": "Schlaf",
+          "f": "spánok",
+          "a": "der"
+        },
+        {
+          "n": "Stress",
+          "f": "stres",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "zuhause",
+      "icon": "🏠",
+      "name": "Zuhause & Wohnen",
+      "words": [
+        {
+          "n": "Haus",
+          "f": "dom",
+          "a": "das"
+        },
+        {
+          "n": "Wohnung",
+          "f": "byt",
+          "a": "die"
+        },
+        {
+          "n": "Zimmer",
+          "f": "izba",
+          "a": "das"
+        },
+        {
+          "n": "Küche",
+          "f": "kuchyňa",
+          "a": "die"
+        },
+        {
+          "n": "Badezimmer",
+          "f": "kúpeľňa",
+          "a": "das"
+        },
+        {
+          "n": "Schlafzimmer",
+          "f": "spálňa",
+          "a": "das"
+        },
+        {
+          "n": "Wohnzimmer",
+          "f": "obývacia izba",
+          "a": "das"
+        },
+        {
+          "n": "Esszimmer",
+          "f": "jedáleň",
+          "a": "das"
+        },
+        {
+          "n": "Kinderzimmer",
+          "f": "detská izba",
+          "a": "das"
+        },
+        {
+          "n": "Arbeitszimmer",
+          "f": "pracovňa",
+          "a": "das"
+        },
+        {
+          "n": "Keller",
+          "f": "pivnica",
+          "a": "der"
+        },
+        {
+          "n": "Dachboden",
+          "f": "podkrovie",
+          "a": "der"
+        },
+        {
+          "n": "Garten",
+          "f": "záhrada",
+          "a": "der"
+        },
+        {
+          "n": "Garage",
+          "f": "garáž",
+          "a": "die"
+        },
+        {
+          "n": "Balkon",
+          "f": "balkón",
+          "a": "der"
+        },
+        {
+          "n": "Terrasse",
+          "f": "terasa",
+          "a": "die"
+        },
+        {
+          "n": "Treppe",
+          "f": "schody"
+        },
+        {
+          "n": "Aufzug",
+          "f": "výťah",
+          "a": "der"
+        },
+        {
+          "n": "Eingang",
+          "f": "vchod",
+          "a": "der"
+        },
+        {
+          "n": "Ausgang",
+          "f": "východ",
+          "a": "der"
+        },
+        {
+          "n": "Tür",
+          "f": "dvere"
+        },
+        {
+          "n": "Fenster",
+          "f": "okno",
+          "a": "das"
+        },
+        {
+          "n": "Wand",
+          "f": "stena",
+          "a": "die"
+        },
+        {
+          "n": "Boden",
+          "f": "podlaha",
+          "a": "der"
+        },
+        {
+          "n": "Decke",
+          "f": "strop",
+          "a": "die"
+        },
+        {
+          "n": "Dach",
+          "f": "strecha",
+          "a": "das"
+        },
+        {
+          "n": "Möbel",
+          "f": "nábytok"
+        },
+        {
+          "n": "Tisch",
+          "f": "stôl",
+          "a": "der"
+        },
+        {
+          "n": "Stuhl",
+          "f": "stolička",
+          "a": "der"
+        },
+        {
+          "n": "Sofa",
+          "f": "pohovka",
+          "a": "das"
+        },
+        {
+          "n": "Sessel",
+          "f": "kreslo",
+          "a": "der"
+        },
+        {
+          "n": "Bett",
+          "f": "posteľ",
+          "a": "das"
+        },
+        {
+          "n": "Schrank",
+          "f": "skriňa",
+          "a": "der"
+        },
+        {
+          "n": "Regal",
+          "f": "police",
+          "a": "das"
+        },
+        {
+          "n": "Schreibtisch",
+          "f": "písací stôl",
+          "a": "der"
+        },
+        {
+          "n": "Lampe",
+          "f": "lampa",
+          "a": "die"
+        },
+        {
+          "n": "Teppich",
+          "f": "koberec",
+          "a": "der"
+        },
+        {
+          "n": "Vorhang",
+          "f": "záclona",
+          "a": "der"
+        },
+        {
+          "n": "Bild",
+          "f": "obraz",
+          "a": "das"
+        },
+        {
+          "n": "Spiegel",
+          "f": "zrkadlo",
+          "a": "der"
+        },
+        {
+          "n": "Kühlschrank",
+          "f": "chladnička",
+          "a": "der"
+        },
+        {
+          "n": "Herd",
+          "f": "sporák",
+          "a": "der"
+        },
+        {
+          "n": "Backofen",
+          "f": "rúra",
+          "a": "der"
+        },
+        {
+          "n": "Geschirrspüler",
+          "f": "umývačka riadu",
+          "a": "der"
+        },
+        {
+          "n": "Waschmaschine",
+          "f": "práčka",
+          "a": "die"
+        },
+        {
+          "n": "Trockner",
+          "f": "sušička",
+          "a": "der"
+        },
+        {
+          "n": "Staubsauger",
+          "f": "vysávač",
+          "a": "der"
+        },
+        {
+          "n": "Fernseher",
+          "f": "televízor",
+          "a": "der"
+        },
+        {
+          "n": "Radio",
+          "f": "rádio",
+          "a": "das"
+        },
+        {
+          "n": "Computer",
+          "f": "počítač",
+          "a": "der"
+        },
+        {
+          "n": "Drucker",
+          "f": "tlačiareň",
+          "a": "der"
+        },
+        {
+          "n": "Telefon",
+          "f": "telefón",
+          "a": "das"
+        },
+        {
+          "n": "Heizung",
+          "f": "kúrenie",
+          "a": "die"
+        },
+        {
+          "n": "Klimaanlage",
+          "f": "klimatizácia",
+          "a": "die"
+        },
+        {
+          "n": "Steckdose",
+          "f": "zásuvka",
+          "a": "die"
+        },
+        {
+          "n": "Glühbirne",
+          "f": "žiarovka",
+          "a": "die"
+        },
+        {
+          "n": "Miete",
+          "f": "nájomné",
+          "a": "die"
+        },
+        {
+          "n": "Vermieter",
+          "f": "prenajímateľ",
+          "a": "der"
+        },
+        {
+          "n": "Nachbar",
+          "f": "sused",
+          "a": "der"
+        },
+        {
+          "n": "Adresse",
+          "f": "adresa",
+          "a": "die"
+        },
+        {
+          "n": "aufräumen",
+          "f": "upratovať"
+        },
+        {
+          "n": "putzen",
+          "f": "čistiť"
+        },
+        {
+          "n": "waschen",
+          "f": "prať"
+        },
+        {
+          "n": "bügeln",
+          "f": "žehliť"
+        },
+        {
+          "n": "reparieren",
+          "f": "opravovať"
+        },
+        {
+          "n": "bauen",
+          "f": "stavať"
+        },
+        {
+          "n": "renovieren",
+          "f": "renovovať"
+        }
+      ]
+    },
+    {
+      "id": "tiere",
+      "icon": "🐾",
+      "name": "Tiere & Natur",
+      "words": [
+        {
+          "n": "Hund",
+          "f": "pes",
+          "a": "der",
+          "notes": "Treu wie ein Hund"
+        },
+        {
+          "n": "Katze",
+          "f": "mačka",
+          "a": "die"
+        },
+        {
+          "n": "Pferd",
+          "f": "kôň",
+          "a": "das"
+        },
+        {
+          "n": "Kuh",
+          "f": "krava",
+          "a": "die"
+        },
+        {
+          "n": "Schwein",
+          "f": "prasa",
+          "a": "das"
+        },
+        {
+          "n": "Schaf",
+          "f": "ovca",
+          "a": "das"
+        },
+        {
+          "n": "Ziege",
+          "f": "koza",
+          "a": "die"
+        },
+        {
+          "n": "Huhn",
+          "f": "sliepka",
+          "a": "das"
+        },
+        {
+          "n": "Ente",
+          "f": "kačka",
+          "a": "die"
+        },
+        {
+          "n": "Gans",
+          "f": "hus",
+          "a": "die"
+        },
+        {
+          "n": "Truthahn",
+          "f": "morka",
+          "a": "der"
+        },
+        {
+          "n": "Vogel",
+          "f": "vták",
+          "a": "der"
+        },
+        {
+          "n": "Adler",
+          "f": "orol",
+          "a": "der"
+        },
+        {
+          "n": "Eule",
+          "f": "sova",
+          "a": "die"
+        },
+        {
+          "n": "Papagei",
+          "f": "papagáj",
+          "a": "der"
+        },
+        {
+          "n": "Fisch",
+          "f": "ryba",
+          "a": "der"
+        },
+        {
+          "n": "Delfin",
+          "f": "delfín",
+          "a": "der"
+        },
+        {
+          "n": "Hai",
+          "f": "žralok",
+          "a": "der"
+        },
+        {
+          "n": "Wal",
+          "f": "veľryba",
+          "a": "der"
+        },
+        {
+          "n": "Oktopus",
+          "f": "chobotnica",
+          "a": "der"
+        },
+        {
+          "n": "Krabbe",
+          "f": "krab",
+          "a": "die"
+        },
+        {
+          "n": "Löwe",
+          "f": "lev",
+          "a": "der"
+        },
+        {
+          "n": "Tiger",
+          "f": "tiger",
+          "a": "der"
+        },
+        {
+          "n": "Elefant",
+          "f": "slon",
+          "a": "der"
+        },
+        {
+          "n": "Giraffe",
+          "f": "žirafa",
+          "a": "die"
+        },
+        {
+          "n": "Zebra",
+          "f": "zebra",
+          "a": "das"
+        },
+        {
+          "n": "Gorilla",
+          "f": "gorila",
+          "a": "der"
+        },
+        {
+          "n": "Affe",
+          "f": "opica",
+          "a": "der"
+        },
+        {
+          "n": "Bär",
+          "f": "medveď",
+          "a": "der"
+        },
+        {
+          "n": "Wolf",
+          "f": "vlk",
+          "a": "der"
+        },
+        {
+          "n": "Fuchs",
+          "f": "líška",
+          "a": "der"
+        },
+        {
+          "n": "Reh",
+          "f": "srnka",
+          "a": "das"
+        },
+        {
+          "n": "Hirsch",
+          "f": "jeleň",
+          "a": "der"
+        },
+        {
+          "n": "Hase",
+          "f": "zajac",
+          "a": "der"
+        },
+        {
+          "n": "Eichhörnchen",
+          "f": "veverička",
+          "a": "das"
+        },
+        {
+          "n": "Igel",
+          "f": "ježko",
+          "a": "der"
+        },
+        {
+          "n": "Maus",
+          "f": "myš",
+          "a": "die"
+        },
+        {
+          "n": "Ratte",
+          "f": "potkan",
+          "a": "die"
+        },
+        {
+          "n": "Schlange",
+          "f": "had",
+          "a": "die"
+        },
+        {
+          "n": "Frosch",
+          "f": "žaba",
+          "a": "der"
+        },
+        {
+          "n": "Eidechse",
+          "f": "jašterica",
+          "a": "die"
+        },
+        {
+          "n": "Krokodil",
+          "f": "krokodíl",
+          "a": "das"
+        },
+        {
+          "n": "Schildkröte",
+          "f": "korytnačka",
+          "a": "die"
+        },
+        {
+          "n": "Spinne",
+          "f": "pavúk",
+          "a": "die"
+        },
+        {
+          "n": "Biene",
+          "f": "včela",
+          "a": "die"
+        },
+        {
+          "n": "Schmetterling",
+          "f": "motýľ",
+          "a": "der"
+        },
+        {
+          "n": "Ameise",
+          "f": "mravec",
+          "a": "die"
+        },
+        {
+          "n": "Käfer",
+          "f": "chrobák",
+          "a": "der"
+        },
+        {
+          "n": "Fliege",
+          "f": "mucha",
+          "a": "die"
+        },
+        {
+          "n": "Mücke",
+          "f": "komár",
+          "a": "die"
+        },
+        {
+          "n": "Baum",
+          "f": "strom",
+          "a": "der"
+        },
+        {
+          "n": "Wald",
+          "f": "les",
+          "a": "der"
+        },
+        {
+          "n": "Blume",
+          "f": "kvet",
+          "a": "die"
+        },
+        {
+          "n": "Gras",
+          "f": "tráva",
+          "a": "das"
+        },
+        {
+          "n": "Strauch",
+          "f": "ker",
+          "a": "der"
+        },
+        {
+          "n": "Pflanze",
+          "f": "rastlina",
+          "a": "die"
+        },
+        {
+          "n": "Wurzel",
+          "f": "koreň",
+          "a": "die"
+        },
+        {
+          "n": "Ast",
+          "f": "vetva",
+          "a": "der"
+        },
+        {
+          "n": "Blatt",
+          "f": "list",
+          "a": "das"
+        },
+        {
+          "n": "Frucht",
+          "f": "ovocie",
+          "a": "die"
+        },
+        {
+          "n": "Same",
+          "f": "semeno",
+          "a": "der"
+        },
+        {
+          "n": "Erde",
+          "f": "zem",
+          "a": "die"
+        },
+        {
+          "n": "Stein",
+          "f": "kameň",
+          "a": "der"
+        },
+        {
+          "n": "Fels",
+          "f": "skala",
+          "a": "der"
+        },
+        {
+          "n": "Sand",
+          "f": "piesok",
+          "a": "der"
+        },
+        {
+          "n": "Wasser",
+          "f": "voda",
+          "a": "das"
+        },
+        {
+          "n": "Fluss",
+          "f": "rieka",
+          "a": "der"
+        },
+        {
+          "n": "Bach",
+          "f": "potok",
+          "a": "der"
+        },
+        {
+          "n": "See",
+          "f": "jazero",
+          "a": "der"
+        },
+        {
+          "n": "Meer",
+          "f": "more",
+          "a": "das"
+        },
+        {
+          "n": "Ozean",
+          "f": "oceán",
+          "a": "der"
+        },
+        {
+          "n": "Berg",
+          "f": "hora",
+          "a": "der"
+        },
+        {
+          "n": "Tal",
+          "f": "údolie",
+          "a": "das"
+        },
+        {
+          "n": "Wiese",
+          "f": "lúka",
+          "a": "die"
+        },
+        {
+          "n": "Feld",
+          "f": "pole",
+          "a": "das"
+        },
+        {
+          "n": "Sonne",
+          "f": "slnko",
+          "a": "die"
+        },
+        {
+          "n": "Mond",
+          "f": "mesiac",
+          "a": "der"
+        },
+        {
+          "n": "Stern",
+          "f": "hviezda",
+          "a": "der"
+        },
+        {
+          "n": "Himmel",
+          "f": "nebo",
+          "a": "der"
+        },
+        {
+          "n": "Wolke",
+          "f": "oblak",
+          "a": "die"
+        },
+        {
+          "n": "Regen",
+          "f": "dážď",
+          "a": "der"
+        },
+        {
+          "n": "Schnee",
+          "f": "sneh",
+          "a": "der"
+        },
+        {
+          "n": "Wind",
+          "f": "vietor",
+          "a": "der"
+        },
+        {
+          "n": "Sturm",
+          "f": "búrka",
+          "a": "der"
+        },
+        {
+          "n": "Blitz",
+          "f": "blesk",
+          "a": "der"
+        },
+        {
+          "n": "Donner",
+          "f": "hrom",
+          "a": "der"
+        },
+        {
+          "n": "Nebel",
+          "f": "hmla",
+          "a": "der"
+        },
+        {
+          "n": "Eis",
+          "f": "ľad",
+          "a": "das"
+        },
+        {
+          "n": "Frost",
+          "f": "mráz",
+          "a": "der"
+        },
+        {
+          "n": "Sonnenschein",
+          "f": "slnečný svit",
+          "a": "der"
+        },
+        {
+          "n": "Regenbogen",
+          "f": "dúha",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "beruf",
+      "icon": "💼",
+      "name": "Beruf & Arbeit",
+      "words": [
+        {
+          "n": "Arbeit",
+          "f": "práca",
+          "a": "die"
+        },
+        {
+          "n": "Beruf",
+          "f": "povolanie",
+          "a": "der"
+        },
+        {
+          "n": "Job",
+          "f": "zamestnanie",
+          "a": "der"
+        },
+        {
+          "n": "Stelle",
+          "f": "pracovné miesto",
+          "a": "die"
+        },
+        {
+          "n": "Büro",
+          "f": "kancelária",
+          "a": "das"
+        },
+        {
+          "n": "Fabrik",
+          "f": "továreň",
+          "a": "die"
+        },
+        {
+          "n": "Firma",
+          "f": "firma",
+          "a": "die"
+        },
+        {
+          "n": "Unternehmen",
+          "f": "podnik",
+          "a": "das"
+        },
+        {
+          "n": "Chef",
+          "f": "šéf",
+          "a": "der"
+        },
+        {
+          "n": "Kollege",
+          "f": "kolega",
+          "a": "der"
+        },
+        {
+          "n": "Mitarbeiter",
+          "f": "zamestnanec",
+          "a": "der"
+        },
+        {
+          "n": "Angestellter",
+          "f": "úradník",
+          "a": "der"
+        },
+        {
+          "n": "Arzt",
+          "f": "lekár",
+          "a": "der"
+        },
+        {
+          "n": "Krankenschwester",
+          "f": "zdravotná sestra",
+          "a": "die"
+        },
+        {
+          "n": "Lehrer",
+          "f": "učiteľ",
+          "a": "der"
+        },
+        {
+          "n": "Schüler",
+          "f": "žiak",
+          "a": "der"
+        },
+        {
+          "n": "Student",
+          "f": "študent",
+          "a": "der"
+        },
+        {
+          "n": "Professor",
+          "f": "profesor",
+          "a": "der"
+        },
+        {
+          "n": "Anwalt",
+          "f": "advokát",
+          "a": "der"
+        },
+        {
+          "n": "Richter",
+          "f": "sudca",
+          "a": "der"
+        },
+        {
+          "n": "Polizist",
+          "f": "policajt",
+          "a": "der"
+        },
+        {
+          "n": "Feuerwehrmann",
+          "f": "hasič",
+          "a": "der"
+        },
+        {
+          "n": "Soldat",
+          "f": "vojak",
+          "a": "der"
+        },
+        {
+          "n": "Politiker",
+          "f": "politik",
+          "a": "der"
+        },
+        {
+          "n": "Ingenieur",
+          "f": "inžinier",
+          "a": "der"
+        },
+        {
+          "n": "Architekt",
+          "f": "architekt",
+          "a": "der"
+        },
+        {
+          "n": "Programmierer",
+          "f": "programátor",
+          "a": "der"
+        },
+        {
+          "n": "Designer",
+          "f": "dizajnér",
+          "a": "der"
+        },
+        {
+          "n": "Journalist",
+          "f": "novinár",
+          "a": "der"
+        },
+        {
+          "n": "Schriftsteller",
+          "f": "spisovateľ",
+          "a": "der"
+        },
+        {
+          "n": "Musiker",
+          "f": "hudobník",
+          "a": "der"
+        },
+        {
+          "n": "Schauspieler",
+          "f": "herec",
+          "a": "der"
+        },
+        {
+          "n": "Künstler",
+          "f": "umelec",
+          "a": "der"
+        },
+        {
+          "n": "Koch",
+          "f": "kuchár",
+          "a": "der"
+        },
+        {
+          "n": "Bäcker",
+          "f": "pekár",
+          "a": "der"
+        },
+        {
+          "n": "Metzger",
+          "f": "mäsiar",
+          "a": "der"
+        },
+        {
+          "n": "Verkäufer",
+          "f": "predavač",
+          "a": "der"
+        },
+        {
+          "n": "Kassierer",
+          "f": "pokladník",
+          "a": "der"
+        },
+        {
+          "n": "Fahrer",
+          "f": "vodič",
+          "a": "der"
+        },
+        {
+          "n": "Pilot",
+          "f": "pilot",
+          "a": "der"
+        },
+        {
+          "n": "Elektriker",
+          "f": "elektrikár",
+          "a": "der"
+        },
+        {
+          "n": "Klempner",
+          "f": "inštalatér",
+          "a": "der"
+        },
+        {
+          "n": "Maurer",
+          "f": "murár",
+          "a": "der"
+        },
+        {
+          "n": "Bauer",
+          "f": "roľník",
+          "a": "der"
+        },
+        {
+          "n": "Gärtner",
+          "f": "záhradník",
+          "a": "der"
+        },
+        {
+          "n": "Reinigungskraft",
+          "f": "upratovač",
+          "a": "die"
+        },
+        {
+          "n": "Gehalt",
+          "f": "plat",
+          "a": "das"
+        },
+        {
+          "n": "Lohn",
+          "f": "mzda",
+          "a": "der"
+        },
+        {
+          "n": "Rente",
+          "f": "dôchodok",
+          "a": "die"
+        },
+        {
+          "n": "Arbeitslosigkeit",
+          "f": "nezamestnanosť",
+          "a": "die"
+        },
+        {
+          "n": "Kündigung",
+          "f": "výpoveď",
+          "a": "die"
+        },
+        {
+          "n": "Bewerbung",
+          "f": "žiadosť o zamestnanie",
+          "a": "die"
+        },
+        {
+          "n": "Lebenslauf",
+          "f": "životopis",
+          "a": "der"
+        },
+        {
+          "n": "Vorstellungsgespräch",
+          "f": "pohovor",
+          "a": "das"
+        },
+        {
+          "n": "Überstunden",
+          "f": "nadčasy"
+        },
+        {
+          "n": "Urlaub",
+          "f": "dovolenka",
+          "a": "der"
+        },
+        {
+          "n": "Krankenstand",
+          "f": "PN",
+          "a": "der"
+        },
+        {
+          "n": "Pause",
+          "f": "prestávka",
+          "a": "die"
+        },
+        {
+          "n": "Sitzung",
+          "f": "schôdza",
+          "a": "die"
+        },
+        {
+          "n": "Konferenz",
+          "f": "konferencia",
+          "a": "die"
+        },
+        {
+          "n": "Projekt",
+          "f": "projekt",
+          "a": "das"
+        },
+        {
+          "n": "Aufgabe",
+          "f": "úloha",
+          "a": "die"
+        },
+        {
+          "n": "Frist",
+          "f": "termín",
+          "a": "die"
+        },
+        {
+          "n": "Bericht",
+          "f": "správa",
+          "a": "der"
+        },
+        {
+          "n": "Vertrag",
+          "f": "zmluva",
+          "a": "der"
+        },
+        {
+          "n": "Rechnung",
+          "f": "faktúra",
+          "a": "die"
+        }
+      ]
+    },
+    {
+      "id": "schule",
+      "icon": "📚",
+      "name": "Schule & Bildung",
+      "words": [
+        {
+          "n": "Schule",
+          "f": "škola",
+          "a": "die"
+        },
+        {
+          "n": "Universität",
+          "f": "univerzita",
+          "a": "die"
+        },
+        {
+          "n": "Klasse",
+          "f": "trieda",
+          "a": "die"
+        },
+        {
+          "n": "Unterricht",
+          "f": "vyučovanie",
+          "a": "der"
+        },
+        {
+          "n": "Fach",
+          "f": "predmet",
+          "a": "das"
+        },
+        {
+          "n": "Prüfung",
+          "f": "skúška",
+          "a": "die"
+        },
+        {
+          "n": "Test",
+          "f": "test",
+          "a": "der"
+        },
+        {
+          "n": "Hausaufgabe",
+          "f": "domáca úloha",
+          "a": "die"
+        },
+        {
+          "n": "Note",
+          "f": "známka",
+          "a": "die"
+        },
+        {
+          "n": "Zeugnis",
+          "f": "vysvedčenie",
+          "a": "das"
+        },
+        {
+          "n": "Diplom",
+          "f": "diplom",
+          "a": "das"
+        },
+        {
+          "n": "Abschluss",
+          "f": "ukončenie",
+          "a": "der"
+        },
+        {
+          "n": "Buch",
+          "f": "kniha",
+          "a": "das"
+        },
+        {
+          "n": "Heft",
+          "f": "zošit",
+          "a": "das"
+        },
+        {
+          "n": "Stift",
+          "f": "pero",
+          "a": "der"
+        },
+        {
+          "n": "Bleistift",
+          "f": "ceruzka",
+          "a": "der"
+        },
+        {
+          "n": "Lineal",
+          "f": "pravítko",
+          "a": "das"
+        },
+        {
+          "n": "Tafel",
+          "f": "tabuľa",
+          "a": "die"
+        },
+        {
+          "n": "Kreide",
+          "f": "krieda",
+          "a": "die"
+        },
+        {
+          "n": "Papier",
+          "f": "papier",
+          "a": "das"
+        },
+        {
+          "n": "Bibliothek",
+          "f": "knižnica",
+          "a": "die"
+        },
+        {
+          "n": "Wörterbuch",
+          "f": "slovník",
+          "a": "das"
+        },
+        {
+          "n": "Mathematik",
+          "f": "matematika",
+          "a": "die"
+        },
+        {
+          "n": "Physik",
+          "f": "fyzika",
+          "a": "die"
+        },
+        {
+          "n": "Chemie",
+          "f": "chémia",
+          "a": "die"
+        },
+        {
+          "n": "Biologie",
+          "f": "biológia",
+          "a": "die"
+        },
+        {
+          "n": "Geschichte",
+          "f": "história",
+          "a": "die"
+        },
+        {
+          "n": "Geographie",
+          "f": "geografia",
+          "a": "die"
+        },
+        {
+          "n": "Musik",
+          "f": "hudba",
+          "a": "die"
+        },
+        {
+          "n": "Kunst",
+          "f": "umenie",
+          "a": "die"
+        },
+        {
+          "n": "Sport",
+          "f": "telocvik",
+          "a": "der"
+        },
+        {
+          "n": "Informatik",
+          "f": "informatika",
+          "a": "die"
+        },
+        {
+          "n": "Sprache",
+          "f": "jazyk",
+          "a": "die"
+        },
+        {
+          "n": "Grammatik",
+          "f": "gramatika",
+          "a": "die"
+        },
+        {
+          "n": "Vokabel",
+          "f": "slovíčko",
+          "a": "die"
+        },
+        {
+          "n": "Aussprache",
+          "f": "výslovnosť",
+          "a": "die"
+        },
+        {
+          "n": "lernen",
+          "f": "učiť sa"
+        },
+        {
+          "n": "studieren",
+          "f": "študovať"
+        },
+        {
+          "n": "lesen",
+          "f": "čítať"
+        },
+        {
+          "n": "schreiben",
+          "f": "písať"
+        },
+        {
+          "n": "rechnen",
+          "f": "počítať"
+        },
+        {
+          "n": "erklären",
+          "f": "vysvetľovať"
+        },
+        {
+          "n": "verstehen",
+          "f": "rozumieť"
+        },
+        {
+          "n": "wiederholen",
+          "f": "opakovať"
+        },
+        {
+          "n": "erinnern",
+          "f": "pamätať si"
+        },
+        {
+          "n": "vergessen",
+          "f": "zabudnúť"
+        },
+        {
+          "n": "fragen",
+          "f": "pýtať sa"
+        },
+        {
+          "n": "antworten",
+          "f": "odpovedať"
+        }
+      ]
+    },
+    {
+      "id": "einkaufen",
+      "icon": "🛍️",
+      "name": "Einkaufen & Geld",
+      "words": [
+        {
+          "n": "kaufen",
+          "f": "kúpiť"
+        },
+        {
+          "n": "verkaufen",
+          "f": "predať"
+        },
+        {
+          "n": "bezahlen",
+          "f": "zaplatiť"
+        },
+        {
+          "n": "kosten",
+          "f": "stáť"
+        },
+        {
+          "n": "Preis",
+          "f": "cena",
+          "a": "der"
+        },
+        {
+          "n": "Rabatt",
+          "f": "zľava",
+          "a": "der"
+        },
+        {
+          "n": "Angebot",
+          "f": "ponuka",
+          "a": "das"
+        },
+        {
+          "n": "Rechnung",
+          "f": "účet",
+          "a": "die"
+        },
+        {
+          "n": "Quittung",
+          "f": "potvrdenie",
+          "a": "die"
+        },
+        {
+          "n": "Kassenbon",
+          "f": "bloček",
+          "a": "der"
+        },
+        {
+          "n": "Geld",
+          "f": "peniaze"
+        },
+        {
+          "n": "Bargeld",
+          "f": "hotovosť",
+          "a": "das"
+        },
+        {
+          "n": "Münze",
+          "f": "minca",
+          "a": "die"
+        },
+        {
+          "n": "Schein",
+          "f": "bankovka",
+          "a": "der"
+        },
+        {
+          "n": "Euro",
+          "f": "euro",
+          "a": "der"
+        },
+        {
+          "n": "Cent",
+          "f": "cent",
+          "a": "der"
+        },
+        {
+          "n": "Kreditkarte",
+          "f": "kreditná karta",
+          "a": "die"
+        },
+        {
+          "n": "Bankkarte",
+          "f": "bankomatová karta",
+          "a": "die"
+        },
+        {
+          "n": "Bankomat",
+          "f": "bankomat",
+          "a": "der"
+        },
+        {
+          "n": "Bank",
+          "f": "banka",
+          "a": "die"
+        },
+        {
+          "n": "Konto",
+          "f": "účet",
+          "a": "das"
+        },
+        {
+          "n": "Überweisung",
+          "f": "prevod",
+          "a": "die"
+        },
+        {
+          "n": "Supermarkt",
+          "f": "supermarket",
+          "a": "der"
+        },
+        {
+          "n": "Markt",
+          "f": "trh",
+          "a": "der"
+        },
+        {
+          "n": "Laden",
+          "f": "obchod",
+          "a": "der"
+        },
+        {
+          "n": "Geschäft",
+          "f": "predajňa",
+          "a": "das"
+        },
+        {
+          "n": "Boutique",
+          "f": "butik",
+          "a": "die"
+        },
+        {
+          "n": "Apotheke",
+          "f": "lekáreň",
+          "a": "die"
+        },
+        {
+          "n": "Bäckerei",
+          "f": "pekáreň",
+          "a": "die"
+        },
+        {
+          "n": "Metzgerei",
+          "f": "mäsiarstvo",
+          "a": "die"
+        },
+        {
+          "n": "Parfümerie",
+          "f": "parfuméria",
+          "a": "die"
+        },
+        {
+          "n": "Spielzeuggeschäft",
+          "f": "hračkárstvo",
+          "a": "das"
+        },
+        {
+          "n": "Buchhandlung",
+          "f": "kníhkupectvo",
+          "a": "die"
+        },
+        {
+          "n": "Möbelhaus",
+          "f": "predajňa nábytku",
+          "a": "das"
+        },
+        {
+          "n": "Kleidung",
+          "f": "oblečenie",
+          "a": "die"
+        },
+        {
+          "n": "Hemd",
+          "f": "košeľa",
+          "a": "das"
+        },
+        {
+          "n": "Hose",
+          "f": "nohavice"
+        },
+        {
+          "n": "Rock",
+          "f": "sukňa",
+          "a": "der"
+        },
+        {
+          "n": "Kleid",
+          "f": "šaty"
+        },
+        {
+          "n": "Jacke",
+          "f": "bunda",
+          "a": "die"
+        },
+        {
+          "n": "Mantel",
+          "f": "kabát",
+          "a": "der"
+        },
+        {
+          "n": "Pullover",
+          "f": "sveter",
+          "a": "der"
+        },
+        {
+          "n": "T-Shirt",
+          "f": "tričko",
+          "a": "das"
+        },
+        {
+          "n": "Unterwäsche",
+          "f": "spodná bielizeň",
+          "a": "die"
+        },
+        {
+          "n": "Socke",
+          "f": "ponožka",
+          "a": "die"
+        },
+        {
+          "n": "Schuh",
+          "f": "topánka",
+          "a": "der"
+        },
+        {
+          "n": "Stiefel",
+          "f": "čižma",
+          "a": "der"
+        },
+        {
+          "n": "Sandalen",
+          "f": "sandále"
+        },
+        {
+          "n": "Mütze",
+          "f": "čiapka",
+          "a": "die"
+        },
+        {
+          "n": "Handschuh",
+          "f": "rukavica",
+          "a": "der"
+        },
+        {
+          "n": "Schal",
+          "f": "šál",
+          "a": "der"
+        },
+        {
+          "n": "Gürtel",
+          "f": "opasok",
+          "a": "der"
+        },
+        {
+          "n": "Tasche",
+          "f": "taška",
+          "a": "die"
+        },
+        {
+          "n": "Rucksack",
+          "f": "ruksak",
+          "a": "der"
+        },
+        {
+          "n": "Portemonnaie",
+          "f": "peňaženka",
+          "a": "das"
+        },
+        {
+          "n": "Schmuck",
+          "f": "šperky"
+        },
+        {
+          "n": "Uhr",
+          "f": "hodinky"
+        },
+        {
+          "n": "Brille",
+          "f": "okuliare"
+        },
+        {
+          "n": "Ring",
+          "f": "prsteň",
+          "a": "der"
+        },
+        {
+          "n": "Halskette",
+          "f": "náhrdelník",
+          "a": "die"
+        },
+        {
+          "n": "Armband",
+          "f": "náramok",
+          "a": "das"
+        },
+        {
+          "n": "Größe",
+          "f": "veľkosť",
+          "a": "die"
+        },
+        {
+          "n": "Farbe",
+          "f": "farba",
+          "a": "die"
+        },
+        {
+          "n": "umtauschen",
+          "f": "vymeniť"
+        },
+        {
+          "n": "zurückgeben",
+          "f": "vrátiť"
+        }
+      ]
+    },
+    {
+      "id": "kommunikation",
+      "icon": "💬",
+      "name": "Kommunikation & Alltag",
+      "words": [
+        {
+          "n": "sprechen",
+          "f": "hovoriť"
+        },
+        {
+          "n": "reden",
+          "f": "rozprávať"
+        },
+        {
+          "n": "sagen",
+          "f": "povedať"
+        },
+        {
+          "n": "erzählen",
+          "f": "rozprávať"
+        },
+        {
+          "n": "fragen",
+          "f": "opýtať sa"
+        },
+        {
+          "n": "antworten",
+          "f": "odpovedať"
+        },
+        {
+          "n": "erklären",
+          "f": "vysvetliť"
+        },
+        {
+          "n": "beschreiben",
+          "f": "opísať"
+        },
+        {
+          "n": "diskutieren",
+          "f": "diskutovať"
+        },
+        {
+          "n": "streiten",
+          "f": "hádať sa"
+        },
+        {
+          "n": "zustimmen",
+          "f": "súhlasiť"
+        },
+        {
+          "n": "ablehnen",
+          "f": "odmietnuť"
+        },
+        {
+          "n": "bitten",
+          "f": "prosiť"
+        },
+        {
+          "n": "danken",
+          "f": "ďakovať"
+        },
+        {
+          "n": "entschuldigen",
+          "f": "ospravedlniť sa"
+        },
+        {
+          "n": "grüßen",
+          "f": "pozdraviť"
+        },
+        {
+          "n": "verabschieden",
+          "f": "rozlúčiť sa"
+        },
+        {
+          "n": "vorstellen",
+          "f": "predstaviť"
+        },
+        {
+          "n": "Hallo",
+          "f": "Ahoj"
+        },
+        {
+          "n": "Tschüss",
+          "f": "Dovidenia"
+        },
+        {
+          "n": "Auf Wiedersehen",
+          "f": "Zbohom"
+        },
+        {
+          "n": "Guten Morgen",
+          "f": "Dobré ráno"
+        },
+        {
+          "n": "Guten Tag",
+          "f": "Dobrý deň"
+        },
+        {
+          "n": "Guten Abend",
+          "f": "Dobrý večer"
+        },
+        {
+          "n": "Gute Nacht",
+          "f": "Dobrú noc"
+        },
+        {
+          "n": "Danke",
+          "f": "Ďakujem"
+        },
+        {
+          "n": "Bitte",
+          "f": "Prosím"
+        },
+        {
+          "n": "Entschuldigung",
+          "f": "Prepáčte"
+        },
+        {
+          "n": "Ja",
+          "f": "Áno"
+        },
+        {
+          "n": "Nein",
+          "f": "Nie"
+        },
+        {
+          "n": "vielleicht",
+          "f": "možno"
+        },
+        {
+          "n": "natürlich",
+          "f": "samozrejme"
+        },
+        {
+          "n": "leider",
+          "f": "bohužiaľ"
+        },
+        {
+          "n": "hoffentlich",
+          "f": "dúfajme"
+        },
+        {
+          "n": "Wie geht es Ihnen?",
+          "f": "Ako sa máte?"
+        },
+        {
+          "n": "Wie geht es dir?",
+          "f": "Ako sa máš?"
+        },
+        {
+          "n": "Es geht mir gut",
+          "f": "Mám sa dobre"
+        },
+        {
+          "n": "Es geht mir schlecht",
+          "f": "Mám sa zle"
+        },
+        {
+          "n": "Ich verstehe nicht",
+          "f": "Nerozumiem"
+        },
+        {
+          "n": "Wiederholen Sie bitte",
+          "f": "Zopakujte prosím"
+        },
+        {
+          "n": "Langsamer bitte",
+          "f": "Pomalšie prosím"
+        },
+        {
+          "n": "Wie heißen Sie?",
+          "f": "Ako sa voláte?"
+        },
+        {
+          "n": "Ich heiße…",
+          "f": "Volám sa…"
+        },
+        {
+          "n": "Woher kommen Sie?",
+          "f": "Odkiaľ ste?"
+        },
+        {
+          "n": "Ich komme aus…",
+          "f": "Som z…"
+        },
+        {
+          "n": "Wo wohnen Sie?",
+          "f": "Kde bývate?"
+        },
+        {
+          "n": "Wie alt sind Sie?",
+          "f": "Koľko máte rokov?"
+        },
+        {
+          "n": "Ich bin … Jahre alt",
+          "f": "Mám … rokov"
+        },
+        {
+          "n": "Telefon",
+          "f": "telefón",
+          "a": "das"
+        },
+        {
+          "n": "Handy",
+          "f": "mobilný telefón",
+          "a": "das"
+        },
+        {
+          "n": "anrufen",
+          "f": "zavolať"
+        },
+        {
+          "n": "E-Mail",
+          "f": "e-mail",
+          "a": "die"
+        },
+        {
+          "n": "Brief",
+          "f": "list",
+          "a": "der"
+        },
+        {
+          "n": "Nachricht",
+          "f": "správa",
+          "a": "die"
+        },
+        {
+          "n": "Gespräch",
+          "f": "rozhovor",
+          "a": "das"
+        },
+        {
+          "n": "Diskussion",
+          "f": "diskusia",
+          "a": "die"
+        },
+        {
+          "n": "Meinung",
+          "f": "názor",
+          "a": "die"
+        },
+        {
+          "n": "Idee",
+          "f": "nápad",
+          "a": "die"
+        },
+        {
+          "n": "Vorschlag",
+          "f": "návrh",
+          "a": "der"
+        },
+        {
+          "n": "Entscheidung",
+          "f": "rozhodnutie",
+          "a": "die"
+        },
+        {
+          "n": "Problem",
+          "f": "problém",
+          "a": "das"
+        },
+        {
+          "n": "Lösung",
+          "f": "riešenie",
+          "a": "die"
+        },
+        {
+          "n": "Erklärung",
+          "f": "vysvetlenie",
+          "a": "die"
+        },
+        {
+          "n": "Antwort",
+          "f": "odpoveď",
+          "a": "die"
+        },
+        {
+          "n": "Frage",
+          "f": "otázka",
+          "a": "die"
+        },
+        {
+          "n": "Aussage",
+          "f": "tvrdenie",
+          "a": "die"
+        }
+      ]
+    },
+    {
+      "id": "gefuehle",
+      "icon": "❤️",
+      "name": "Gefühle & Charakter",
+      "words": [
+        {
+          "n": "glücklich",
+          "f": "šťastný"
+        },
+        {
+          "n": "traurig",
+          "f": "smutný"
+        },
+        {
+          "n": "wütend",
+          "f": "nahnevaný"
+        },
+        {
+          "n": "ängstlich",
+          "f": "úzkostný"
+        },
+        {
+          "n": "überrascht",
+          "f": "prekvapený"
+        },
+        {
+          "n": "enttäuscht",
+          "f": "sklamaný"
+        },
+        {
+          "n": "aufgeregt",
+          "f": "vzrušený"
+        },
+        {
+          "n": "gelangweilt",
+          "f": "znudený"
+        },
+        {
+          "n": "müde",
+          "f": "unavený"
+        },
+        {
+          "n": "entspannt",
+          "f": "uvoľnený"
+        },
+        {
+          "n": "gestresst",
+          "f": "vystresovaný"
+        },
+        {
+          "n": "froh",
+          "f": "radostný"
+        },
+        {
+          "n": "zufrieden",
+          "f": "spokojný"
+        },
+        {
+          "n": "unzufrieden",
+          "f": "nespokojný"
+        },
+        {
+          "n": "einsam",
+          "f": "osamelý"
+        },
+        {
+          "n": "verliebt",
+          "f": "zamilovaný"
+        },
+        {
+          "n": "stolz",
+          "f": "hrdý"
+        },
+        {
+          "n": "schämen",
+          "f": "hanbiť sa"
+        },
+        {
+          "n": "neidisch",
+          "f": "závidieť"
+        },
+        {
+          "n": "eifersüchtig",
+          "f": "žiarlivý"
+        },
+        {
+          "n": "dankbar",
+          "f": "vďačný"
+        },
+        {
+          "n": "hoffnungsvoll",
+          "f": "nádejný"
+        },
+        {
+          "n": "verzweifelt",
+          "f": "zúfalý"
+        },
+        {
+          "n": "mutig",
+          "f": "odvážny"
+        },
+        {
+          "n": "feige",
+          "f": "zbabelý"
+        },
+        {
+          "n": "neugierig",
+          "f": "zvedavý"
+        },
+        {
+          "n": "geduldig",
+          "f": "trpezlivý"
+        },
+        {
+          "n": "ungeduldig",
+          "f": "netrpezlivý"
+        },
+        {
+          "n": "freundlich",
+          "f": "priateľský"
+        },
+        {
+          "n": "unfreundlich",
+          "f": "nepriateľský"
+        },
+        {
+          "n": "höflich",
+          "f": "zdvorilý"
+        },
+        {
+          "n": "unhöflich",
+          "f": "nezdvorilý"
+        },
+        {
+          "n": "ehrlich",
+          "f": "čestný"
+        },
+        {
+          "n": "unehrlich",
+          "f": "nečestný"
+        },
+        {
+          "n": "großzügig",
+          "f": "štedrý"
+        },
+        {
+          "n": "geizig",
+          "f": "lakomý"
+        },
+        {
+          "n": "fleißig",
+          "f": "usilovný"
+        },
+        {
+          "n": "faul",
+          "f": "lenivý"
+        },
+        {
+          "n": "klug",
+          "f": "múdry"
+        },
+        {
+          "n": "dumm",
+          "f": "hlúpy"
+        },
+        {
+          "n": "lustig",
+          "f": "vtipný"
+        },
+        {
+          "n": "ernst",
+          "f": "vážny"
+        },
+        {
+          "n": "ruhig",
+          "f": "pokojný"
+        },
+        {
+          "n": "laut",
+          "f": "hlučný"
+        },
+        {
+          "n": "schüchtern",
+          "f": "hanblivý"
+        },
+        {
+          "n": "selbstbewusst",
+          "f": "sebavedomý"
+        },
+        {
+          "n": "kreativ",
+          "f": "kreatívny"
+        },
+        {
+          "n": "talentiert",
+          "f": "talentovaný"
+        },
+        {
+          "n": "zuverlässig",
+          "f": "spoľahlivý"
+        },
+        {
+          "n": "unzuverlässig",
+          "f": "nespoľahlivý"
+        },
+        {
+          "n": "Liebe",
+          "f": "láska",
+          "a": "die"
+        },
+        {
+          "n": "Freundschaft",
+          "f": "priateľstvo",
+          "a": "die"
+        },
+        {
+          "n": "Hass",
+          "f": "nenávisť",
+          "a": "der"
+        },
+        {
+          "n": "Angst",
+          "f": "strach",
+          "a": "die"
+        },
+        {
+          "n": "Freude",
+          "f": "radosť",
+          "a": "die"
+        },
+        {
+          "n": "Trauer",
+          "f": "smútok",
+          "a": "die"
+        },
+        {
+          "n": "Wut",
+          "f": "hnev",
+          "a": "die"
+        },
+        {
+          "n": "Überraschung",
+          "f": "prekvapenie",
+          "a": "die"
+        },
+        {
+          "n": "Hoffnung",
+          "f": "nádej",
+          "a": "die"
+        },
+        {
+          "n": "Verzweiflung",
+          "f": "zúfalstvo",
+          "a": "die"
+        },
+        {
+          "n": "Stolz",
+          "f": "hrdosť",
+          "a": "der"
+        },
+        {
+          "n": "Scham",
+          "f": "hanba",
+          "a": "die"
+        },
+        {
+          "n": "Mitgefühl",
+          "f": "súcit",
+          "a": "das"
+        },
+        {
+          "n": "Empathie",
+          "f": "empatia",
+          "a": "die"
+        },
+        {
+          "n": "Vertrauen",
+          "f": "dôvera",
+          "a": "das"
+        },
+        {
+          "n": "Misstrauen",
+          "f": "nedôvera",
+          "a": "das"
+        }
+      ]
+    },
+    {
+      "id": "technik",
+      "icon": "💻",
+      "name": "Technik & Medien",
+      "words": [
+        {
+          "n": "Computer",
+          "f": "počítač",
+          "a": "der"
+        },
+        {
+          "n": "Laptop",
+          "f": "laptop",
+          "a": "der"
+        },
+        {
+          "n": "Tablet",
+          "f": "tablet",
+          "a": "das"
+        },
+        {
+          "n": "Smartphone",
+          "f": "smartphone",
+          "a": "das"
+        },
+        {
+          "n": "Bildschirm",
+          "f": "obrazovka",
+          "a": "der"
+        },
+        {
+          "n": "Tastatur",
+          "f": "klávesnica",
+          "a": "die"
+        },
+        {
+          "n": "Maus",
+          "f": "myš",
+          "a": "die"
+        },
+        {
+          "n": "Drucker",
+          "f": "tlačiareň",
+          "a": "der"
+        },
+        {
+          "n": "Scanner",
+          "f": "skener",
+          "a": "der"
+        },
+        {
+          "n": "Kamera",
+          "f": "kamera",
+          "a": "die"
+        },
+        {
+          "n": "Kopfhörer",
+          "f": "slúchadlá"
+        },
+        {
+          "n": "Lautsprecher",
+          "f": "reproduktor",
+          "a": "der"
+        },
+        {
+          "n": "Fernseher",
+          "f": "televízor",
+          "a": "der"
+        },
+        {
+          "n": "Radio",
+          "f": "rádio",
+          "a": "das"
+        },
+        {
+          "n": "Internet",
+          "f": "internet",
+          "a": "das"
+        },
+        {
+          "n": "Website",
+          "f": "webstránka",
+          "a": "die"
+        },
+        {
+          "n": "App",
+          "f": "aplikácia",
+          "a": "die"
+        },
+        {
+          "n": "Software",
+          "f": "softvér",
+          "a": "die"
+        },
+        {
+          "n": "Programm",
+          "f": "program",
+          "a": "das"
+        },
+        {
+          "n": "Datei",
+          "f": "súbor",
+          "a": "die"
+        },
+        {
+          "n": "Ordner",
+          "f": "priečinok",
+          "a": "der"
+        },
+        {
+          "n": "Passwort",
+          "f": "heslo",
+          "a": "das"
+        },
+        {
+          "n": "E-Mail",
+          "f": "e-mail",
+          "a": "die"
+        },
+        {
+          "n": "Nachricht",
+          "f": "správa",
+          "a": "die"
+        },
+        {
+          "n": "Video",
+          "f": "video",
+          "a": "das"
+        },
+        {
+          "n": "Foto",
+          "f": "fotka",
+          "a": "das"
+        },
+        {
+          "n": "Musik",
+          "f": "hudba",
+          "a": "die"
+        },
+        {
+          "n": "Film",
+          "f": "film",
+          "a": "der"
+        },
+        {
+          "n": "Serie",
+          "f": "seriál",
+          "a": "die"
+        },
+        {
+          "n": "Streaming",
+          "f": "streamovanie",
+          "a": "das"
+        },
+        {
+          "n": "soziale Medien",
+          "f": "sociálne siete"
+        },
+        {
+          "n": "Netzwerk",
+          "f": "sieť",
+          "a": "das"
+        },
+        {
+          "n": "Bluetooth",
+          "f": "bluetooth",
+          "a": "das"
+        },
+        {
+          "n": "WLAN",
+          "f": "wifi",
+          "a": "das"
+        },
+        {
+          "n": "Akku",
+          "f": "batéria",
+          "a": "der"
+        },
+        {
+          "n": "Ladekabel",
+          "f": "nabíjací kábel",
+          "a": "das"
+        },
+        {
+          "n": "Cloud",
+          "f": "cloud",
+          "a": "die"
+        },
+        {
+          "n": "Backup",
+          "f": "záloha",
+          "a": "das"
+        },
+        {
+          "n": "Update",
+          "f": "aktualizácia",
+          "a": "das"
+        },
+        {
+          "n": "Download",
+          "f": "stiahnutie",
+          "a": "der"
+        },
+        {
+          "n": "Upload",
+          "f": "nahranie",
+          "a": "das"
+        },
+        {
+          "n": "Virus",
+          "f": "vírus",
+          "a": "der"
+        },
+        {
+          "n": "Roboter",
+          "f": "robot",
+          "a": "der"
+        },
+        {
+          "n": "künstliche Intelligenz",
+          "f": "umelá inteligencia",
+          "a": "die"
+        },
+        {
+          "n": "Algorithmus",
+          "f": "algoritmus",
+          "a": "der"
+        },
+        {
+          "n": "Daten",
+          "f": "dáta"
+        },
+        {
+          "n": "Verschlüsselung",
+          "f": "šifrovanie",
+          "a": "die"
+        },
+        {
+          "n": "Sicherheit",
+          "f": "bezpečnosť",
+          "a": "die"
+        },
+        {
+          "n": "drucken",
+          "f": "tlačiť"
+        },
+        {
+          "n": "speichern",
+          "f": "uložiť"
+        },
+        {
+          "n": "löschen",
+          "f": "vymazať"
+        },
+        {
+          "n": "kopieren",
+          "f": "kopírovať"
+        },
+        {
+          "n": "einfügen",
+          "f": "vložiť"
+        },
+        {
+          "n": "suchen",
+          "f": "hľadať"
+        },
+        {
+          "n": "installieren",
+          "f": "nainštalovať"
+        },
+        {
+          "n": "deinstallieren",
+          "f": "odinštalovať"
+        },
+        {
+          "n": "starten",
+          "f": "spustiť"
+        },
+        {
+          "n": "beenden",
+          "f": "ukončiť"
+        },
+        {
+          "n": "neustarten",
+          "f": "reštartovať"
+        },
+        {
+          "n": "klicken",
+          "f": "kliknúť"
+        },
+        {
+          "n": "tippen",
+          "f": "ťukať"
+        },
+        {
+          "n": "wischen",
+          "f": "potiahnuť"
+        }
+      ]
+    },
+    {
+      "id": "freizeit",
+      "icon": "⚽",
+      "name": "Freizeit & Sport",
+      "words": [
+        {
+          "n": "Hobby",
+          "f": "hobby",
+          "a": "das"
+        },
+        {
+          "n": "Sport",
+          "f": "šport",
+          "a": "der"
+        },
+        {
+          "n": "Fußball",
+          "f": "futbal",
+          "a": "der"
+        },
+        {
+          "n": "Basketball",
+          "f": "basketbal",
+          "a": "der"
+        },
+        {
+          "n": "Tennis",
+          "f": "tenis",
+          "a": "das"
+        },
+        {
+          "n": "Volleyball",
+          "f": "volejbal",
+          "a": "der"
+        },
+        {
+          "n": "Schwimmen",
+          "f": "plávanie",
+          "a": "das"
+        },
+        {
+          "n": "Radfahren",
+          "f": "jazda na bicykli",
+          "a": "das"
+        },
+        {
+          "n": "Laufen",
+          "f": "beh",
+          "a": "das"
+        },
+        {
+          "n": "Wandern",
+          "f": "turistika",
+          "a": "das"
+        },
+        {
+          "n": "Klettern",
+          "f": "horolezectvo",
+          "a": "das"
+        },
+        {
+          "n": "Skifahren",
+          "f": "lyžovanie",
+          "a": "das"
+        },
+        {
+          "n": "Eislaufen",
+          "f": "korčuľovanie",
+          "a": "das"
+        },
+        {
+          "n": "Surfen",
+          "f": "surfovanie",
+          "a": "das"
+        },
+        {
+          "n": "Tanzen",
+          "f": "tanec",
+          "a": "das"
+        },
+        {
+          "n": "Yoga",
+          "f": "jóga",
+          "a": "das"
+        },
+        {
+          "n": "Fitness",
+          "f": "fitness",
+          "a": "das"
+        },
+        {
+          "n": "Gym",
+          "f": "posilňovňa",
+          "a": "das"
+        },
+        {
+          "n": "Spiel",
+          "f": "hra",
+          "a": "das"
+        },
+        {
+          "n": "Brettspiel",
+          "f": "stolová hra",
+          "a": "das"
+        },
+        {
+          "n": "Videospiel",
+          "f": "videohra",
+          "a": "das"
+        },
+        {
+          "n": "Kino",
+          "f": "kino",
+          "a": "das"
+        },
+        {
+          "n": "Theater",
+          "f": "divadlo",
+          "a": "das"
+        },
+        {
+          "n": "Konzert",
+          "f": "koncert",
+          "a": "das"
+        },
+        {
+          "n": "Museum",
+          "f": "múzeum",
+          "a": "das"
+        },
+        {
+          "n": "Ausstellung",
+          "f": "výstava",
+          "a": "die"
+        },
+        {
+          "n": "lesen",
+          "f": "čítať"
+        },
+        {
+          "n": "malen",
+          "f": "maľovať"
+        },
+        {
+          "n": "zeichnen",
+          "f": "kresliť"
+        },
+        {
+          "n": "fotografieren",
+          "f": "fotografovať"
+        },
+        {
+          "n": "singen",
+          "f": "spievať"
+        },
+        {
+          "n": "spielen",
+          "f": "hrať"
+        },
+        {
+          "n": "reisen",
+          "f": "cestovať"
+        },
+        {
+          "n": "kochen",
+          "f": "variť"
+        },
+        {
+          "n": "gärtnern",
+          "f": "záhradkárčiť"
+        },
+        {
+          "n": "sammeln",
+          "f": "zbierať"
+        },
+        {
+          "n": "Mannschaft",
+          "f": "tím",
+          "a": "die"
+        },
+        {
+          "n": "Spieler",
+          "f": "hráč",
+          "a": "der"
+        },
+        {
+          "n": "Schiedsrichter",
+          "f": "rozhodca",
+          "a": "der"
+        },
+        {
+          "n": "Stadion",
+          "f": "štadión",
+          "a": "das"
+        },
+        {
+          "n": "Tor",
+          "f": "gól",
+          "a": "das"
+        },
+        {
+          "n": "Sieg",
+          "f": "víťazstvo",
+          "a": "der"
+        },
+        {
+          "n": "Niederlage",
+          "f": "prehra",
+          "a": "die"
+        },
+        {
+          "n": "Unentschieden",
+          "f": "remíza",
+          "a": "das"
+        },
+        {
+          "n": "Meisterschaft",
+          "f": "majstrovstvá"
+        },
+        {
+          "n": "Pokal",
+          "f": "pohár",
+          "a": "der"
+        },
+        {
+          "n": "Training",
+          "f": "tréning",
+          "a": "das"
+        },
+        {
+          "n": "Trainer",
+          "f": "tréner",
+          "a": "der"
+        },
+        {
+          "n": "Sportler",
+          "f": "športovec",
+          "a": "der"
+        },
+        {
+          "n": "Olympiade",
+          "f": "olympiáda",
+          "a": "die"
+        }
+      ]
+    },
+    {
+      "id": "wetter",
+      "icon": "⛅",
+      "name": "Wetter & Umwelt",
+      "words": [
+        {
+          "n": "Wetter",
+          "f": "počasie",
+          "a": "das"
+        },
+        {
+          "n": "Klima",
+          "f": "klíma",
+          "a": "das"
+        },
+        {
+          "n": "Temperatur",
+          "f": "teplota",
+          "a": "die"
+        },
+        {
+          "n": "Grad",
+          "f": "stupeň",
+          "a": "der"
+        },
+        {
+          "n": "warm",
+          "f": "teplo"
+        },
+        {
+          "n": "kalt",
+          "f": "chladno"
+        },
+        {
+          "n": "heiß",
+          "f": "horúco"
+        },
+        {
+          "n": "kühl",
+          "f": "chladivo"
+        },
+        {
+          "n": "sonnig",
+          "f": "slnečno"
+        },
+        {
+          "n": "bewölkt",
+          "f": "oblačno"
+        },
+        {
+          "n": "regnerisch",
+          "f": "daždivo"
+        },
+        {
+          "n": "windig",
+          "f": "veterné"
+        },
+        {
+          "n": "neblig",
+          "f": "hmlisté"
+        },
+        {
+          "n": "Sonne",
+          "f": "slnko",
+          "a": "die"
+        },
+        {
+          "n": "Regen",
+          "f": "dážď",
+          "a": "der"
+        },
+        {
+          "n": "Schnee",
+          "f": "sneh",
+          "a": "der"
+        },
+        {
+          "n": "Hagel",
+          "f": "krúpy"
+        },
+        {
+          "n": "Gewitter",
+          "f": "búrka",
+          "a": "das"
+        },
+        {
+          "n": "Blitz",
+          "f": "blesk",
+          "a": "der"
+        },
+        {
+          "n": "Donner",
+          "f": "hrom",
+          "a": "der"
+        },
+        {
+          "n": "Sturm",
+          "f": "búrka",
+          "a": "der"
+        },
+        {
+          "n": "Tornado",
+          "f": "tornado",
+          "a": "der"
+        },
+        {
+          "n": "Überschwemmung",
+          "f": "povodeň",
+          "a": "die"
+        },
+        {
+          "n": "Dürre",
+          "f": "sucho",
+          "a": "die"
+        },
+        {
+          "n": "Erdbeben",
+          "f": "zemetrasenie",
+          "a": "das"
+        },
+        {
+          "n": "Vulkan",
+          "f": "sopka",
+          "a": "der"
+        },
+        {
+          "n": "Umwelt",
+          "f": "životné prostredie",
+          "a": "die"
+        },
+        {
+          "n": "Natur",
+          "f": "príroda",
+          "a": "die"
+        },
+        {
+          "n": "Ökologie",
+          "f": "ekológia",
+          "a": "die"
+        },
+        {
+          "n": "Klimawandel",
+          "f": "zmena klímy",
+          "a": "der"
+        },
+        {
+          "n": "Treibhausgas",
+          "f": "skleníkový plyn",
+          "a": "das"
+        },
+        {
+          "n": "CO2",
+          "f": "CO2"
+        },
+        {
+          "n": "erneuerbare Energie",
+          "f": "obnoviteľná energia",
+          "a": "die"
+        },
+        {
+          "n": "Solarenergie",
+          "f": "solárna energia",
+          "a": "die"
+        },
+        {
+          "n": "Windenergie",
+          "f": "veterná energia",
+          "a": "die"
+        },
+        {
+          "n": "Recycling",
+          "f": "recyklácia",
+          "a": "das"
+        },
+        {
+          "n": "Müll",
+          "f": "odpad",
+          "a": "der"
+        },
+        {
+          "n": "Plastik",
+          "f": "plast",
+          "a": "das"
+        },
+        {
+          "n": "Verschmutzung",
+          "f": "znečistenie",
+          "a": "die"
+        },
+        {
+          "n": "Naturschutz",
+          "f": "ochrana prírody",
+          "a": "der"
+        },
+        {
+          "n": "Artenschutz",
+          "f": "ochrana druhov",
+          "a": "der"
+        },
+        {
+          "n": "nachhaltig",
+          "f": "udržateľný"
+        },
+        {
+          "n": "umweltfreundlich",
+          "f": "ekologický"
+        },
+        {
+          "n": "Luft",
+          "f": "vzduch",
+          "a": "die"
+        },
+        {
+          "n": "Wasser",
+          "f": "voda",
+          "a": "das"
+        },
+        {
+          "n": "Boden",
+          "f": "pôda",
+          "a": "der"
+        },
+        {
+          "n": "Wald",
+          "f": "les",
+          "a": "der"
+        },
+        {
+          "n": "Wiese",
+          "f": "lúka",
+          "a": "die"
+        },
+        {
+          "n": "Feuchtgebiet",
+          "f": "mokraď",
+          "a": "das"
+        },
+        {
+          "n": "Regenwald",
+          "f": "dažďový prales",
+          "a": "der"
+        },
+        {
+          "n": "Wüste",
+          "f": "púšť",
+          "a": "die"
+        },
+        {
+          "n": "Steppe",
+          "f": "step",
+          "a": "die"
+        },
+        {
+          "n": "Tundra",
+          "f": "tundra",
+          "a": "die"
+        },
+        {
+          "n": "Gletscher",
+          "f": "ľadovec",
+          "a": "der"
+        },
+        {
+          "n": "Eisberg",
+          "f": "ľadovec",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "verben",
+      "icon": "⚡",
+      "name": "Wichtige Verben",
+      "words": [
+        {
+          "n": "sein",
+          "f": "byť"
+        },
+        {
+          "n": "haben",
+          "f": "mať"
+        },
+        {
+          "n": "werden",
+          "f": "stať sa"
+        },
+        {
+          "n": "können",
+          "f": "môcť"
+        },
+        {
+          "n": "müssen",
+          "f": "musieť"
+        },
+        {
+          "n": "wollen",
+          "f": "chcieť"
+        },
+        {
+          "n": "sollen",
+          "f": "mať (povinnosť)"
+        },
+        {
+          "n": "dürfen",
+          "f": "smieť"
+        },
+        {
+          "n": "mögen",
+          "f": "mať rád"
+        },
+        {
+          "n": "lassen",
+          "f": "nechať"
+        },
+        {
+          "n": "gehen",
+          "f": "ísť"
+        },
+        {
+          "n": "kommen",
+          "f": "prísť"
+        },
+        {
+          "n": "fahren",
+          "f": "ísť (vozidlom)"
+        },
+        {
+          "n": "laufen",
+          "f": "bežať"
+        },
+        {
+          "n": "fliegen",
+          "f": "letieť"
+        },
+        {
+          "n": "schwimmen",
+          "f": "plávať"
+        },
+        {
+          "n": "stehen",
+          "f": "stáť"
+        },
+        {
+          "n": "sitzen",
+          "f": "sedieť"
+        },
+        {
+          "n": "liegen",
+          "f": "ležať"
+        },
+        {
+          "n": "schlafen",
+          "f": "spať"
+        },
+        {
+          "n": "aufwachen",
+          "f": "prebudiť sa"
+        },
+        {
+          "n": "essen",
+          "f": "jesť"
+        },
+        {
+          "n": "trinken",
+          "f": "piť"
+        },
+        {
+          "n": "kochen",
+          "f": "variť"
+        },
+        {
+          "n": "kaufen",
+          "f": "kúpiť"
+        },
+        {
+          "n": "zahlen",
+          "f": "platiť"
+        },
+        {
+          "n": "arbeiten",
+          "f": "pracovať"
+        },
+        {
+          "n": "lernen",
+          "f": "učiť sa"
+        },
+        {
+          "n": "lesen",
+          "f": "čítať"
+        },
+        {
+          "n": "schreiben",
+          "f": "písať"
+        },
+        {
+          "n": "hören",
+          "f": "počúvať"
+        },
+        {
+          "n": "sehen",
+          "f": "vidieť"
+        },
+        {
+          "n": "schauen",
+          "f": "pozerať"
+        },
+        {
+          "n": "sprechen",
+          "f": "hovoriť"
+        },
+        {
+          "n": "sagen",
+          "f": "povedať"
+        },
+        {
+          "n": "fragen",
+          "f": "pýtať sa"
+        },
+        {
+          "n": "antworten",
+          "f": "odpovedať"
+        },
+        {
+          "n": "denken",
+          "f": "myslieť"
+        },
+        {
+          "n": "wissen",
+          "f": "vedieť"
+        },
+        {
+          "n": "verstehen",
+          "f": "rozumieť"
+        },
+        {
+          "n": "vergessen",
+          "f": "zabudnúť"
+        },
+        {
+          "n": "erinnern",
+          "f": "pamätať si"
+        },
+        {
+          "n": "fühlen",
+          "f": "cítiť"
+        },
+        {
+          "n": "lieben",
+          "f": "milovať"
+        },
+        {
+          "n": "hassen",
+          "f": "nenávidieť"
+        },
+        {
+          "n": "helfen",
+          "f": "pomáhať"
+        },
+        {
+          "n": "brauchen",
+          "f": "potrebovať"
+        },
+        {
+          "n": "finden",
+          "f": "nájsť"
+        },
+        {
+          "n": "verlieren",
+          "f": "stratiť"
+        },
+        {
+          "n": "bringen",
+          "f": "priniesť"
+        },
+        {
+          "n": "geben",
+          "f": "dať"
+        },
+        {
+          "n": "nehmen",
+          "f": "vziať"
+        },
+        {
+          "n": "stellen",
+          "f": "postaviť"
+        },
+        {
+          "n": "legen",
+          "f": "položiť"
+        },
+        {
+          "n": "hängen",
+          "f": "zavesiť"
+        },
+        {
+          "n": "öffnen",
+          "f": "otvoriť"
+        },
+        {
+          "n": "schließen",
+          "f": "zavrieť"
+        },
+        {
+          "n": "beginnen",
+          "f": "začať"
+        },
+        {
+          "n": "enden",
+          "f": "skončiť"
+        },
+        {
+          "n": "warten",
+          "f": "čakať"
+        },
+        {
+          "n": "treffen",
+          "f": "stretnúť"
+        },
+        {
+          "n": "besuchen",
+          "f": "navštíviť"
+        },
+        {
+          "n": "spielen",
+          "f": "hrať"
+        },
+        {
+          "n": "tanzen",
+          "f": "tancovať"
+        },
+        {
+          "n": "singen",
+          "f": "spievať"
+        },
+        {
+          "n": "malen",
+          "f": "maľovať"
+        },
+        {
+          "n": "bauen",
+          "f": "stavať"
+        },
+        {
+          "n": "reparieren",
+          "f": "opravovať"
+        },
+        {
+          "n": "putzen",
+          "f": "čistiť"
+        },
+        {
+          "n": "waschen",
+          "f": "prať"
+        },
+        {
+          "n": "bügeln",
+          "f": "žehliť"
+        },
+        {
+          "n": "aufräumen",
+          "f": "upratovať"
+        },
+        {
+          "n": "einladen",
+          "f": "pozvať"
+        },
+        {
+          "n": "feiern",
+          "f": "oslavovať"
+        },
+        {
+          "n": "reisen",
+          "f": "cestovať"
+        },
+        {
+          "n": "wandern",
+          "f": "turistovať"
+        },
+        {
+          "n": "klettern",
+          "f": "liezť"
+        },
+        {
+          "n": "fallen",
+          "f": "padnúť"
+        },
+        {
+          "n": "steigen",
+          "f": "vystúpiť"
+        },
+        {
+          "n": "drücken",
+          "f": "stlačiť"
+        },
+        {
+          "n": "ziehen",
+          "f": "ťahať"
+        },
+        {
+          "n": "schieben",
+          "f": "tlačiť"
+        },
+        {
+          "n": "werfen",
+          "f": "hodiť"
+        },
+        {
+          "n": "fangen",
+          "f": "chytiť"
+        },
+        {
+          "n": "schlagen",
+          "f": "udrieť"
+        },
+        {
+          "n": "brechen",
+          "f": "zlomiť"
+        },
+        {
+          "n": "schneiden",
+          "f": "krájať"
+        },
+        {
+          "n": "nähen",
+          "f": "šiť"
+        },
+        {
+          "n": "stricken",
+          "f": "pliesť"
+        },
+        {
+          "n": "messen",
+          "f": "merať"
+        },
+        {
+          "n": "wiegen",
+          "f": "vážiť"
+        },
+        {
+          "n": "zählen",
+          "f": "počítať"
+        },
+        {
+          "n": "rechnen",
+          "f": "rátať"
+        },
+        {
+          "n": "planen",
+          "f": "plánovať"
+        },
+        {
+          "n": "entscheiden",
+          "f": "rozhodnúť"
+        },
+        {
+          "n": "versuchen",
+          "f": "pokúsiť sa"
+        },
+        {
+          "n": "gelingen",
+          "f": "podariť sa"
+        },
+        {
+          "n": "scheitern",
+          "f": "zlyhať"
+        },
+        {
+          "n": "übersetzen",
+          "f": "preložiť"
+        },
+        {
+          "n": "erklären",
+          "f": "vysvetliť"
+        },
+        {
+          "n": "beschreiben",
+          "f": "opísať"
+        }
+      ]
+    },
+    {
+      "id": "adjektive",
+      "icon": "✨",
+      "name": "Wichtige Adjektive",
+      "words": [
+        {
+          "n": "gut",
+          "f": "dobrý"
+        },
+        {
+          "n": "schlecht",
+          "f": "zlý"
+        },
+        {
+          "n": "schön",
+          "f": "krásny"
+        },
+        {
+          "n": "hässlich",
+          "f": "škaredý"
+        },
+        {
+          "n": "groß",
+          "f": "veľký"
+        },
+        {
+          "n": "klein",
+          "f": "malý"
+        },
+        {
+          "n": "alt",
+          "f": "starý"
+        },
+        {
+          "n": "jung",
+          "f": "mladý"
+        },
+        {
+          "n": "neu",
+          "f": "nový"
+        },
+        {
+          "n": "teuer",
+          "f": "drahý"
+        },
+        {
+          "n": "günstig",
+          "f": "lacný"
+        },
+        {
+          "n": "billig",
+          "f": "lacný"
+        },
+        {
+          "n": "schwer",
+          "f": "ťažký"
+        },
+        {
+          "n": "leicht",
+          "f": "ľahký"
+        },
+        {
+          "n": "schwierig",
+          "f": "ťažký"
+        },
+        {
+          "n": "einfach",
+          "f": "jednoduchý"
+        },
+        {
+          "n": "kompliziert",
+          "f": "komplikovaný"
+        },
+        {
+          "n": "schnell",
+          "f": "rýchly"
+        },
+        {
+          "n": "langsam",
+          "f": "pomalý"
+        },
+        {
+          "n": "stark",
+          "f": "silný"
+        },
+        {
+          "n": "schwach",
+          "f": "slabý"
+        },
+        {
+          "n": "laut",
+          "f": "hlučný"
+        },
+        {
+          "n": "leise",
+          "f": "tichý"
+        },
+        {
+          "n": "hell",
+          "f": "svetlý"
+        },
+        {
+          "n": "dunkel",
+          "f": "tmavý"
+        },
+        {
+          "n": "sauber",
+          "f": "čistý"
+        },
+        {
+          "n": "schmutzig",
+          "f": "špinavý"
+        },
+        {
+          "n": "warm",
+          "f": "teplý"
+        },
+        {
+          "n": "kalt",
+          "f": "studený"
+        },
+        {
+          "n": "heiß",
+          "f": "horúci"
+        },
+        {
+          "n": "kalt",
+          "f": "chladný"
+        },
+        {
+          "n": "trocken",
+          "f": "suchý"
+        },
+        {
+          "n": "nass",
+          "f": "mokrý"
+        },
+        {
+          "n": "hart",
+          "f": "tvrdý"
+        },
+        {
+          "n": "weich",
+          "f": "mäkký"
+        },
+        {
+          "n": "glatt",
+          "f": "hladký"
+        },
+        {
+          "n": "rau",
+          "f": "drsný"
+        },
+        {
+          "n": "rund",
+          "f": "okrúhly"
+        },
+        {
+          "n": "eckig",
+          "f": "hranatý"
+        },
+        {
+          "n": "flach",
+          "f": "plochý"
+        },
+        {
+          "n": "tief",
+          "f": "hlboký"
+        },
+        {
+          "n": "breit",
+          "f": "široký"
+        },
+        {
+          "n": "schmal",
+          "f": "úzky"
+        },
+        {
+          "n": "voll",
+          "f": "plný"
+        },
+        {
+          "n": "leer",
+          "f": "prázdny"
+        },
+        {
+          "n": "offen",
+          "f": "otvorený"
+        },
+        {
+          "n": "geschlossen",
+          "f": "zatvorený"
+        },
+        {
+          "n": "richtig",
+          "f": "správny"
+        },
+        {
+          "n": "falsch",
+          "f": "nesprávny"
+        },
+        {
+          "n": "wahr",
+          "f": "pravdivý"
+        },
+        {
+          "n": "unwahr",
+          "f": "nepravdivý"
+        },
+        {
+          "n": "möglich",
+          "f": "možný"
+        },
+        {
+          "n": "unmöglich",
+          "f": "nemožný"
+        },
+        {
+          "n": "wichtig",
+          "f": "dôležitý"
+        },
+        {
+          "n": "unwichtig",
+          "f": "nedôležitý"
+        },
+        {
+          "n": "interessant",
+          "f": "zaujímavý"
+        },
+        {
+          "n": "langweilig",
+          "f": "nudný"
+        },
+        {
+          "n": "lustig",
+          "f": "vtipný"
+        },
+        {
+          "n": "traurig",
+          "f": "smutný"
+        },
+        {
+          "n": "schmerzhaft",
+          "f": "bolestivý"
+        },
+        {
+          "n": "angenehm",
+          "f": "príjemný"
+        },
+        {
+          "n": "unangenehm",
+          "f": "nepríjemný"
+        },
+        {
+          "n": "bekannt",
+          "f": "známy"
+        },
+        {
+          "n": "unbekannt",
+          "f": "neznámy"
+        },
+        {
+          "n": "beliebt",
+          "f": "obľúbený"
+        },
+        {
+          "n": "unbeliebt",
+          "f": "neobľúbený"
+        },
+        {
+          "n": "erfolgreich",
+          "f": "úspešný"
+        },
+        {
+          "n": "erfolglos",
+          "f": "neúspešný"
+        },
+        {
+          "n": "berühmt",
+          "f": "slávny"
+        },
+        {
+          "n": "unbekannt",
+          "f": "neznámy"
+        },
+        {
+          "n": "modern",
+          "f": "moderný"
+        },
+        {
+          "n": "altmodisch",
+          "f": "staromódny"
+        },
+        {
+          "n": "international",
+          "f": "medzinárodný"
+        },
+        {
+          "n": "national",
+          "f": "národný"
+        },
+        {
+          "n": "lokal",
+          "f": "miestny"
+        },
+        {
+          "n": "global",
+          "f": "globálny"
+        },
+        {
+          "n": "öffentlich",
+          "f": "verejný"
+        },
+        {
+          "n": "privat",
+          "f": "súkromný"
+        },
+        {
+          "n": "kostenlos",
+          "f": "bezplatný"
+        },
+        {
+          "n": "kostenpflichtig",
+          "f": "spoplatnený"
+        },
+        {
+          "n": "offiziell",
+          "f": "oficiálny"
+        },
+        {
+          "n": "inoffiziell",
+          "f": "neoficiálny"
+        },
+        {
+          "n": "normal",
+          "f": "normálny"
+        },
+        {
+          "n": "seltsam",
+          "f": "podivný"
+        },
+        {
+          "n": "merkwürdig",
+          "f": "zvláštny"
+        },
+        {
+          "n": "typisch",
+          "f": "typický"
+        },
+        {
+          "n": "einzigartig",
+          "f": "jedinečný"
+        },
+        {
+          "n": "gemeinsam",
+          "f": "spoločný"
+        },
+        {
+          "n": "allein",
+          "f": "sám"
+        },
+        {
+          "n": "zusammen",
+          "f": "spolu"
+        },
+        {
+          "n": "getrennt",
+          "f": "oddelený"
+        },
+        {
+          "n": "gegenseitig",
+          "f": "vzájomný"
+        },
+        {
+          "n": "einseitig",
+          "f": "jednostranný"
+        },
+        {
+          "n": "freiwillig",
+          "f": "dobrovoľný"
+        },
+        {
+          "n": "unfreiwillig",
+          "f": "nedobrovoľný"
+        },
+        {
+          "n": "absichtlich",
+          "f": "úmyselný"
+        },
+        {
+          "n": "unabsichtlich",
+          "f": "neúmyselný"
+        },
+        {
+          "n": "plötzlich",
+          "f": "náhly"
+        },
+        {
+          "n": "allmählich",
+          "f": "postupný"
+        },
+        {
+          "n": "vorübergehend",
+          "f": "dočasný"
+        },
+        {
+          "n": "dauerhaft",
+          "f": "trvalý"
+        },
+        {
+          "n": "gelegentlich",
+          "f": "príležitostný"
+        },
+        {
+          "n": "regelmäßig",
+          "f": "pravidelný"
+        }
+      ]
+    }
+  ]
+}

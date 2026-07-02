@@ -1,0 +1,1057 @@
+{
+  "packs": [
+    {
+      "id": "zahlen",
+      "icon": "🔢",
+      "name": "Numbers & Time",
+      "words": [
+        {
+          "n": "eins",
+          "f": "one"
+        },
+        {
+          "n": "zwei",
+          "f": "two"
+        },
+        {
+          "n": "drei",
+          "f": "three"
+        },
+        {
+          "n": "vier",
+          "f": "four"
+        },
+        {
+          "n": "fünf",
+          "f": "five"
+        },
+        {
+          "n": "sechs",
+          "f": "six"
+        },
+        {
+          "n": "sieben",
+          "f": "seven"
+        },
+        {
+          "n": "acht",
+          "f": "eight"
+        },
+        {
+          "n": "neun",
+          "f": "nine"
+        },
+        {
+          "n": "zehn",
+          "f": "ten"
+        },
+        {
+          "n": "zwanzig",
+          "f": "twenty"
+        },
+        {
+          "n": "hundert",
+          "f": "hundred"
+        },
+        {
+          "n": "tausend",
+          "f": "thousand"
+        },
+        {
+          "n": "Montag",
+          "f": "Monday",
+          "a": "der"
+        },
+        {
+          "n": "Dienstag",
+          "f": "Tuesday",
+          "a": "der"
+        },
+        {
+          "n": "Mittwoch",
+          "f": "Wednesday",
+          "a": "der"
+        },
+        {
+          "n": "Donnerstag",
+          "f": "Thursday",
+          "a": "der"
+        },
+        {
+          "n": "Freitag",
+          "f": "Friday",
+          "a": "der"
+        },
+        {
+          "n": "Samstag",
+          "f": "Saturday",
+          "a": "die"
+        },
+        {
+          "n": "Sonntag",
+          "f": "Sunday",
+          "a": "die"
+        },
+        {
+          "n": "Januar",
+          "f": "January",
+          "a": "der"
+        },
+        {
+          "n": "Februar",
+          "f": "February",
+          "a": "der"
+        },
+        {
+          "n": "März",
+          "f": "March",
+          "a": "der"
+        },
+        {
+          "n": "April",
+          "f": "April",
+          "a": "der"
+        },
+        {
+          "n": "Mai",
+          "f": "May",
+          "a": "der"
+        },
+        {
+          "n": "Juni",
+          "f": "June",
+          "a": "der"
+        },
+        {
+          "n": "Juli",
+          "f": "July",
+          "a": "der"
+        },
+        {
+          "n": "August",
+          "f": "August",
+          "a": "der"
+        },
+        {
+          "n": "September",
+          "f": "September",
+          "a": "der"
+        },
+        {
+          "n": "Oktober",
+          "f": "October",
+          "a": "der"
+        },
+        {
+          "n": "November",
+          "f": "November",
+          "a": "der"
+        },
+        {
+          "n": "Dezember",
+          "f": "December",
+          "a": "der"
+        },
+        {
+          "n": "Stunde",
+          "f": "hour",
+          "a": "die"
+        },
+        {
+          "n": "Minute",
+          "f": "minute",
+          "a": "die"
+        },
+        {
+          "n": "Sekunde",
+          "f": "second",
+          "a": "die"
+        },
+        {
+          "n": "Tag",
+          "f": "day",
+          "a": "der"
+        },
+        {
+          "n": "Woche",
+          "f": "week",
+          "a": "die"
+        },
+        {
+          "n": "Monat",
+          "f": "month",
+          "a": "der"
+        },
+        {
+          "n": "Jahr",
+          "f": "year",
+          "a": "das"
+        },
+        {
+          "n": "gestern",
+          "f": "yesterday"
+        },
+        {
+          "n": "heute",
+          "f": "today"
+        },
+        {
+          "n": "morgen",
+          "f": "tomorrow"
+        },
+        {
+          "n": "früh",
+          "f": "early"
+        },
+        {
+          "n": "spät",
+          "f": "late"
+        },
+        {
+          "n": "jetzt",
+          "f": "now"
+        },
+        {
+          "n": "bald",
+          "f": "soon"
+        },
+        {
+          "n": "immer",
+          "f": "always"
+        },
+        {
+          "n": "nie",
+          "f": "never"
+        },
+        {
+          "n": "manchmal",
+          "f": "sometimes"
+        },
+        {
+          "n": "oft",
+          "f": "often"
+        },
+        {
+          "n": "Frühling",
+          "f": "spring",
+          "a": "der"
+        },
+        {
+          "n": "Sommer",
+          "f": "summer",
+          "a": "der"
+        },
+        {
+          "n": "Herbst",
+          "f": "autumn",
+          "a": "der"
+        },
+        {
+          "n": "Winter",
+          "f": "winter",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "familie",
+      "icon": "👨‍👩‍👧",
+      "name": "Family",
+      "words": [
+        {
+          "n": "Mutter",
+          "f": "mother",
+          "a": "die"
+        },
+        {
+          "n": "Vater",
+          "f": "father",
+          "a": "der"
+        },
+        {
+          "n": "Kind",
+          "f": "child",
+          "a": "das"
+        },
+        {
+          "n": "Sohn",
+          "f": "son",
+          "a": "der"
+        },
+        {
+          "n": "Tochter",
+          "f": "daughter",
+          "a": "die"
+        },
+        {
+          "n": "Bruder",
+          "f": "brother",
+          "a": "der"
+        },
+        {
+          "n": "Schwester",
+          "f": "sister",
+          "a": "die"
+        },
+        {
+          "n": "Großmutter",
+          "f": "grandmother",
+          "a": "die"
+        },
+        {
+          "n": "Großvater",
+          "f": "grandfather",
+          "a": "der"
+        },
+        {
+          "n": "Enkel",
+          "f": "grandson",
+          "a": "der"
+        },
+        {
+          "n": "Onkel",
+          "f": "uncle",
+          "a": "der"
+        },
+        {
+          "n": "Tante",
+          "f": "aunt",
+          "a": "die"
+        },
+        {
+          "n": "Cousin",
+          "f": "cousin (m)",
+          "a": "der"
+        },
+        {
+          "n": "Cousine",
+          "f": "cousin (f)",
+          "a": "die"
+        },
+        {
+          "n": "Neffe",
+          "f": "nephew",
+          "a": "der"
+        },
+        {
+          "n": "Nichte",
+          "f": "niece",
+          "a": "die"
+        },
+        {
+          "n": "Familie",
+          "f": "family",
+          "a": "die"
+        },
+        {
+          "n": "Ehemann",
+          "f": "husband",
+          "a": "der"
+        },
+        {
+          "n": "Ehefrau",
+          "f": "wife",
+          "a": "die"
+        },
+        {
+          "n": "Freund",
+          "f": "boyfriend",
+          "a": "der"
+        },
+        {
+          "n": "Freundin",
+          "f": "girlfriend",
+          "a": "die"
+        },
+        {
+          "n": "Baby",
+          "f": "baby",
+          "a": "das"
+        }
+      ]
+    },
+    {
+      "id": "essen",
+      "icon": "🍽️",
+      "name": "Food & Drink",
+      "words": [
+        {
+          "n": "Brot",
+          "f": "bread",
+          "a": "das"
+        },
+        {
+          "n": "Butter",
+          "f": "butter",
+          "a": "die"
+        },
+        {
+          "n": "Käse",
+          "f": "cheese",
+          "a": "der"
+        },
+        {
+          "n": "Milch",
+          "f": "milk",
+          "a": "die"
+        },
+        {
+          "n": "Ei",
+          "f": "egg",
+          "a": "das"
+        },
+        {
+          "n": "Fleisch",
+          "f": "meat",
+          "a": "das"
+        },
+        {
+          "n": "Fisch",
+          "f": "fish",
+          "a": "der"
+        },
+        {
+          "n": "Apfel",
+          "f": "apple",
+          "a": "der"
+        },
+        {
+          "n": "Banane",
+          "f": "banana",
+          "a": "die"
+        },
+        {
+          "n": "Orange",
+          "f": "orange",
+          "a": "die"
+        },
+        {
+          "n": "Kartoffel",
+          "f": "potato",
+          "a": "die"
+        },
+        {
+          "n": "Tomate",
+          "f": "tomato",
+          "a": "die"
+        },
+        {
+          "n": "Salat",
+          "f": "salad",
+          "a": "der"
+        },
+        {
+          "n": "Suppe",
+          "f": "soup",
+          "a": "die"
+        },
+        {
+          "n": "Reis",
+          "f": "rice",
+          "a": "der"
+        },
+        {
+          "n": "Nudeln",
+          "f": "pasta"
+        },
+        {
+          "n": "Wasser",
+          "f": "water",
+          "a": "das"
+        },
+        {
+          "n": "Saft",
+          "f": "juice",
+          "a": "der"
+        },
+        {
+          "n": "Kaffee",
+          "f": "coffee",
+          "a": "der"
+        },
+        {
+          "n": "Tee",
+          "f": "tea",
+          "a": "der"
+        },
+        {
+          "n": "Bier",
+          "f": "beer",
+          "a": "das"
+        },
+        {
+          "n": "Wein",
+          "f": "wine",
+          "a": "der"
+        },
+        {
+          "n": "Frühstück",
+          "f": "breakfast",
+          "a": "das"
+        },
+        {
+          "n": "Mittagessen",
+          "f": "lunch",
+          "a": "das"
+        },
+        {
+          "n": "Abendessen",
+          "f": "dinner",
+          "a": "das"
+        },
+        {
+          "n": "lecker",
+          "f": "delicious"
+        },
+        {
+          "n": "süß",
+          "f": "sweet"
+        },
+        {
+          "n": "salzig",
+          "f": "salty"
+        },
+        {
+          "n": "scharf",
+          "f": "spicy"
+        },
+        {
+          "n": "kochen",
+          "f": "to cook"
+        }
+      ]
+    },
+    {
+      "id": "reisen",
+      "icon": "✈️",
+      "name": "Travel",
+      "words": [
+        {
+          "n": "Flugzeug",
+          "f": "airplane",
+          "a": "das"
+        },
+        {
+          "n": "Zug",
+          "f": "train",
+          "a": "der"
+        },
+        {
+          "n": "Bus",
+          "f": "bus",
+          "a": "der"
+        },
+        {
+          "n": "Auto",
+          "f": "car",
+          "a": "das"
+        },
+        {
+          "n": "Fahrrad",
+          "f": "bicycle",
+          "a": "das"
+        },
+        {
+          "n": "Hotel",
+          "f": "hotel",
+          "a": "das"
+        },
+        {
+          "n": "Zimmer",
+          "f": "room",
+          "a": "das"
+        },
+        {
+          "n": "Gepäck",
+          "f": "luggage",
+          "a": "das"
+        },
+        {
+          "n": "Reisepass",
+          "f": "passport",
+          "a": "der"
+        },
+        {
+          "n": "Ticket",
+          "f": "ticket",
+          "a": "das"
+        },
+        {
+          "n": "Abflug",
+          "f": "departure",
+          "a": "der"
+        },
+        {
+          "n": "Ankunft",
+          "f": "arrival",
+          "a": "die"
+        },
+        {
+          "n": "links",
+          "f": "left"
+        },
+        {
+          "n": "rechts",
+          "f": "right"
+        },
+        {
+          "n": "geradeaus",
+          "f": "straight ahead"
+        },
+        {
+          "n": "Straße",
+          "f": "street",
+          "a": "die"
+        },
+        {
+          "n": "Karte",
+          "f": "map",
+          "a": "die"
+        },
+        {
+          "n": "Stadt",
+          "f": "city",
+          "a": "die"
+        },
+        {
+          "n": "Land",
+          "f": "country",
+          "a": "das"
+        },
+        {
+          "n": "Grenze",
+          "f": "border",
+          "a": "die"
+        },
+        {
+          "n": "Reise",
+          "f": "journey",
+          "a": "die"
+        },
+        {
+          "n": "Urlaub",
+          "f": "vacation",
+          "a": "der"
+        },
+        {
+          "n": "Museum",
+          "f": "museum",
+          "a": "das"
+        },
+        {
+          "n": "Strand",
+          "f": "beach",
+          "a": "der"
+        },
+        {
+          "n": "Berg",
+          "f": "mountain",
+          "a": "der"
+        },
+        {
+          "n": "Meer",
+          "f": "sea",
+          "a": "das"
+        }
+      ]
+    },
+    {
+      "id": "koerper",
+      "icon": "💪",
+      "name": "Body & Health",
+      "words": [
+        {
+          "n": "Kopf",
+          "f": "head",
+          "a": "der"
+        },
+        {
+          "n": "Gesicht",
+          "f": "face",
+          "a": "das"
+        },
+        {
+          "n": "Auge",
+          "f": "eye",
+          "a": "das"
+        },
+        {
+          "n": "Ohr",
+          "f": "ear",
+          "a": "das"
+        },
+        {
+          "n": "Nase",
+          "f": "nose",
+          "a": "die"
+        },
+        {
+          "n": "Mund",
+          "f": "mouth",
+          "a": "der"
+        },
+        {
+          "n": "Hand",
+          "f": "hand",
+          "a": "die"
+        },
+        {
+          "n": "Arm",
+          "f": "arm",
+          "a": "der"
+        },
+        {
+          "n": "Bein",
+          "f": "leg",
+          "a": "das"
+        },
+        {
+          "n": "Fuß",
+          "f": "foot",
+          "a": "der"
+        },
+        {
+          "n": "Herz",
+          "f": "heart",
+          "a": "das"
+        },
+        {
+          "n": "Blut",
+          "f": "blood",
+          "a": "das"
+        },
+        {
+          "n": "Arzt",
+          "f": "doctor",
+          "a": "der"
+        },
+        {
+          "n": "Krankenhaus",
+          "f": "hospital",
+          "a": "das"
+        },
+        {
+          "n": "Apotheke",
+          "f": "pharmacy",
+          "a": "die"
+        },
+        {
+          "n": "Medikament",
+          "f": "medicine",
+          "a": "das"
+        },
+        {
+          "n": "Krankheit",
+          "f": "illness",
+          "a": "die"
+        },
+        {
+          "n": "Fieber",
+          "f": "fever",
+          "a": "das"
+        },
+        {
+          "n": "gesund",
+          "f": "healthy"
+        },
+        {
+          "n": "krank",
+          "f": "sick"
+        },
+        {
+          "n": "Schmerz",
+          "f": "pain",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "zuhause",
+      "icon": "🏠",
+      "name": "Home",
+      "words": [
+        {
+          "n": "Haus",
+          "f": "house",
+          "a": "das"
+        },
+        {
+          "n": "Wohnung",
+          "f": "apartment",
+          "a": "die"
+        },
+        {
+          "n": "Zimmer",
+          "f": "room",
+          "a": "das"
+        },
+        {
+          "n": "Küche",
+          "f": "kitchen",
+          "a": "die"
+        },
+        {
+          "n": "Badezimmer",
+          "f": "bathroom",
+          "a": "das"
+        },
+        {
+          "n": "Schlafzimmer",
+          "f": "bedroom",
+          "a": "das"
+        },
+        {
+          "n": "Wohnzimmer",
+          "f": "living room",
+          "a": "das"
+        },
+        {
+          "n": "Tisch",
+          "f": "table",
+          "a": "der"
+        },
+        {
+          "n": "Stuhl",
+          "f": "chair",
+          "a": "der"
+        },
+        {
+          "n": "Bett",
+          "f": "bed",
+          "a": "das"
+        },
+        {
+          "n": "Sofa",
+          "f": "sofa",
+          "a": "das"
+        },
+        {
+          "n": "Tür",
+          "f": "door"
+        },
+        {
+          "n": "Fenster",
+          "f": "window",
+          "a": "das"
+        },
+        {
+          "n": "Kühlschrank",
+          "f": "refrigerator",
+          "a": "der"
+        },
+        {
+          "n": "Herd",
+          "f": "stove",
+          "a": "der"
+        },
+        {
+          "n": "Fernseher",
+          "f": "television",
+          "a": "der"
+        },
+        {
+          "n": "Lampe",
+          "f": "lamp",
+          "a": "die"
+        }
+      ]
+    },
+    {
+      "id": "tiere",
+      "icon": "🐾",
+      "name": "Animals",
+      "words": [
+        {
+          "n": "Hund",
+          "f": "dog",
+          "a": "der"
+        },
+        {
+          "n": "Katze",
+          "f": "cat",
+          "a": "die"
+        },
+        {
+          "n": "Pferd",
+          "f": "horse",
+          "a": "das"
+        },
+        {
+          "n": "Kuh",
+          "f": "cow",
+          "a": "die"
+        },
+        {
+          "n": "Schwein",
+          "f": "pig",
+          "a": "das"
+        },
+        {
+          "n": "Schaf",
+          "f": "sheep",
+          "a": "das"
+        },
+        {
+          "n": "Huhn",
+          "f": "chicken",
+          "a": "das"
+        },
+        {
+          "n": "Vogel",
+          "f": "bird",
+          "a": "der"
+        },
+        {
+          "n": "Fisch",
+          "f": "fish",
+          "a": "der"
+        },
+        {
+          "n": "Löwe",
+          "f": "lion",
+          "a": "der"
+        },
+        {
+          "n": "Tiger",
+          "f": "tiger",
+          "a": "der"
+        },
+        {
+          "n": "Elefant",
+          "f": "elephant",
+          "a": "der"
+        },
+        {
+          "n": "Bär",
+          "f": "bear",
+          "a": "der"
+        },
+        {
+          "n": "Wolf",
+          "f": "wolf",
+          "a": "der"
+        },
+        {
+          "n": "Hase",
+          "f": "rabbit",
+          "a": "der"
+        },
+        {
+          "n": "Maus",
+          "f": "mouse",
+          "a": "die"
+        },
+        {
+          "n": "Schlange",
+          "f": "snake",
+          "a": "die"
+        },
+        {
+          "n": "Frosch",
+          "f": "frog",
+          "a": "der"
+        },
+        {
+          "n": "Biene",
+          "f": "bee",
+          "a": "die"
+        },
+        {
+          "n": "Schmetterling",
+          "f": "butterfly",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "kommunikation",
+      "icon": "💬",
+      "name": "Communication",
+      "words": [
+        {
+          "n": "Hallo",
+          "f": "Hello"
+        },
+        {
+          "n": "Tschüss",
+          "f": "Goodbye"
+        },
+        {
+          "n": "Danke",
+          "f": "Thank you"
+        },
+        {
+          "n": "Bitte",
+          "f": "Please"
+        },
+        {
+          "n": "Entschuldigung",
+          "f": "Excuse me"
+        },
+        {
+          "n": "Ja",
+          "f": "Yes"
+        },
+        {
+          "n": "Nein",
+          "f": "No"
+        },
+        {
+          "n": "Guten Morgen",
+          "f": "Good morning"
+        },
+        {
+          "n": "Guten Tag",
+          "f": "Good afternoon"
+        },
+        {
+          "n": "Guten Abend",
+          "f": "Good evening"
+        },
+        {
+          "n": "Wie geht es dir?",
+          "f": "How are you?"
+        },
+        {
+          "n": "Es geht mir gut",
+          "f": "I am fine"
+        },
+        {
+          "n": "Ich verstehe nicht",
+          "f": "I don't understand"
+        },
+        {
+          "n": "sprechen",
+          "f": "to speak"
+        },
+        {
+          "n": "fragen",
+          "f": "to ask"
+        },
+        {
+          "n": "antworten",
+          "f": "to answer"
+        },
+        {
+          "n": "verstehen",
+          "f": "to understand"
+        },
+        {
+          "n": "Sprache",
+          "f": "language",
+          "a": "die"
+        },
+        {
+          "n": "Wort",
+          "f": "word",
+          "a": "das"
+        },
+        {
+          "n": "Satz",
+          "f": "sentence",
+          "a": "der"
+        }
+      ]
+    }
+  ]
+}

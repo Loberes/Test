@@ -1,0 +1,697 @@
+{
+  "packs": [
+    {
+      "id": "zahlen",
+      "icon": "🔢",
+      "name": "Zahlen & Zeit",
+      "words": [
+        {
+          "n": "eins",
+          "f": "egy"
+        },
+        {
+          "n": "zwei",
+          "f": "kettő"
+        },
+        {
+          "n": "drei",
+          "f": "három"
+        },
+        {
+          "n": "vier",
+          "f": "négy"
+        },
+        {
+          "n": "fünf",
+          "f": "öt"
+        },
+        {
+          "n": "sechs",
+          "f": "hat"
+        },
+        {
+          "n": "sieben",
+          "f": "hét"
+        },
+        {
+          "n": "acht",
+          "f": "nyolc"
+        },
+        {
+          "n": "neun",
+          "f": "kilenc"
+        },
+        {
+          "n": "zehn",
+          "f": "tíz"
+        },
+        {
+          "n": "zwanzig",
+          "f": "húsz"
+        },
+        {
+          "n": "hundert",
+          "f": "száz"
+        },
+        {
+          "n": "tausend",
+          "f": "ezer"
+        },
+        {
+          "n": "Montag",
+          "f": "hétfő",
+          "a": "der"
+        },
+        {
+          "n": "Dienstag",
+          "f": "kedd",
+          "a": "der"
+        },
+        {
+          "n": "Mittwoch",
+          "f": "szerda",
+          "a": "die"
+        },
+        {
+          "n": "Donnerstag",
+          "f": "csütörtök",
+          "a": "der"
+        },
+        {
+          "n": "Freitag",
+          "f": "péntek",
+          "a": "der"
+        },
+        {
+          "n": "Samstag",
+          "f": "szombat",
+          "a": "die"
+        },
+        {
+          "n": "Sonntag",
+          "f": "vasárnap",
+          "a": "die"
+        },
+        {
+          "n": "Januar",
+          "f": "január",
+          "a": "der"
+        },
+        {
+          "n": "Februar",
+          "f": "február",
+          "a": "der"
+        },
+        {
+          "n": "März",
+          "f": "március",
+          "a": "der"
+        },
+        {
+          "n": "Stunde",
+          "f": "óra",
+          "a": "die"
+        },
+        {
+          "n": "Minute",
+          "f": "perc",
+          "a": "die"
+        },
+        {
+          "n": "Tag",
+          "f": "nap",
+          "a": "der"
+        },
+        {
+          "n": "Woche",
+          "f": "hét",
+          "a": "die"
+        },
+        {
+          "n": "Monat",
+          "f": "hónap",
+          "a": "der"
+        },
+        {
+          "n": "Jahr",
+          "f": "év",
+          "a": "das"
+        },
+        {
+          "n": "gestern",
+          "f": "tegnap"
+        },
+        {
+          "n": "heute",
+          "f": "ma"
+        },
+        {
+          "n": "morgen",
+          "f": "holnap"
+        },
+        {
+          "n": "immer",
+          "f": "mindig"
+        },
+        {
+          "n": "nie",
+          "f": "soha"
+        },
+        {
+          "n": "manchmal",
+          "f": "néha"
+        },
+        {
+          "n": "oft",
+          "f": "gyakran"
+        },
+        {
+          "n": "Frühling",
+          "f": "tavasz",
+          "a": "der"
+        },
+        {
+          "n": "Sommer",
+          "f": "nyár",
+          "a": "der"
+        },
+        {
+          "n": "Herbst",
+          "f": "ősz",
+          "a": "der"
+        },
+        {
+          "n": "Winter",
+          "f": "tél",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "familie",
+      "icon": "👨‍👩‍👧",
+      "name": "Familie",
+      "words": [
+        {
+          "n": "Mutter",
+          "f": "anya",
+          "a": "die"
+        },
+        {
+          "n": "Vater",
+          "f": "apa",
+          "a": "der"
+        },
+        {
+          "n": "Kind",
+          "f": "gyerek",
+          "a": "das"
+        },
+        {
+          "n": "Sohn",
+          "f": "fiú",
+          "a": "der"
+        },
+        {
+          "n": "Tochter",
+          "f": "lány",
+          "a": "die"
+        },
+        {
+          "n": "Bruder",
+          "f": "fivér",
+          "a": "der"
+        },
+        {
+          "n": "Schwester",
+          "f": "nővér",
+          "a": "die"
+        },
+        {
+          "n": "Großmutter",
+          "f": "nagymama",
+          "a": "die"
+        },
+        {
+          "n": "Großvater",
+          "f": "nagyapa",
+          "a": "der"
+        },
+        {
+          "n": "Onkel",
+          "f": "nagybácsi",
+          "a": "der"
+        },
+        {
+          "n": "Tante",
+          "f": "néni",
+          "a": "die"
+        },
+        {
+          "n": "Familie",
+          "f": "család",
+          "a": "die"
+        },
+        {
+          "n": "Ehemann",
+          "f": "férj",
+          "a": "der"
+        },
+        {
+          "n": "Ehefrau",
+          "f": "feleség",
+          "a": "die"
+        },
+        {
+          "n": "Baby",
+          "f": "baba",
+          "a": "das"
+        }
+      ]
+    },
+    {
+      "id": "essen",
+      "icon": "🍽️",
+      "name": "Essen & Trinken",
+      "words": [
+        {
+          "n": "Brot",
+          "f": "kenyér",
+          "a": "das"
+        },
+        {
+          "n": "Butter",
+          "f": "vaj",
+          "a": "die"
+        },
+        {
+          "n": "Käse",
+          "f": "sajt",
+          "a": "der"
+        },
+        {
+          "n": "Milch",
+          "f": "tej",
+          "a": "die"
+        },
+        {
+          "n": "Ei",
+          "f": "tojás",
+          "a": "das"
+        },
+        {
+          "n": "Fleisch",
+          "f": "hús",
+          "a": "das"
+        },
+        {
+          "n": "Apfel",
+          "f": "alma",
+          "a": "der"
+        },
+        {
+          "n": "Kartoffel",
+          "f": "burgonya",
+          "a": "die"
+        },
+        {
+          "n": "Tomate",
+          "f": "paradicsom",
+          "a": "die"
+        },
+        {
+          "n": "Wasser",
+          "f": "víz",
+          "a": "das"
+        },
+        {
+          "n": "Kaffee",
+          "f": "kávé",
+          "a": "der"
+        },
+        {
+          "n": "Tee",
+          "f": "tea",
+          "a": "der"
+        },
+        {
+          "n": "Bier",
+          "f": "sör",
+          "a": "das"
+        },
+        {
+          "n": "Wein",
+          "f": "bor",
+          "a": "der"
+        },
+        {
+          "n": "Frühstück",
+          "f": "reggeli",
+          "a": "das"
+        },
+        {
+          "n": "Mittagessen",
+          "f": "ebéd",
+          "a": "das"
+        },
+        {
+          "n": "Abendessen",
+          "f": "vacsora",
+          "a": "das"
+        },
+        {
+          "n": "lecker",
+          "f": "finom"
+        },
+        {
+          "n": "kochen",
+          "f": "főzni"
+        }
+      ]
+    },
+    {
+      "id": "reisen",
+      "icon": "✈️",
+      "name": "Reisen",
+      "words": [
+        {
+          "n": "Flugzeug",
+          "f": "repülő",
+          "a": "das"
+        },
+        {
+          "n": "Zug",
+          "f": "vonat",
+          "a": "der"
+        },
+        {
+          "n": "Bus",
+          "f": "busz",
+          "a": "der"
+        },
+        {
+          "n": "Auto",
+          "f": "autó",
+          "a": "das"
+        },
+        {
+          "n": "Hotel",
+          "f": "szálloda",
+          "a": "das"
+        },
+        {
+          "n": "Zimmer",
+          "f": "szoba",
+          "a": "das"
+        },
+        {
+          "n": "Gepäck",
+          "f": "csomag",
+          "a": "das"
+        },
+        {
+          "n": "Reisepass",
+          "f": "útlevél",
+          "a": "der"
+        },
+        {
+          "n": "Ticket",
+          "f": "jegy",
+          "a": "das"
+        },
+        {
+          "n": "links",
+          "f": "balra"
+        },
+        {
+          "n": "rechts",
+          "f": "jobbra"
+        },
+        {
+          "n": "geradeaus",
+          "f": "egyenesen"
+        },
+        {
+          "n": "Stadt",
+          "f": "város",
+          "a": "die"
+        },
+        {
+          "n": "Land",
+          "f": "ország",
+          "a": "das"
+        },
+        {
+          "n": "Reise",
+          "f": "utazás",
+          "a": "die"
+        }
+      ]
+    },
+    {
+      "id": "koerper",
+      "icon": "💪",
+      "name": "Körper & Gesundheit",
+      "words": [
+        {
+          "n": "Kopf",
+          "f": "fej",
+          "a": "der"
+        },
+        {
+          "n": "Auge",
+          "f": "szem",
+          "a": "das"
+        },
+        {
+          "n": "Ohr",
+          "f": "fül",
+          "a": "das"
+        },
+        {
+          "n": "Nase",
+          "f": "orr",
+          "a": "die"
+        },
+        {
+          "n": "Mund",
+          "f": "száj",
+          "a": "der"
+        },
+        {
+          "n": "Hand",
+          "f": "kéz",
+          "a": "die"
+        },
+        {
+          "n": "Arm",
+          "f": "kar",
+          "a": "der"
+        },
+        {
+          "n": "Bein",
+          "f": "láb",
+          "a": "das"
+        },
+        {
+          "n": "Fuß",
+          "f": "lábfej",
+          "a": "der"
+        },
+        {
+          "n": "Arzt",
+          "f": "orvos",
+          "a": "der"
+        },
+        {
+          "n": "Krankenhaus",
+          "f": "kórház",
+          "a": "das"
+        },
+        {
+          "n": "gesund",
+          "f": "egészséges"
+        },
+        {
+          "n": "krank",
+          "f": "beteg"
+        }
+      ]
+    },
+    {
+      "id": "zuhause",
+      "icon": "🏠",
+      "name": "Zuhause",
+      "words": [
+        {
+          "n": "Haus",
+          "f": "ház",
+          "a": "das"
+        },
+        {
+          "n": "Wohnung",
+          "f": "lakás",
+          "a": "die"
+        },
+        {
+          "n": "Küche",
+          "f": "konyha",
+          "a": "die"
+        },
+        {
+          "n": "Badezimmer",
+          "f": "fürdőszoba",
+          "a": "das"
+        },
+        {
+          "n": "Schlafzimmer",
+          "f": "hálószoba",
+          "a": "das"
+        },
+        {
+          "n": "Tisch",
+          "f": "asztal",
+          "a": "der"
+        },
+        {
+          "n": "Stuhl",
+          "f": "szék",
+          "a": "der"
+        },
+        {
+          "n": "Bett",
+          "f": "ágy",
+          "a": "das"
+        },
+        {
+          "n": "Fenster",
+          "f": "ablak",
+          "a": "das"
+        },
+        {
+          "n": "Tür",
+          "f": "ajtó"
+        }
+      ]
+    },
+    {
+      "id": "tiere",
+      "icon": "🐾",
+      "name": "Tiere",
+      "words": [
+        {
+          "n": "Hund",
+          "f": "kutya",
+          "a": "der"
+        },
+        {
+          "n": "Katze",
+          "f": "macska",
+          "a": "die"
+        },
+        {
+          "n": "Pferd",
+          "f": "ló",
+          "a": "das"
+        },
+        {
+          "n": "Kuh",
+          "f": "tehén",
+          "a": "die"
+        },
+        {
+          "n": "Schwein",
+          "f": "disznó",
+          "a": "das"
+        },
+        {
+          "n": "Vogel",
+          "f": "madár",
+          "a": "der"
+        },
+        {
+          "n": "Fisch",
+          "f": "hal",
+          "a": "der"
+        },
+        {
+          "n": "Löwe",
+          "f": "oroszlán",
+          "a": "der"
+        },
+        {
+          "n": "Hase",
+          "f": "nyúl",
+          "a": "der"
+        }
+      ]
+    },
+    {
+      "id": "kommunikation",
+      "icon": "💬",
+      "name": "Kommunikation",
+      "words": [
+        {
+          "n": "Hallo",
+          "f": "Szia"
+        },
+        {
+          "n": "Tschüss",
+          "f": "Viszlát"
+        },
+        {
+          "n": "Danke",
+          "f": "Köszönöm"
+        },
+        {
+          "n": "Bitte",
+          "f": "Kérem"
+        },
+        {
+          "n": "Ja",
+          "f": "Igen"
+        },
+        {
+          "n": "Nein",
+          "f": "Nem"
+        },
+        {
+          "n": "Entschuldigung",
+          "f": "Elnézést"
+        },
+        {
+          "n": "Guten Morgen",
+          "f": "Jó reggelt"
+        },
+        {
+          "n": "Guten Tag",
+          "f": "Jó napot"
+        },
+        {
+          "n": "Auf Wiedersehen",
+          "f": "Viszontlátásra"
+        },
+        {
+          "n": "Wie geht es dir?",
+          "f": "Hogy vagy?"
+        },
+        {
+          "n": "Es geht mir gut",
+          "f": "Jól vagyok"
+        },
+        {
+          "n": "sprechen",
+          "f": "beszélni"
+        },
+        {
+          "n": "verstehen",
+          "f": "érteni"
+        },
+        {
+          "n": "fragen",
+          "f": "kérdezni"
+        }
+      ]
+    }
+  ]
+}

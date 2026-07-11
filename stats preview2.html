@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Statistik Kombination</title>
+<style>
+:root{
+  --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
+  --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
+  --b:#0f0f1a;--b2:#1a1a2e;--b3:#242438;--b4:#2e2e48;
+  --t:#e2e8f0;--t2:#94a3b8;--t3:#64748b;--br:rgba(255,255,255,.08);
+  --rad:12px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--b);color:var(--t);font-family:var(--font);font-size:15px;max-width:480px;margin:0 auto;padding-bottom:30px;}
+button{cursor:pointer;border:none;outline:none;background:none;color:inherit;font:inherit;}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--b2);border-bottom:1px solid var(--br);}
+.tb-title{font-size:18px;font-weight:800;letter-spacing:-.3px;}
+.tb-title span{color:var(--acs);}
+.streak{background:var(--acd);color:var(--acs);padding:4px 12px;border-radius:99px;font-size:13px;font-weight:700;}
+
+/* CHIPS */
+.chips{display:flex;gap:6px;padding:14px 16px 0;flex-wrap:wrap;}
+.chip{padding:6px 16px;border-radius:99px;font-size:12px;font-weight:600;background:var(--b3);border:1px solid var(--br);cursor:pointer;transition:all .2s;}
+.chip.on{background:var(--acd);border-color:var(--ac);color:var(--acs);}
+
+/* KPI KACHELN */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px 0;}
+.kpi{background:var(--b2);border:1px solid var(--br);border-radius:var(--rad);padding:14px;position:relative;overflow:hidden;cursor:default;}
+.kpi-icon{position:absolute;right:10px;top:10px;font-size:22px;opacity:.2;}
+.kpi-val{font-size:26px;font-weight:800;line-height:1;}
+.kpi-lbl{font-size:11px;color:var(--t3);margin-top:4px;}
+.kpi-trend{font-size:11px;margin-top:6px;font-weight:600;}
+.up{color:var(--g);} .dn{color:var(--r);} .neu{color:var(--acs);}
+
+/* METRIK TABS */
+.mtabs{display:flex;gap:0;background:var(--b3);border-radius:10px;padding:3px;margin:14px 16px 0;}
+.mtab{flex:1;padding:7px 2px;font-size:10px;font-weight:700;text-align:center;border-radius:7px;cursor:pointer;color:var(--t3);transition:all .2s;}
+.mtab.on{color:#fff;}
+
+/* BALKEN CHART */
+.chart-card{background:var(--b2);border:1px solid var(--br);border-radius:var(--rad);margin:12px 16px 0;padding:14px 14px 10px;overflow:hidden;}
+.chart-title{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
+.bar-chart{display:flex;align-items:flex-end;gap:3px;height:110px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:0;height:100%;cursor:pointer;}
+.bar{width:100%;border-radius:4px 4px 0 0;min-height:3px;transition:all .25s;position:relative;}
+.bar:hover{filter:brightness(1.25);}
+.bar.sel{filter:brightness(1.35);outline:2px solid rgba(255,255,255,.5);outline-offset:1px;}
+.bar-val{font-size:8px;color:var(--t3);margin-bottom:2px;opacity:0;transition:opacity .2s;}
+.bar-col:hover .bar-val{opacity:1;}
+.bar-col.sel-col .bar-val{opacity:1;}
+.xlbls{display:flex;margin-top:5px;}
+.xlbl{flex:1;font-size:8px;color:var(--t3);text-align:center;overflow:hidden;}
+
+/* DETAIL POPUP */
+.detail{background:var(--b3);border:1px solid var(--br);border-left:3px solid var(--ac);border-radius:var(--rad);margin:10px 16px 0;padding:14px;animation:slideD .2s ease;}
+@keyframes slideD{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.detail-head{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--acs);}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.dbox{background:var(--b4);border-radius:8px;padding:10px;}
+.dbox-val{font-size:20px;font-weight:800;}
+.dbox-lbl{font-size:10px;color:var(--t3);margin-top:2px;}
+.close-btn{float:right;font-size:16px;color:var(--t3);cursor:pointer;line-height:1;}
+
+/* TAGESLISTE */
+.list-card{background:var(--b2);border:1px solid var(--br);border-radius:var(--rad);margin:12px 16px 0;padding:14px;}
+.list-title{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
+.day-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--br);}
+.day-item:last-child{border-bottom:none;}
+.day-date{font-size:12px;color:var(--t2);min-width:52px;flex-shrink:0;}
+.day-bar-bg{flex:1;height:7px;background:var(--b4);border-radius:4px;overflow:hidden;}
+.day-bar-fill{height:100%;border-radius:4px;transition:width .4s ease;}
+.day-num{font-size:12px;font-weight:700;min-width:36px;text-align:right;flex-shrink:0;}
+.day-extra{font-size:10px;color:var(--t3);min-width:56px;text-align:right;flex-shrink:0;}
+.no-data{color:var(--t3);font-size:13px;text-align:center;padding:20px 0;}
+</style>
+</head>
+<body>
+
+<!-- Topbar mit Streak -->
+<div class="topbar">
+  <div class="tb-title">Slov<span>ník</span></div>
+  <div class="streak">🔥 7 Tage</div>
+</div>
+
+<!-- Zeitraum -->
+<div class="chips" id="time-chips">
+  <div class="chip on" onclick="setTime(7,this)">7 Tage</div>
+  <div class="chip" onclick="setTime(14,this)">14 Tage</div>
+  <div class="chip" onclick="setTime(30,this)">30 Tage</div>
+  <div class="chip" onclick="setTime(0,this)">Gesamt</div>
+</div>
+
+<!-- KPI Kacheln -->
+<div class="kpi-grid">
+  <div class="kpi">
+    <div class="kpi-icon">📚</div>
+    <div class="kpi-val" id="kpi-tot">—</div>
+    <div class="kpi-lbl">Wörter gelernt</div>
+    <div class="kpi-trend up" id="kpi-tot-t"></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-icon">📅</div>
+    <div class="kpi-val" id="kpi-avg">—</div>
+    <div class="kpi-lbl">Ø pro Lerntag</div>
+    <div class="kpi-trend" id="kpi-avg-t"></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-icon">✓</div>
+    <div class="kpi-val" id="kpi-cor">—</div>
+    <div class="kpi-lbl">Richtig-Quote</div>
+    <div class="kpi-trend" id="kpi-cor-t"></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-icon">🏆</div>
+    <div class="kpi-val" id="kpi-best">—</div>
+    <div class="kpi-lbl">Bester Tag</div>
+    <div class="kpi-trend" id="kpi-best-t" style="color:var(--t3)"></div>
+  </div>
+</div>
+
+<!-- Metrik-Tabs -->
+<div class="mtabs">
+  <div class="mtab on" onclick="setMetric('words',this,'var(--ac)')">Wörter</div>
+  <div class="mtab" onclick="setMetric('correct',this,'var(--g)')">Richtig</div>
+  <div class="mtab" onclick="setMetric('wrong',this,'var(--r)')">Falsch</div>
+  <div class="mtab" onclick="setMetric('ratio',this,'var(--y)')">Quote</div>
+  <div class="mtab" onclick="setMetric('new',this,'var(--cy)')">Neu</div>
+</div>
+
+<!-- Balkendiagramm -->
+<div class="chart-card">
+  <div class="chart-title" id="chart-title">Gelernte Wörter</div>
+  <div class="bar-chart" id="bar-chart"></div>
+  <div class="xlbls" id="xlbls"></div>
+</div>
+
+<!-- Detail-Popup -->
+<div class="detail" id="detail" style="display:none;"></div>
+
+<!-- Tagesliste -->
+<div class="list-card">
+  <div class="list-title" id="list-title">Wörter pro Tag</div>
+  <div id="day-list"></div>
+</div>
+
+<script>
+// ── DEMO-DATEN ────────────────────────────────────────────────────
+const today = new Date();
+const DATA = [];
+for(let i=44; i>=0; i--){
+  const d=new Date(today); d.setDate(d.getDate()-i);
+  const active = Math.random()>.25;
+  const words = active ? Math.floor(Math.random()*40)+5 : 0;
+  const correct = words>0 ? Math.round(words*(0.72+Math.random()*.22)) : 0;
+  const wrong = words-correct;
+  DATA.push({
+    date:d,
+    label:d.toLocaleDateString('de',{day:'2-digit',month:'2-digit'}),
+    weekday:['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()],
+    words, correct, wrong,
+    ratio: words>0?Math.round(correct/words*100):0,
+    new: words>0?Math.floor(words*.28+Math.random()*5):0
+  });
+}
+// Realistische Werte für letzte Tage
+DATA[DATA.length-1]={...DATA[DATA.length-1],words:14,correct:12,wrong:2,ratio:86,new:4};
+DATA[DATA.length-2]={...DATA[DATA.length-2],words:31,correct:27,wrong:4,ratio:87,new:9};
+DATA[DATA.length-3]={...DATA[DATA.length-3],words:38,correct:34,wrong:4,ratio:89,new:11};
+DATA[DATA.length-4]={...DATA[DATA.length-4],words:0,correct:0,wrong:0,ratio:0,new:0};
+DATA[DATA.length-5]={...DATA[DATA.length-5],words:22,correct:20,wrong:2,ratio:91,new:7};
+
+// ── STATE ─────────────────────────────────────────────────────────
+let timeVal=7, metric='words', metricColor='var(--ac)', selDay=-1;
+const MLBLS={words:'Gelernte Wörter',correct:'Richtige Antworten',wrong:'Falsche Antworten',ratio:'Richtig-Quote %',new:'Neue Wörter'};
+const UNIT={words:'',correct:'',wrong:'',ratio:'%',new:''};
+
+// ── HELPERS ───────────────────────────────────────────────────────
+function getSlice(){ return timeVal>0 ? DATA.slice(-timeVal) : DATA; }
+function fmt(d){ return `${d.weekday}, ${d.label}`; }
+
+function setChips(el,parent){
+  document.querySelectorAll(`#${parent} .chip`).forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function render(){
+  const slice=getSlice();
+  renderKPI(slice);
+  renderBars(slice);
+  if(selDay>=0&&selDay<slice.length) renderDetail(slice[selDay]);
+  else document.getElementById('detail').style.display='none';
+  renderList(slice);
+}
+
+function renderKPI(slice){
+  const active=slice.filter(d=>d.words>0);
+  const total=slice.reduce((s,d)=>s+d.words,0);
+  const avg=active.length>0?Math.round(total/active.length):0;
+  const ratio=active.length>0?Math.round(active.reduce((s,d)=>s+d.ratio,0)/active.length):0;
+  const best=Math.max(...slice.map(d=>d.words),0);
+  const bestDay=slice.find(d=>d.words===best);
+
+  // vs. vorheriger Zeitraum
+  const prev=timeVal>0?DATA.slice(-timeVal*2,-timeVal):[];
+  const prevTot=prev.reduce((s,d)=>s+d.words,0);
+  const diff=prevTot>0?Math.round((total-prevTot)/prevTot*100):0;
+
+  document.getElementById('kpi-tot').textContent=total;
+  document.getElementById('kpi-tot-t').innerHTML=prevTot>0
+    ?`<span class="${diff>=0?'up':'dn'}">${diff>=0?'↑':'↓'} ${Math.abs(diff)}% vs. Vorperiode</span>`:'';
+  document.getElementById('kpi-avg').textContent=avg;
+  document.getElementById('kpi-avg-t').innerHTML=`<span class="neu">${active.length} aktive Tage</span>`;
+  document.getElementById('kpi-cor').textContent=ratio+'%';
+  document.getElementById('kpi-cor-t').innerHTML=ratio>=85?'<span class="up">↑ Sehr gut!</span>':ratio>=70?'<span class="neu">➔ Gut</span>':'<span class="dn">↓ Üben!</span>';
+  document.getElementById('kpi-best').textContent=best;
+  document.getElementById('kpi-best-t').textContent=bestDay?fmt(bestDay):'—';
+}
+
+function renderBars(slice){
+  const vals=slice.map(d=>metric==='ratio'?d.ratio:(d[metric]||0));
+  const max=Math.max(...vals,1);
+  const chart=document.getElementById('bar-chart');
+  const xl=document.getElementById('xlbls');
+  const showEvery=Math.ceil(slice.length/7);
+
+  chart.innerHTML=slice.map((d,i)=>{
+    const v=vals[i];
+    const h=v>0?Math.max(5,Math.round(v/max*100)):3;
+    const isSel=selDay===i;
+    // Gradient-artiger Effekt: leichtere Farbe für 0-Wert
+    const barColor=v===0?'var(--b4)':metricColor;
+    return `<div class="bar-col${isSel?' sel-col':''}" onclick="clickBar(${i})">
+      <div class="bar-val">${v}${UNIT[metric]}</div>
+      <div class="bar${isSel?' sel':''}" style="height:${h}px;background:${barColor};opacity:${v===0?.3:1};"></div>
+    </div>`;
+  }).join('');
+
+  xl.innerHTML=slice.map((d,i)=>{
+    const show=i%showEvery===0||i===slice.length-1||i===selDay;
+    return `<div class="xlbl" style="opacity:${show?.9:.15}">${d.label}</div>`;
+  }).join('');
+
+  document.getElementById('chart-title').textContent=MLBLS[metric];
+}
+
+function clickBar(i){
+  const slice=getSlice();
+  if(selDay===i){selDay=-1;document.getElementById('detail').style.display='none';}
+  else{selDay=i;renderDetail(slice[i]);}
+  renderBars(slice);
+}
+
+function renderDetail(d){
+  const el=document.getElementById('detail');
+  el.style.display='block';
+  const dotColor=(v)=>v>=85?'var(--g)':v>=70?'var(--y)':'var(--r)';
+  el.innerHTML=`
+    <div class="detail-head">
+      <span>📅 ${fmt(d)}</span>
+      <span class="close-btn" onclick="selDay=-1;document.getElementById('detail').style.display='none';renderBars(getSlice())">✕</span>
+    </div>
+    <div class="detail-grid">
+      <div class="dbox">
+        <div class="dbox-val" style="color:var(--acs)">${d.words}</div>
+        <div class="dbox-lbl">Wörter gelernt</div>
+      </div>
+      <div class="dbox">
+        <div class="dbox-val" style="color:${dotColor(d.ratio)}">${d.ratio}%</div>
+        <div class="dbox-lbl">Richtig-Quote</div>
+      </div>
+      <div class="dbox">
+        <div class="dbox-val" style="color:var(--g)">${d.correct}</div>
+        <div class="dbox-lbl">✓ Richtig</div>
+      </div>
+      <div class="dbox">
+        <div class="dbox-val" style="color:var(--r)">${d.wrong}</div>
+        <div class="dbox-lbl">✗ Falsch</div>
+      </div>
+      <div class="dbox">
+        <div class="dbox-val" style="color:var(--cy)">${d.new}</div>
+        <div class="dbox-lbl">Neue Wörter</div>
+      </div>
+      <div class="dbox">
+        <div class="dbox-val" style="color:var(--t2)">${d.words>0?d.correct+d.wrong+'×':'—'}</div>
+        <div class="dbox-lbl">Abfragen gesamt</div>
+      </div>
+    </div>`;
+}
+
+function renderList(slice){
+  const vals=slice.map(d=>metric==='ratio'?d.ratio:(d[metric]||0));
+  const max=Math.max(...vals,1);
+  document.getElementById('list-title').textContent=MLBLS[metric]+' pro Tag';
+  const active=[...slice].reverse().filter(d=>d.words>0);
+  if(!active.length){
+    document.getElementById('day-list').innerHTML='<div class="no-data">Keine Daten</div>';
+    return;
+  }
+  document.getElementById('day-list').innerHTML=[...slice].reverse().map((d,ri)=>{
+    const i=slice.length-1-ri;
+    const v=vals[i];
+    if(d.words===0) return '';
+    const pct=Math.round(v/max*100);
+    const extra=metric==='words'?`✓${d.correct} ✗${d.wrong}`
+      :metric==='ratio'?`${d.words} Wörter`
+      :metric==='correct'||metric==='wrong'?`${d.ratio}% Quote`
+      :`${d.words} Wörter`;
+    return `<div class="day-item" style="${selDay===i?'background:var(--b3);border-radius:6px;padding:7px 6px;':''}">
+      <div class="day-date">${d.weekday}, ${d.label}</div>
+      <div class="day-bar-bg"><div class="day-bar-fill" style="width:${pct}%;background:${metricColor};"></div></div>
+      <div class="day-num" style="color:${metricColor}">${v}${UNIT[metric]}</div>
+      <div class="day-extra">${extra}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────
+function setTime(v,el){
+  timeVal=v;selDay=-1;
+  setChips(el,'time-chips');
+  document.getElementById('detail').style.display='none';
+  render();
+}
+
+function setMetric(m,el,col){
+  metric=m;metricColor=col;
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  el.style.background=col;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

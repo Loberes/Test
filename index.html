@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Slovník</title>
 <style>
-/* Slovník v6.12 */
+/* Slovník v6.13 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -207,7 +207,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 .st-mtabs{display:flex;gap:0;background:var(--b3);border-radius:10px;padding:3px;margin-bottom:12px;}
 .st-mtab{flex:1;padding:7px 2px;font-size:10px;font-weight:700;text-align:center;border-radius:7px;cursor:pointer;color:var(--t3);transition:all .2s;}
 .st-mtab.on{color:#fff;}
-.st-chart-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.st-chart-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;min-height:175px;}
 .st-bar-chart{display:flex;align-items:flex-end;gap:3px;height:150px;min-height:150px;flex-shrink:0;}
 .st-bar-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;cursor:pointer;}
 .st-bar{width:100%;border-radius:4px 4px 0 0;min-height:3px;transition:all .25s;}
@@ -475,7 +475,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.12 */
+/* Slovník v6.13 */
 // Entfernt einen evtl. hängenden alten Service Worker + Cache aus früheren Versionen,
 // da diese Version selbst keinen Service Worker mehr registriert.
 if('serviceWorker' in navigator){
@@ -483,7 +483,7 @@ if('serviceWorker' in navigator){
 }
 if(window.caches){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
 
-const VER='6.12';
+const VER='6.13';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`};
 
 /* ── I18N ── */

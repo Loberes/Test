@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Slovník</title>
 <style>
-/* Slovník v6.21 */
+/* Slovník v6.22 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -94,9 +94,18 @@ a{color:var(--acs);text-decoration:none;}
 .fs{font-size:13px;color:var(--t2);margin-top:6px;text-align:center;}
 .fn{font-size:12px;color:var(--y);margin-top:8px;text-align:center;background:rgba(245,158,11,.1);padding:6px 10px;border-radius:6px;}
 .fart{font-size:14px;font-weight:700;color:var(--acs);margin-top:6px;}
+.fc-top{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:center;pointer-events:none;}
+.flag{font-size:18px;line-height:1;}
+.lvl{font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;}
+.note-btn{position:absolute;bottom:12px;right:12px;width:26px;height:26px;border-radius:50%;background:rgba(245,158,11,.15);color:var(--y);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;border:1px solid rgba(245,158,11,.3);z-index:2;pointer-events:auto;}
+.note-pop{position:absolute;bottom:44px;right:12px;left:12px;background:var(--b4);border:1px solid rgba(245,158,11,.35);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--y);box-shadow:var(--sh);opacity:0;transform:translateY(6px);pointer-events:none;transition:var(--tr);z-index:2;text-align:left;}
+.note-pop.open{opacity:1;transform:translateY(0);}
+.note-btn-inline{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--y);background:rgba(245,158,11,.12);padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid rgba(245,158,11,.3);}
+.note-pop-inline{display:none;font-size:12px;color:var(--y);background:rgba(245,158,11,.1);padding:6px 10px;border-radius:6px;margin-top:6px;text-align:center;}
+.note-pop-inline.open{display:block;}
 /* TYPE */
-.tyc{width:100%;max-width:380px;background:var(--b2);border:1px solid var(--br);border-radius:16px;padding:24px 20px;box-shadow:var(--sh);}
-.tyq{font-size:clamp(18px,5vw,28px);font-weight:800;text-align:center;margin-bottom:16px;}
+.tyc{width:100%;max-width:380px;background:var(--b2);border:1px solid var(--br);border-radius:16px;padding:24px 20px;box-shadow:var(--sh);position:relative;}
+.tyq{font-size:clamp(18px,5vw,28px);font-weight:800;text-align:center;margin-bottom:16px;margin-top:20px;}
 .tyr{display:flex;gap:8px;}
 .tyr input{flex:1;background:var(--b3);border:2px solid var(--br);border-radius:var(--rads);padding:10px 14px;font-size:16px;color:var(--t);transition:border-color var(--tr);}
 .tyr input:focus{border-color:var(--ac);}
@@ -105,8 +114,8 @@ a{color:var(--acs);text-decoration:none;}
 .tyr input.warn{border-color:var(--y);background:rgba(245,158,11,.1);}
 .tyfb{text-align:center;margin-top:10px;font-size:14px;font-weight:600;min-height:22px;}
 /* LETTERS */
-.ltc{width:100%;max-width:380px;background:var(--b2);border:1px solid var(--br);border-radius:16px;padding:20px;box-shadow:var(--sh);}
-.ltq{font-size:clamp(16px,5vw,24px);font-weight:800;text-align:center;margin-bottom:12px;}
+.ltc{width:100%;max-width:380px;background:var(--b2);border:1px solid var(--br);border-radius:16px;padding:20px;box-shadow:var(--sh);position:relative;}
+.ltq{font-size:clamp(16px,5vw,24px);font-weight:800;text-align:center;margin-bottom:12px;margin-top:20px;}
 .ltsl{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;min-height:44px;}
 .lts{min-width:34px;height:40px;border-bottom:2px solid var(--ac);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;padding:0 4px;cursor:pointer;}
 .lts.on{border-color:var(--acs);color:var(--acs);}
@@ -474,7 +483,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.21 */
+/* Slovník v6.22 */
 // Entfernt einen evtl. hängenden alten Service Worker + Cache aus früheren Versionen,
 // da diese Version selbst keinen Service Worker mehr registriert.
 if('serviceWorker' in navigator){
@@ -482,7 +491,7 @@ if('serviceWorker' in navigator){
 }
 if(window.caches){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
 
-const VER='6.21';
+const VER='6.22';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`};
 
 /* ── I18N ── */
@@ -688,6 +697,30 @@ function applyI18N(){
 const SRS_D=[0,1,7,30,60,180,365,Infinity];
 function SRS_N(){return I18N[S.ui]?.srsNames||I18N.de.srsNames;}
 const SRS_C=['#ef4444','#f97316','#f59e0b','#84cc16','#22c55e','#06b6d4','#6366f1','#a855f7'];
+const LFLAG={de:'🇩🇪',en:'🇬🇧',sk:'🇸🇰',hu:'🇭🇺',fr:'🇫🇷',it:'🇮🇹',pl:'🇵🇱',cs:'🇨🇿',ru:'🇷🇺',es:'🇪🇸',pt:'🇵🇹',nl:'🇳🇱',ko:'🇰🇷'};
+function flagFor(code){return LFLAG[code]||'🌐';}
+function cardTop(langCode,stage){
+  const sc=SRS_C[Math.min(stage||0,7)];
+  return `<div class="fc-top"><span class="flag">${flagFor(langCode)}</span><span class="lvl" style="background:${sc}22;color:${sc};">${stage||0}</span></div>`;
+}
+let _noteUid=0;
+function noteBlock(notes){
+  if(!notes)return '';
+  const uid=++_noteUid;
+  return `<div class="note-pop" id="np-${uid}">💡 ${esc(notes)}</div><div class="note-btn" onclick="event.stopPropagation();toggleNote(${uid})">💡</div>`;
+}
+function noteBlockInline(notes){
+  if(!notes)return '';
+  const uid=++_noteUid;
+  return `<div style="text-align:center;margin-bottom:12px;">
+    <span class="note-btn-inline" onclick="toggleNote(${uid})">💡 Hinweis</span>
+    <div class="note-pop-inline" id="np-${uid}">💡 ${esc(notes)}</div>
+  </div>`;
+}
+function toggleNote(uid){
+  const el=document.getElementById('np-'+uid);
+  if(el)el.classList.toggle('open');
+}
 
 let S={
   ui:'de',
@@ -885,10 +918,13 @@ function renderCard(){
 
   if(LS.mode==='deep'&&LS.phase===1){
     const qSide=dir===0?'native':'foreign';
+    const aSide=dir===0?'foreign':'native';
+    const qLang=qSide==='native'?S.pair.native:S.pair.target;
+    const aLang=aSide==='native'?S.pair.native:S.pair.target;
     document.getElementById('lbody').innerHTML=`
       <div class="fcw"><div class="fc flip" id="thefc">
-        <div class="ff front"><div class="fw">${esc(q)}</div>${getNotes(card,qSide)?`<div class="fn">💡 ${esc(getNotes(card,qSide))}</div>`:''}</div>
-        <div class="ff back"><div class="fw">${esc(a)}</div>${dir===0&&card.article?`<div class="fart">${esc(card.article)}</div>`:''}</div>
+        <div class="ff front">${cardTop(qLang,card.stage)}<div class="fw">${esc(q)}</div>${qSide==='native'&&card.article?`<div class="fart">${esc(card.article)}</div>`:''}${noteBlock(getNotes(card,qSide))}</div>
+        <div class="ff back">${cardTop(aLang,card.stage)}<div class="fw">${esc(a)}</div>${aSide==='native'&&card.article?`<div class="fart">${esc(card.article)}</div>`:''}</div>
       </div></div>
       <div class="abts"><button class="btn bp blg bw" onclick="dp2()">${t('weiterBtn')}</button></div>`;
     spk(q);return;
@@ -939,25 +975,31 @@ function dp2(){LS.phase=2;const c=LS.queue[0];renderFlip(c,LS.dir===0?c.native:c
 function renderFlip(card,q,a,dir){
   const qSide=dir===0?'native':'foreign';
   const aSide=dir===0?'foreign':'native';
+  const qLang=qSide==='native'?S.pair.native:S.pair.target;
+  const aLang=aSide==='native'?S.pair.native:S.pair.target;
   const qNotes=getNotes(card,qSide);
   const aSyns=getSyns(card,aSide);
+  const wrongArg=LS.mode==='deep'?'false,1':'false'; // Gezielt üben: max. -1 Stufe statt voller Reset
   document.getElementById('lbody').innerHTML=`
     <div class="fcw" onclick="flipIt()">
       <div class="fc" id="thefc">
         <div class="ff front">
+          ${cardTop(qLang,card.stage)}
           <div class="fw">${esc(q)}</div>
-          ${qNotes?`<div class="fn">💡 ${esc(qNotes)}</div>`:''}
+          ${qSide==='native'&&card.article?`<div class="fart">${esc(card.article)}</div>`:''}
+          ${noteBlock(qNotes)}
           <div style="margin-top:12px;font-size:12px;color:var(--t3)">${t('tapToFlip')}</div>
         </div>
         <div class="ff back">
+          ${cardTop(aLang,card.stage)}
           <div class="fw">${esc(a)}</div>
-          ${dir===0&&card.article?`<div class="fart">${esc(card.article)}</div>`:''}
+          ${aSide==='native'&&card.article?`<div class="fart">${esc(card.article)}</div>`:''}
           ${aSyns.length?`<div class="fs">~ ${aSyns.join(', ')}</div>`:''}
         </div>
       </div>
     </div>
     <div class="abts" id="abts" style="display:none;">
-      <button class="btn br2 blg" onclick="mark(false)">${t('falschBtn')}</button>
+      <button class="btn br2 blg" onclick="mark(${wrongArg})">${t('falschBtn')}</button>
       <button class="btn bg blg" onclick="mark(true)">${t('richtigBtn')}</button>
     </div>
     <div style="text-align:center;margin-top:10px;" id="dkwrap">
@@ -976,11 +1018,14 @@ function flipIt(){
 /* TYPE */
 function renderType(card,q,a,dir){
   const qSide=dir===0?'native':'foreign';
+  const qLang=qSide==='native'?S.pair.native:S.pair.target;
   const qNotes=getNotes(card,qSide);
   document.getElementById('lbody').innerHTML=`
     <div class="tyc">
+      ${cardTop(qLang,card.stage)}
       <div class="tyq">${esc(q)}</div>
-      ${qNotes?`<div class="fn" style="margin-bottom:12px;">💡 ${esc(qNotes)}</div>`:''}
+      ${qSide==='native'&&card.article?`<div class="fart" style="text-align:center;margin-bottom:8px;">${esc(card.article)}</div>`:''}
+      ${noteBlockInline(qNotes)}
       <div class="tyr">
         <input type="text" id="tyin" placeholder="Antwort…" data-i18n-ph="answerPh" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
           oninput="autoChk()" onkeydown="if(event.key==='Enter')chkType()">
@@ -1115,6 +1160,7 @@ function chkType(){
 /* LETTERS */
 function renderLetters(card,q,a,dir){
   const qSide=dir===0?'native':'foreign';
+  const qLang=qSide==='native'?S.pair.native:S.pair.target;
   const qNotes=getNotes(card,qSide);
   const target=dir===0?card.foreign:card.native;
   const letters=[...target].map((c,i)=>({c,i}));
@@ -1123,8 +1169,10 @@ function renderLetters(card,q,a,dir){
   const tiles=shuf.map(l=>`<div class="ltt" id="tl${l.i}" onclick="pickL(${l.i},'${esc(l.c)}')">${esc(l.c)}</div>`).join('');
   document.getElementById('lbody').innerHTML=`
     <div class="ltc">
+      ${cardTop(qLang,card.stage)}
       <div class="ltq">${esc(q)}</div>
-      ${qNotes?`<div class="fn" style="margin-bottom:10px;">💡 ${esc(qNotes)}</div>`:''}
+      ${qSide==='native'&&card.article?`<div class="fart" style="text-align:center;margin-bottom:8px;">${esc(card.article)}</div>`:''}
+      ${noteBlockInline(qNotes)}
       <div class="ltsl" id="ltsl">${slots}</div>
       <div class="ltti">${tiles}</div>
       <div style="text-align:center;font-size:14px;font-weight:600;min-height:22px;margin-top:8px;" id="ltfb"></div>
@@ -1246,7 +1294,8 @@ function dontKnow(){
     const el=document.getElementById('thefc');
     if(el&&!el.classList.contains('flip'))el.classList.add('flip');
     const b=document.getElementById('abts');
-    if(b){b.style.display='flex';b.innerHTML=`<button class="btn br2 blg bw" onclick="mark(false)">${t('weiterBtn')}</button>`;}
+    const wrongArg=LS.mode==='deep'?'false,1':'false';
+    if(b){b.style.display='flex';b.innerHTML=`<button class="btn br2 blg bw" onclick="mark(${wrongArg})">${t('weiterBtn')}</button>`;}
     spk(correct);
   } else if(ctype==='type'){
     const inp=document.getElementById('tyin');

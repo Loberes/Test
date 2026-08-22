@@ -2,12 +2,12 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, interactive-widget=overlays-content">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Slovník</title>
 <style>
-/* Slovník v6.22 */
+/* Slovník v6.23 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -83,7 +83,7 @@ a{color:var(--acs);text-decoration:none;}
 .lhdr .lhp{font-size:12px;color:var(--t2);}
 .pbw{height:3px;background:var(--b3);flex-shrink:0;}
 .pb{height:3px;background:var(--ac);transition:width .3s ease;}
-.lbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;gap:16px;}
+.lbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 16px 20px;gap:16px;overflow-y:auto;}
 /* FLIP CARD */
 .fcw{width:100%;max-width:380px;perspective:1000px;}
 .fc{position:relative;width:100%;aspect-ratio:1.6;transform-style:preserve-3d;transition:transform .45s ease;cursor:pointer;}
@@ -483,7 +483,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.22 */
+/* Slovník v6.23 */
 // Entfernt einen evtl. hängenden alten Service Worker + Cache aus früheren Versionen,
 // da diese Version selbst keinen Service Worker mehr registriert.
 if('serviceWorker' in navigator){
@@ -491,7 +491,7 @@ if('serviceWorker' in navigator){
 }
 if(window.caches){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
 
-const VER='6.22';
+const VER='6.23';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`};
 
 /* ── I18N ── */
@@ -542,6 +542,7 @@ de:{
   synForeignPh:'Syn1, Syn2',noteForeignPh:'Nur bei Fremdsprache sichtbar…',
   closeDiacritic:'Fast richtig – Achtung auf Akzente/diakritische Zeichen!',
   closeTypo:'Fast richtig – kleiner Tippfehler',yourInput:'Deine Eingabe',
+  confusionWarn:(w,m)=>`⚠️ „${w}" ist deine Übersetzung für „${m}" – wurde vorsichtshalber ebenfalls eine Stufe zurückgestuft.`,
   srsNames:['Neu','1 Tag','1 Woche','1 Monat','2 Monate','6 Monate','1 Jahr','Gelernt'],
   kpiWordsLearned:'Wörter gelernt',kpiAvgPerDay:'Ø pro Lerntag',kpiCorrectRate:'Richtig-Quote',kpiBestDay:'Bester Tag',
   mWords:'Wörter',mRatio:'Quote',
@@ -602,6 +603,7 @@ en:{
   synForeignPh:'Syn1, Syn2',noteForeignPh:'Only shown for the foreign word…',
   closeDiacritic:'Almost right – watch the accents!',
   closeTypo:'Almost right – small typo',yourInput:'Your answer',
+  confusionWarn:(w,m)=>`⚠️ "${w}" is your translation for "${m}" – it was also stepped down a level as a precaution.`,
   srsNames:['New','1 day','1 week','1 month','2 months','6 months','1 year','Learned'],
   kpiWordsLearned:'Words learned',kpiAvgPerDay:'Avg per active day',kpiCorrectRate:'Correct rate',kpiBestDay:'Best day',
   mWords:'Words',mRatio:'Rate',
@@ -662,6 +664,7 @@ sk:{
   synForeignPh:'Syn1, Syn2',noteForeignPh:'Zobrazí sa len pri cudzom slove…',
   closeDiacritic:'Takmer správne – pozor na dĺžne a mäkčene!',
   closeTypo:'Takmer správne – malý preklep',yourInput:'Tvoja odpoveď',
+  confusionWarn:(w,m)=>`⚠️ „${w}" je tvoj preklad pre „${m}" – jeho úroveň bola pre istotu tiež znížená.`,
   srsNames:['Nové','1 deň','1 týždeň','1 mesiac','2 mesiace','6 mesiacov','1 rok','Naučené'],
   kpiWordsLearned:'Naučené slovíčka',kpiAvgPerDay:'Ø na deň učenia',kpiCorrectRate:'Úspešnosť',kpiBestDay:'Najlepší deň',
   mWords:'Slovíčka',mRatio:'Kvóta',
@@ -1082,6 +1085,22 @@ function norm(s){
     .replace(/[-–—]/g,' ')    
     .replace(/\s+/g,' ').trim();
 }
+/* Verwechslungs-Erkennung (nur Tipp-Modus, seit v6.23):
+   Prüft bei komplett falscher Antwort, ob das Getippte exakt der Übersetzung
+   einer ANDEREN Vokabel entspricht (gleiche Sprachseite). Falls ja: diese andere
+   Vokabel bekommt ebenfalls -1 Stufe (nicht Statistik), da eine Verwechslung
+   naheliegt. Kein Treffer, wenn es sich um ein Synonym der AKTUELLEN Karte
+   handelt — das wäre dann ohnehin schon als richtig gewertet worden (tier
+   'exact'/'diacritic'), diese Funktion wird nur bei tier==='wrong' aufgerufen. */
+function checkConfusion(typed,aSide,card){
+  const typedK=normKeepAccents(typed);
+  if(!typedK)return null;
+  return S.vocab.find(v=>{
+    if(v.native===card.native&&v.foreign===card.foreign)return false;
+    const val=v[aSide];
+    return val&&normKeepAccents(val)===typedK;
+  })||null;
+}
 function autoChk(){
   const inp=document.getElementById('tyin');if(!inp||!LS)return;
   const typed=inp.value.trim();if(!typed)return;
@@ -1151,8 +1170,20 @@ function chkType(){
   const msgKey=tier==='typo'?'closeTypo':'falschBtn';
   const color=tier==='wrong'?'var(--r)':'var(--y)';
   inp.classList.add(tier==='wrong'?'err':'warn');
+
+  let confusionHtml='';
+  if(tier==='wrong'){
+    const confusedWith=checkConfusion(typed,aSide,card);
+    if(confusedWith){
+      confusedWith.stage=Math.max(0,(confusedWith.stage||0)-1);
+      const otherMeaning=aSide==='foreign'?confusedWith.native:confusedWith.foreign;
+      confusionHtml=`<div style="font-size:12px;color:var(--y);background:rgba(245,158,11,.1);padding:6px 10px;border-radius:6px;margin-top:8px;">${t('confusionWarn')(typed,otherMeaning)}</div>`;
+    }
+  }
+
   fb.innerHTML=`<span style="color:${color}">${t(msgKey)}</span><br>
-    <span style="font-size:12px;color:var(--t3)">${t('correctIs')}: <strong>${esc(correct)}</strong></span>`;
+    <span style="font-size:12px;color:var(--t3)">${t('correctIs')}: <strong>${esc(correct)}</strong></span>
+    ${confusionHtml}`;
   nx.style.display='block';
   nx.innerHTML=`<button class="btn bs" onclick="mark(false${stageDrop!==undefined?','+stageDrop:''})">${t('weiterBtn')}</button>`;
 }

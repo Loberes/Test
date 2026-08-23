@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Slovník</title>
 <style>
-/* Slovník v6.23 */
+/* Slovník v6.24 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -483,7 +483,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.23 */
+/* Slovník v6.24 */
 // Entfernt einen evtl. hängenden alten Service Worker + Cache aus früheren Versionen,
 // da diese Version selbst keinen Service Worker mehr registriert.
 if('serviceWorker' in navigator){
@@ -491,7 +491,7 @@ if('serviceWorker' in navigator){
 }
 if(window.caches){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
 
-const VER='6.23';
+const VER='6.24';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`};
 
 /* ── I18N ── */
@@ -543,6 +543,13 @@ de:{
   closeDiacritic:'Fast richtig – Achtung auf Akzente/diakritische Zeichen!',
   closeTypo:'Fast richtig – kleiner Tippfehler',yourInput:'Deine Eingabe',
   confusionWarn:(w,m)=>`⚠️ „${w}" ist deine Übersetzung für „${m}" – wurde vorsichtshalber ebenfalls eine Stufe zurückgestuft.`,
+  srsAdvanced:'SRS-Parameter (erweitert)',srsAdvancedDesc:'Nur ändern, wenn du weißt, was du tust – wirkt sich auf alle Vokabeln aus.',
+  srsIntervals:'Wiederholungs-Intervalle (Tage)',srsPenalties:'Abzüge bei falscher Antwort',
+  penaltyTypo:'Tippfehler/Buchstabendreher',penaltyConfusion:'Verwechslung mit anderem Wort',penaltyDeep:'Falsch in Gezielt üben',
+  ctypeCurve:'Kartentyp-Verteilung',
+  lettersMaxStage:'Buchstaben-Modus bis Stufe',lettersMaxStageDesc:'Ab dieser Stufe kein Buchstaben-Modus mehr',
+  flipMaxStage:'Umdrehen-Modus bis Stufe',flipMaxStageDesc:'Ab dieser Stufe kein Umdrehen-Modus mehr',
+  ctypeBasePct:'Start-Anteil bei Stufe 0 (%)',resetSrsParams:'Auf Standard zurücksetzen',srsParamsReset:'SRS-Parameter zurückgesetzt',
   srsNames:['Neu','1 Tag','1 Woche','1 Monat','2 Monate','6 Monate','1 Jahr','Gelernt'],
   kpiWordsLearned:'Wörter gelernt',kpiAvgPerDay:'Ø pro Lerntag',kpiCorrectRate:'Richtig-Quote',kpiBestDay:'Bester Tag',
   mWords:'Wörter',mRatio:'Quote',
@@ -604,6 +611,13 @@ en:{
   closeDiacritic:'Almost right – watch the accents!',
   closeTypo:'Almost right – small typo',yourInput:'Your answer',
   confusionWarn:(w,m)=>`⚠️ "${w}" is your translation for "${m}" – it was also stepped down a level as a precaution.`,
+  srsAdvanced:'SRS parameters (advanced)',srsAdvancedDesc:'Only change if you know what you\'re doing – affects all vocabulary.',
+  srsIntervals:'Review intervals (days)',srsPenalties:'Stage penalties on wrong answer',
+  penaltyTypo:'Typo/letter swap',penaltyConfusion:'Confused with another word',penaltyDeep:'Wrong in Deep Learn',
+  ctypeCurve:'Card type distribution',
+  lettersMaxStage:'Letters mode up to stage',lettersMaxStageDesc:'No more letters mode from this stage on',
+  flipMaxStage:'Flip mode up to stage',flipMaxStageDesc:'No more flip mode from this stage on',
+  ctypeBasePct:'Starting share at stage 0 (%)',resetSrsParams:'Reset to default',srsParamsReset:'SRS parameters reset',
   srsNames:['New','1 day','1 week','1 month','2 months','6 months','1 year','Learned'],
   kpiWordsLearned:'Words learned',kpiAvgPerDay:'Avg per active day',kpiCorrectRate:'Correct rate',kpiBestDay:'Best day',
   mWords:'Words',mRatio:'Rate',
@@ -665,6 +679,13 @@ sk:{
   closeDiacritic:'Takmer správne – pozor na dĺžne a mäkčene!',
   closeTypo:'Takmer správne – malý preklep',yourInput:'Tvoja odpoveď',
   confusionWarn:(w,m)=>`⚠️ „${w}" je tvoj preklad pre „${m}" – jeho úroveň bola pre istotu tiež znížená.`,
+  srsAdvanced:'SRS parametre (pokročilé)',srsAdvancedDesc:'Meniť len ak vieš, čo robíš – ovplyvní všetky slovíčka.',
+  srsIntervals:'Intervaly opakovania (dni)',srsPenalties:'Zníženie úrovne pri zlej odpovedi',
+  penaltyTypo:'Preklep/prehodené písmená',penaltyConfusion:'Zámena s iným slovom',penaltyDeep:'Chyba v Cielenom precvičovaní',
+  ctypeCurve:'Rozdelenie typov kariet',
+  lettersMaxStage:'Režim písmen do úrovne',lettersMaxStageDesc:'Od tejto úrovne už žiadny režim písmen',
+  flipMaxStage:'Režim otáčania do úrovne',flipMaxStageDesc:'Od tejto úrovne už žiadny režim otáčania',
+  ctypeBasePct:'Počiatočný podiel pri úrovni 0 (%)',resetSrsParams:'Obnoviť predvolené',srsParamsReset:'SRS parametre obnovené',
   srsNames:['Nové','1 deň','1 týždeň','1 mesiac','2 mesiace','6 mesiacov','1 rok','Naučené'],
   kpiWordsLearned:'Naučené slovíčka',kpiAvgPerDay:'Ø na deň učenia',kpiCorrectRate:'Úspešnosť',kpiBestDay:'Najlepší deň',
   mWords:'Slovíčka',mRatio:'Kvóta',
@@ -697,7 +718,34 @@ function applyI18N(){
   });
   const s1=document.getElementById('s-ul');if(s1)s1.value=S.ui;
 }
-const SRS_D=[0,1,7,30,60,180,365,Infinity];
+const SRS_D_DEFAULT=[0,1,7,30,60,180,365,Infinity];
+let SRS_D=[...SRS_D_DEFAULT]; // Stufe 0 (0) und Stufe 7 (∞) bleiben fix, Stufen 1–6 einstellbar
+const CTYPE_DEFAULT={lettersMaxStage:3,flipMaxStage:5,basePct:33};
+const PENALTY_DEFAULT={typo:2,confusion:1,deepWrong:1};
+function applySRSSettings(){
+  const d=S.set.srsDays;
+  if(Array.isArray(d)&&d.length===6&&d.every(n=>typeof n==='number'&&n>=0)){
+    SRS_D=[0,...d,Infinity];
+  } else {
+    SRS_D=[...SRS_D_DEFAULT];
+  }
+}
+function ctypeCfg(){
+  const c=S.set.ctype||{};
+  return {
+    lettersMaxStage:typeof c.lettersMaxStage==='number'?c.lettersMaxStage:CTYPE_DEFAULT.lettersMaxStage,
+    flipMaxStage:typeof c.flipMaxStage==='number'?c.flipMaxStage:CTYPE_DEFAULT.flipMaxStage,
+    basePct:typeof c.basePct==='number'?c.basePct:CTYPE_DEFAULT.basePct,
+  };
+}
+function penaltyCfg(){
+  const p=S.set.penalty||{};
+  return {
+    typo:typeof p.typo==='number'?p.typo:PENALTY_DEFAULT.typo,
+    confusion:typeof p.confusion==='number'?p.confusion:PENALTY_DEFAULT.confusion,
+    deepWrong:typeof p.deepWrong==='number'?p.deepWrong:PENALTY_DEFAULT.deepWrong,
+  };
+}
 function SRS_N(){return I18N[S.ui]?.srsNames||I18N.de.srsNames;}
 const SRS_C=['#ef4444','#f97316','#f59e0b','#84cc16','#22c55e','#06b6d4','#6366f1','#a855f7'];
 const LFLAG={de:'🇩🇪',en:'🇬🇧',sk:'🇸🇰',hu:'🇭🇺',fr:'🇫🇷',it:'🇮🇹',pl:'🇵🇱',cs:'🇨🇿',ru:'🇷🇺',es:'🇪🇸',pt:'🇵🇹',nl:'🇳🇱',ko:'🇰🇷'};
@@ -740,6 +788,7 @@ function init(){
   if(set) S.set={...S.set,...set};
   S.ui=S.set.uiLang||'de';
   applyTheme(S.set.theme||'dark');
+  applySRSSettings();
   const langs=lg(SK.langs);
   if(langs) S.langs=langs;
   const pair=lg(SK.pair);
@@ -767,7 +816,7 @@ function init(){
 }
 
 function updateDeepDesc(){
-  const n=S.set.repeatN||2;
+  const n=S.set.repeatN||3;
   const el=document.getElementById('deep-desc');
   if(el) el.textContent=t('deepDesc')(n);
 }
@@ -955,8 +1004,9 @@ function renderCard(){
    Tippen:     füllt den Rest auf → 33% am Anfang, 100% ab Stufe 5 */
 function ctypeWeights(stage){
   stage=Math.max(0,Math.min(7,stage||0));
-  const lettersW=stage<3?33*(1-stage/3):0;
-  const flipW=stage<5?33*(1-stage/5):0;
+  const cfg=ctypeCfg();
+  const lettersW=(cfg.lettersMaxStage>0&&stage<cfg.lettersMaxStage)?cfg.basePct*(1-stage/cfg.lettersMaxStage):0;
+  const flipW=(cfg.flipMaxStage>0&&stage<cfg.flipMaxStage)?cfg.basePct*(1-stage/cfg.flipMaxStage):0;
   const typeW=Math.max(0,100-lettersW-flipW);
   return {flip:flipW,type:typeW,letters:lettersW};
 }
@@ -982,7 +1032,7 @@ function renderFlip(card,q,a,dir){
   const aLang=aSide==='native'?S.pair.native:S.pair.target;
   const qNotes=getNotes(card,qSide);
   const aSyns=getSyns(card,aSide);
-  const wrongArg=LS.mode==='deep'?'false,1':'false'; // Gezielt üben: max. -1 Stufe statt voller Reset
+  const wrongArg=LS.mode==='deep'?`false,${penaltyCfg().deepWrong}`:'false'; // Gezielt üben: einstellbare Strafe statt voller Reset
   document.getElementById('lbody').innerHTML=`
     <div class="fcw" onclick="flipIt()">
       <div class="fc" id="thefc">
@@ -1166,7 +1216,7 @@ function chkType(){
     if(nx){nx.style.display='block';nx.innerHTML=`<button class="btn bg blg bw" style="margin-top:8px;" onclick="mark(true)">${t('weiterBtn')}</button>`;}
     return;
   }
-  const stageDrop=tier==='typo'?2:undefined;
+  const stageDrop=tier==='typo'?penaltyCfg().typo:undefined;
   const msgKey=tier==='typo'?'closeTypo':'falschBtn';
   const color=tier==='wrong'?'var(--r)':'var(--y)';
   inp.classList.add(tier==='wrong'?'err':'warn');
@@ -1175,7 +1225,7 @@ function chkType(){
   if(tier==='wrong'){
     const confusedWith=checkConfusion(typed,aSide,card);
     if(confusedWith){
-      confusedWith.stage=Math.max(0,(confusedWith.stage||0)-1);
+      confusedWith.stage=Math.max(0,(confusedWith.stage||0)-penaltyCfg().confusion);
       const otherMeaning=aSide==='foreign'?confusedWith.native:confusedWith.foreign;
       confusionHtml=`<div style="font-size:12px;color:var(--y);background:rgba(245,158,11,.1);padding:6px 10px;border-radius:6px;margin-top:8px;">${t('confusionWarn')(typed,otherMeaning)}</div>`;
     }
@@ -1236,7 +1286,7 @@ function pickL(id,ch){
       spk(target);
     } else {
       const dist=editDistance(typed,target);
-      const stageDrop=dist===1?2:undefined;
+      const stageDrop=dist===1?penaltyCfg().typo:undefined;
       const msgKey=dist===1?'closeTypo':'falschBtn';
       const color=dist===1?'var(--y)':'var(--r)';
       fb.innerHTML=`<div style="color:${color}">${t(msgKey)}</div>
@@ -1325,7 +1375,7 @@ function dontKnow(){
     const el=document.getElementById('thefc');
     if(el&&!el.classList.contains('flip'))el.classList.add('flip');
     const b=document.getElementById('abts');
-    const wrongArg=LS.mode==='deep'?'false,1':'false';
+    const wrongArg=LS.mode==='deep'?`false,${penaltyCfg().deepWrong}`:'false';
     if(b){b.style.display='flex';b.innerHTML=`<button class="btn br2 blg bw" onclick="mark(${wrongArg})">${t('weiterBtn')}</button>`;}
     spk(correct);
   } else if(ctype==='type'){
@@ -1359,7 +1409,7 @@ function mark(ok,stageDrop){
     if(ok) S.vocab[vi].stats.correct++;else S.vocab[vi].stats.wrong++;
   }
 
-  const reqN=S.set.repeatN||2;
+  const reqN=S.set.repeatN||3;
 
   if(ok){
     LS.cc[key][dk]++;
@@ -2303,6 +2353,44 @@ function openSettings(){
       </div>
     </div>
     <div class="card">
+      <div class="stit">${t('srsAdvanced')}</div>
+      <div class="setd" style="margin-bottom:12px;">${t('srsAdvancedDesc')}</div>
+
+      <div class="setl" style="margin-bottom:6px;font-weight:600;">${t('srsIntervals')}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
+        ${[1,2,3,4,5,6].map(i=>`
+          <div style="text-align:center;">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:3px;">${SRS_N()[i]}</div>
+            <input type="number" min="0" max="9999" value="${SRS_D[i]}" id="s-srsd-${i}" onchange="setSrsDay(${i},this.value)"
+              style="width:100%;background:var(--b3);border:1px solid var(--br);border-radius:6px;padding:5px 2px;color:var(--t);text-align:center;">
+          </div>`).join('')}
+      </div>
+
+      <div class="setl" style="margin-bottom:6px;font-weight:600;">${t('srsPenalties')}</div>
+      <div class="setr"><div class="setl">${t('penaltyTypo')}</div>
+        <input type="number" min="0" max="7" value="${penaltyCfg().typo}" id="s-pen-typo" onchange="setPenalty('typo',this.value)"
+          style="width:56px;background:var(--b3);border:1px solid var(--br);border-radius:6px;padding:5px;color:var(--t);text-align:center;"></div>
+      <div class="setr"><div class="setl">${t('penaltyConfusion')}</div>
+        <input type="number" min="0" max="7" value="${penaltyCfg().confusion}" id="s-pen-conf" onchange="setPenalty('confusion',this.value)"
+          style="width:56px;background:var(--b3);border:1px solid var(--br);border-radius:6px;padding:5px;color:var(--t);text-align:center;"></div>
+      <div class="setr"><div class="setl">${t('penaltyDeep')}</div>
+        <input type="number" min="0" max="7" value="${penaltyCfg().deepWrong}" id="s-pen-deep" onchange="setPenalty('deepWrong',this.value)"
+          style="width:56px;background:var(--b3);border:1px solid var(--br);border-radius:6px;padding:5px;color:var(--t);text-align:center;"></div>
+
+      <div class="setl" style="margin:14px 0 6px;font-weight:600;">${t('ctypeCurve')}</div>
+      <div class="setr"><div><div class="setl">${t('lettersMaxStage')}</div><div class="setd">${t('lettersMaxStageDesc')}</div></div>
+        <input type="number" min="0" max="7" value="${ctypeCfg().lettersMaxStage}" id="s-ct-lm" onchange="setCtype('lettersMaxStage',this.value)"
+          style="width:56px;background:var(--b3);border:1px solid var(--br);border-radius:6px;padding:5px;color:var(--t);text-align:center;"></div>
+      <div class="setr"><div><div class="setl">${t('flipMaxStage')}</div><div class="setd">${t('flipMaxStageDesc')}</div></div>
+        <input type="number" min="0" max="7" value="${ctypeCfg().flipMaxStage}" id="s-ct-fm" onchange="setCtype('flipMaxStage',this.value)"
+          style="width:56px;background:var(--b3);border:1px solid var(--br);border-radius:6px;padding:5px;color:var(--t);text-align:center;"></div>
+      <div class="setr"><div class="setl">${t('ctypeBasePct')}</div>
+        <input type="number" min="0" max="100" value="${ctypeCfg().basePct}" id="s-ct-bp" onchange="setCtype('basePct',this.value)"
+          style="width:56px;background:var(--b3);border:1px solid var(--br);border-radius:6px;padding:5px;color:var(--t);text-align:center;"></div>
+
+      <button class="btn bs bw" style="margin-top:14px;" onclick="resetSrsParams()">${t('resetSrsParams')}</button>
+    </div>
+    <div class="card">
       <div class="stit">${t('dataSection')}</div>
       <button class="btn bs bw" style="margin-bottom:8px;" onclick="expJSON();closeMod();">${t('jsonExport')}</button>
       <button class="btn bs bw" style="color:var(--r);border-color:var(--r);" onclick="resetAll()">${t('deleteAllBtn')}</button>
@@ -2318,6 +2406,27 @@ function setGN(v){
 function setRN(v){
   document.getElementById('s-rnv').textContent=v;
   S.set.repeatN=parseInt(v);ls(SK.set,S.set);updateDeepDesc();
+}
+function setSrsDay(idx,v){
+  const n=Math.max(0,parseInt(v)||0);
+  const days=(Array.isArray(S.set.srsDays)&&S.set.srsDays.length===6)?[...S.set.srsDays]:SRS_D_DEFAULT.slice(1,7);
+  days[idx-1]=n;
+  S.set.srsDays=days;ls(SK.set,S.set);
+  applySRSSettings();
+}
+function setPenalty(key,v){
+  const n=Math.max(0,Math.min(7,parseInt(v)||0));
+  S.set.penalty={...penaltyCfg(),[key]:n};ls(SK.set,S.set);
+}
+function setCtype(key,v){
+  const n=Math.max(0,parseInt(v)||0);
+  S.set.ctype={...ctypeCfg(),[key]:n};ls(SK.set,S.set);
+}
+function resetSrsParams(){
+  delete S.set.srsDays;delete S.set.penalty;delete S.set.ctype;
+  ls(SK.set,S.set);applySRSSettings();
+  closeMod();openSettings();
+  toast(t('srsParamsReset'));
 }
 function setThm(t){S.set.theme=t;ls(SK.set,S.set);applyTheme(t);}
 function setUL(l){

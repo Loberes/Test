@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Slovník</title>
 <style>
-/* Slovník v6.24 */
+/* Slovník v6.25 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -483,7 +483,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.24 */
+/* Slovník v6.25 */
 // Entfernt einen evtl. hängenden alten Service Worker + Cache aus früheren Versionen,
 // da diese Version selbst keinen Service Worker mehr registriert.
 if('serviceWorker' in navigator){
@@ -491,7 +491,7 @@ if('serviceWorker' in navigator){
 }
 if(window.caches){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
 
-const VER='6.24';
+const VER='6.25';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`};
 
 /* ── I18N ── */
@@ -550,6 +550,11 @@ de:{
   lettersMaxStage:'Buchstaben-Modus bis Stufe',lettersMaxStageDesc:'Ab dieser Stufe kein Buchstaben-Modus mehr',
   flipMaxStage:'Umdrehen-Modus bis Stufe',flipMaxStageDesc:'Ab dieser Stufe kein Umdrehen-Modus mehr',
   ctypeBasePct:'Start-Anteil bei Stufe 0 (%)',resetSrsParams:'Auf Standard zurücksetzen',srsParamsReset:'SRS-Parameter zurückgesetzt',
+  createdLbl:'Erstellt am',editedLbl:'Bearbeitet',totalLbl:'Gesamt',historyRangeLbl:'Verlauf (365 Tage)',
+  timelineLbl:'Zeitverlauf',neverEdited:'Nie',noHistoryYet:'Noch keine Lern-Ereignisse.',
+  entriesCount:n=>n===1?'1 Eintrag':`${n} Einträge`,
+  moreEntriesNote:n=>`… und ${n} weitere Einträge`,
+  historyCapNote:'Ereignisse älter als 365 Tage sind nicht mehr einzeln gespeichert und fließen nur noch in die Gesamt-Zahlen oben ein.',
   srsNames:['Neu','1 Tag','1 Woche','1 Monat','2 Monate','6 Monate','1 Jahr','Gelernt'],
   kpiWordsLearned:'Wörter gelernt',kpiAvgPerDay:'Ø pro Lerntag',kpiCorrectRate:'Richtig-Quote',kpiBestDay:'Bester Tag',
   mWords:'Wörter',mRatio:'Quote',
@@ -618,6 +623,11 @@ en:{
   lettersMaxStage:'Letters mode up to stage',lettersMaxStageDesc:'No more letters mode from this stage on',
   flipMaxStage:'Flip mode up to stage',flipMaxStageDesc:'No more flip mode from this stage on',
   ctypeBasePct:'Starting share at stage 0 (%)',resetSrsParams:'Reset to default',srsParamsReset:'SRS parameters reset',
+  createdLbl:'Created',editedLbl:'Edited',totalLbl:'Total',historyRangeLbl:'History (365 days)',
+  timelineLbl:'Timeline',neverEdited:'Never',noHistoryYet:'No learning events yet.',
+  entriesCount:n=>n===1?'1 entry':`${n} entries`,
+  moreEntriesNote:n=>`… and ${n} more entries`,
+  historyCapNote:'Events older than 365 days are no longer stored individually and only feed into the totals above.',
   srsNames:['New','1 day','1 week','1 month','2 months','6 months','1 year','Learned'],
   kpiWordsLearned:'Words learned',kpiAvgPerDay:'Avg per active day',kpiCorrectRate:'Correct rate',kpiBestDay:'Best day',
   mWords:'Words',mRatio:'Rate',
@@ -686,6 +696,11 @@ sk:{
   lettersMaxStage:'Režim písmen do úrovne',lettersMaxStageDesc:'Od tejto úrovne už žiadny režim písmen',
   flipMaxStage:'Režim otáčania do úrovne',flipMaxStageDesc:'Od tejto úrovne už žiadny režim otáčania',
   ctypeBasePct:'Počiatočný podiel pri úrovni 0 (%)',resetSrsParams:'Obnoviť predvolené',srsParamsReset:'SRS parametre obnovené',
+  createdLbl:'Vytvorené',editedLbl:'Upravené',totalLbl:'Spolu',historyRangeLbl:'História (365 dní)',
+  timelineLbl:'Časový priebeh',neverEdited:'Nikdy',noHistoryYet:'Zatiaľ žiadne udalosti učenia.',
+  entriesCount:n=>n===1?'1 záznam':`${n} záznamov`,
+  moreEntriesNote:n=>`… a ${n} ďalších záznamov`,
+  historyCapNote:'Udalosti staršie ako 365 dní už nie sú uložené jednotlivo a počítajú sa len do celkových čísel vyššie.',
   srsNames:['Nové','1 deň','1 týždeň','1 mesiac','2 mesiace','6 mesiacov','1 rok','Naučené'],
   kpiWordsLearned:'Naučené slovíčka',kpiAvgPerDay:'Ø na deň učenia',kpiCorrectRate:'Úspešnosť',kpiBestDay:'Najlepší deň',
   mWords:'Slovíčka',mRatio:'Kvóta',
@@ -1673,7 +1688,7 @@ function renderList(){
     const sc=SRS_C[Math.min(v.stage||0,7)];
     return `<div class="vi">
       <div class="vsb" style="background:${sc}22;color:${sc};">${v.stage||0}</div>
-      <div class="vw">
+      <div class="vw" onclick="showWordDetail(${i})" style="cursor:pointer;">
         <div class="vn">${esc((v.article?v.article+' ':'')+v.native)}</div>
         <div class="vf">${esc(v.foreign)}</div>
         <div style="font-size:10px;color:${dueColor(v)};margin-top:2px;">${dueLabel(v)}</div>
@@ -1716,6 +1731,8 @@ function saveEdit(i,fromLearn){
   v.notesNative=document.getElementById('e-note-nat').value.trim();
   v.notesForeign=document.getElementById('e-note-for').value.trim();
   v.stage=Math.min(7,Math.max(0,parseInt(document.getElementById('e-stg').value)||0));
+  v.editCount=(v.editCount||0)+1;
+  v.lastEdited=Date.now();
   saveVocab();closeMod();
   if(fromLearn) renderCard();
   else renderList();
@@ -1725,6 +1742,60 @@ function saveEdit(i,fromLearn){
 function delVocab(i){
   if(!confirm(t('deleteVocabConfirm')))return;
   S.vocab.splice(i,1);saveVocab();renderList();updateTB();toast(t('deletedMsg'));
+}
+
+function fmtDate(ts){
+  if(!ts)return '–';
+  const loc=S.ui==='de'?'de-DE':S.ui==='sk'?'sk-SK':'en-US';
+  return new Date(ts).toLocaleDateString(loc,{day:'2-digit',month:'2-digit',year:'numeric'})
+    +' · '+new Date(ts).toLocaleTimeString(loc,{hour:'2-digit',minute:'2-digit'});
+}
+
+function showWordDetail(i){
+  const v=S.vocab[i];if(!v)return;
+  const key=v.native+'_'+v.foreign;
+  const log=(lg(SK.log)||[]).filter(e=>e.w===key).sort((a,b)=>logT(b)-logT(a));
+  const sc=SRS_C[Math.min(v.stage||0,7)];
+  const cor=v.stats?.correct||0,wro=v.stats?.wrong||0,tot=cor+wro;
+  const pct=tot>0?Math.round(cor/tot*100):0;
+
+  const rows=log.slice(0,50).map(e=>`
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--br);font-size:12px;">
+      <span style="color:var(--t2);">${fmtDate(logT(e))}</span>
+      <span style="color:${e.ok?'var(--g)':'var(--r)'};font-weight:600;">${e.ok?t('richtigBtn'):t('falschBtn')}</span>
+    </div>`).join('');
+
+  const editedStr=v.editCount?`${v.editCount}× (${fmtDate(v.lastEdited)})`:t('neverEdited');
+  const oldWord=v.created&&(Date.now()-v.created)>365*86400000;
+
+  openMod(`${esc((v.article?v.article+' ':'')+v.native)} → ${esc(v.foreign)}`,`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <div class="vsb" style="background:${sc}22;color:${sc};width:34px;height:34px;font-size:15px;">${v.stage||0}</div>
+      <div style="font-size:13px;color:var(--t2);">${SRS_N()[v.stage||0]}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+      <div class="card" style="padding:10px 12px;margin:0;">
+        <div style="font-size:11px;color:var(--t3);">${t('createdLbl')}</div>
+        <div style="font-weight:600;font-size:13px;">${fmtDate(v.created)}</div>
+      </div>
+      <div class="card" style="padding:10px 12px;margin:0;">
+        <div style="font-size:11px;color:var(--t3);">${t('editedLbl')}</div>
+        <div style="font-weight:600;font-size:13px;">${editedStr}</div>
+      </div>
+      <div class="card" style="padding:10px 12px;margin:0;">
+        <div style="font-size:11px;color:var(--t3);">${t('totalLbl')}</div>
+        <div style="font-weight:600;font-size:13px;"><span style="color:var(--g)">✓${cor}</span> / <span style="color:var(--r)">✗${wro}</span> (${pct}%)</div>
+      </div>
+      <div class="card" style="padding:10px 12px;margin:0;">
+        <div style="font-size:11px;color:var(--t3);">${t('historyRangeLbl')}</div>
+        <div style="font-weight:600;font-size:13px;">${t('entriesCount')(log.length)}</div>
+      </div>
+    </div>
+    <div class="stit" style="margin-bottom:6px;">${t('timelineLbl')}</div>
+    ${log.length?rows:`<div style="font-size:12px;color:var(--t3);padding:8px 0;">${t('noHistoryYet')}</div>`}
+    ${log.length>50?`<div style="font-size:11px;color:var(--t3);padding:8px 0;text-align:center;">${t('moreEntriesNote')(log.length-50)}</div>`:''}
+    ${oldWord?`<div style="font-size:11px;color:var(--t3);margin-top:10px;">${t('historyCapNote')}</div>`:''}
+  `);
 }
 
 /* ════════════════════════════════

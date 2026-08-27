@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Slovník</title>
 <style>
-/* Slovník v6.25 */
+/* Slovník v6.26 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -16,6 +16,7 @@
   --br:rgba(255,255,255,.08);--rad:12px;--rads:8px;
   --sh:0 4px 24px rgba(0,0,0,.4);--tr:.18s ease;
   --font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  --wordfont:Verdana,Geneva,Tahoma,sans-serif; /* für Vokabel-Text: unterscheidet großes I und kleines l eindeutig */
 }
 [data-theme=light]{--b:#f1f5f9;--b2:#fff;--b3:#f8fafc;--b4:#e2e8f0;--t:#0f172a;--t2:#475569;--t3:#94a3b8;--br:rgba(0,0,0,.08);}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -90,8 +91,8 @@ a{color:var(--acs);text-decoration:none;}
 .fc.flip{transform:rotateY(180deg);}
 .ff{position:absolute;inset:0;background:var(--b2);border:1px solid var(--br);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;backface-visibility:hidden;box-shadow:var(--sh);}
 .ff.back{transform:rotateY(180deg);background:var(--b3);}
-.fw{font-size:clamp(20px,6vw,32px);font-weight:800;text-align:center;}
-.fs{font-size:13px;color:var(--t2);margin-top:6px;text-align:center;}
+.fw{font-size:clamp(20px,6vw,32px);font-weight:800;text-align:center;font-family:var(--wordfont);}
+.fs{font-size:13px;color:var(--t2);margin-top:6px;text-align:center;font-family:var(--wordfont);}
 .fn{font-size:12px;color:var(--y);margin-top:8px;text-align:center;background:rgba(245,158,11,.1);padding:6px 10px;border-radius:6px;}
 .fart{font-size:14px;font-weight:700;color:var(--acs);margin-top:6px;}
 .fc-top{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:center;pointer-events:none;}
@@ -105,7 +106,7 @@ a{color:var(--acs);text-decoration:none;}
 .note-pop-inline.open{display:block;}
 /* TYPE */
 .tyc{width:100%;max-width:380px;background:var(--b2);border:1px solid var(--br);border-radius:16px;padding:24px 20px;box-shadow:var(--sh);position:relative;}
-.tyq{font-size:clamp(18px,5vw,28px);font-weight:800;text-align:center;margin-bottom:16px;margin-top:20px;}
+.tyq{font-size:clamp(18px,5vw,28px);font-weight:800;text-align:center;margin-bottom:16px;margin-top:20px;font-family:var(--wordfont);}
 .tyr{display:flex;gap:8px;}
 .tyr input{flex:1;background:var(--b3);border:2px solid var(--br);border-radius:var(--rads);padding:10px 14px;font-size:16px;color:var(--t);transition:border-color var(--tr);}
 .tyr input:focus{border-color:var(--ac);}
@@ -115,12 +116,12 @@ a{color:var(--acs);text-decoration:none;}
 .tyfb{text-align:center;margin-top:10px;font-size:14px;font-weight:600;min-height:22px;}
 /* LETTERS */
 .ltc{width:100%;max-width:380px;background:var(--b2);border:1px solid var(--br);border-radius:16px;padding:20px;box-shadow:var(--sh);position:relative;}
-.ltq{font-size:clamp(16px,5vw,24px);font-weight:800;text-align:center;margin-bottom:12px;margin-top:20px;}
+.ltq{font-size:clamp(16px,5vw,24px);font-weight:800;text-align:center;margin-bottom:12px;margin-top:20px;font-family:var(--wordfont);}
 .ltsl{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;min-height:44px;}
-.lts{min-width:34px;height:40px;border-bottom:2px solid var(--ac);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;padding:0 4px;cursor:pointer;}
+.lts{min-width:34px;height:40px;border-bottom:2px solid var(--ac);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;padding:0 4px;cursor:pointer;font-family:var(--wordfont);}
 .lts.on{border-color:var(--acs);color:var(--acs);}
 .ltti{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
-.ltt{min-width:38px;height:44px;padding:0 8px;background:var(--b3);border:1px solid var(--br);border-radius:var(--rads);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--tr);touch-action:manipulation;user-select:none;}
+.ltt{min-width:38px;height:44px;padding:0 8px;background:var(--b3);border:1px solid var(--br);border-radius:var(--rads);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--tr);touch-action:manipulation;user-select:none;font-family:var(--wordfont);}
 .ltt:hover,.ltt:active{background:var(--acd);border-color:var(--ac);}
 .ltt.used{opacity:.3;pointer-events:none;}
 /* ANSWER BTNS */
@@ -140,8 +141,8 @@ a{color:var(--acs);text-decoration:none;}
 .vi{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--br);}
 .vi:last-child{border-bottom:none;}
 .vw{flex:1;min-width:0;}
-.vn{font-weight:700;font-size:14px;}
-.vf{font-size:13px;color:var(--t2);}
+.vn{font-weight:700;font-size:14px;font-family:var(--wordfont);}
+.vf{font-size:13px;color:var(--t2);font-family:var(--wordfont);}
 .vsb{width:24px;height:24px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .va{display:flex;gap:4px;}
 .xbtn{width:30px;height:30px;border-radius:6px;background:var(--b3);display:flex;align-items:center;justify-content:center;font-size:14px;transition:background var(--tr);cursor:pointer;}
@@ -322,6 +323,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
         <div class="md" id="deep-desc">Deep Learn (3× richtig)</div>
       </button>
     </div>
+    <button class="btn bs bw" style="margin-top:14px;" onclick="openSessionHistory()">🕘 <span data-i18n="sessHistoryBtn">Sitzungs-Verlauf</span></button>
     <div class="vtag">Slovník</div>
   </div>
 
@@ -483,7 +485,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.25 */
+/* Slovník v6.26 */
 // Entfernt einen evtl. hängenden alten Service Worker + Cache aus früheren Versionen,
 // da diese Version selbst keinen Service Worker mehr registriert.
 if('serviceWorker' in navigator){
@@ -491,8 +493,9 @@ if('serviceWorker' in navigator){
 }
 if(window.caches){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
 
-const VER='6.25';
-const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`};
+const VER='6.26';
+const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
+const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
 /* ── I18N ── */
 const I18N={
@@ -555,6 +558,11 @@ de:{
   entriesCount:n=>n===1?'1 Eintrag':`${n} Einträge`,
   moreEntriesNote:n=>`… und ${n} weitere Einträge`,
   historyCapNote:'Ereignisse älter als 365 Tage sind nicht mehr einzeln gespeichert und fließen nur noch in die Gesamt-Zahlen oben ein.',
+  sessWords:'Wörter',sessQuote:'Quote',sessDuration:'Dauer',sessDate:'Datum',
+  sessMoves:'Stufen-Bewegungen',sessDifficult:'Schwierige Wörter',
+  noMovesYet:'Keine Stufenänderungen in dieser Sitzung.',noDifficultWords:'Keine schwierigen Wörter – sehr gut!',
+  durationMin:(m,s)=>`${m} Min ${s} Sek`,durationSec:s=>`${s} Sek`,
+  sessHistoryBtn:'Sitzungs-Verlauf',sessHistoryTitle:'Sitzungs-Verlauf',noSessionsYet:'Noch keine abgeschlossenen Sitzungen.',
   srsNames:['Neu','1 Tag','1 Woche','1 Monat','2 Monate','6 Monate','1 Jahr','Gelernt'],
   kpiWordsLearned:'Wörter gelernt',kpiAvgPerDay:'Ø pro Lerntag',kpiCorrectRate:'Richtig-Quote',kpiBestDay:'Bester Tag',
   mWords:'Wörter',mRatio:'Quote',
@@ -628,6 +636,11 @@ en:{
   entriesCount:n=>n===1?'1 entry':`${n} entries`,
   moreEntriesNote:n=>`… and ${n} more entries`,
   historyCapNote:'Events older than 365 days are no longer stored individually and only feed into the totals above.',
+  sessWords:'Words',sessQuote:'Score',sessDuration:'Duration',sessDate:'Date',
+  sessMoves:'Level changes',sessDifficult:'Difficult words',
+  noMovesYet:'No level changes in this session.',noDifficultWords:'No difficult words – great job!',
+  durationMin:(m,s)=>`${m} min ${s} sec`,durationSec:s=>`${s} sec`,
+  sessHistoryBtn:'Session history',sessHistoryTitle:'Session history',noSessionsYet:'No completed sessions yet.',
   srsNames:['New','1 day','1 week','1 month','2 months','6 months','1 year','Learned'],
   kpiWordsLearned:'Words learned',kpiAvgPerDay:'Avg per active day',kpiCorrectRate:'Correct rate',kpiBestDay:'Best day',
   mWords:'Words',mRatio:'Rate',
@@ -701,6 +714,11 @@ sk:{
   entriesCount:n=>n===1?'1 záznam':`${n} záznamov`,
   moreEntriesNote:n=>`… a ${n} ďalších záznamov`,
   historyCapNote:'Udalosti staršie ako 365 dní už nie sú uložené jednotlivo a počítajú sa len do celkových čísel vyššie.',
+  sessWords:'Slovíčka',sessQuote:'Úspešnosť',sessDuration:'Trvanie',sessDate:'Dátum',
+  sessMoves:'Zmeny úrovní',sessDifficult:'Náročné slovíčka',
+  noMovesYet:'V tejto sedení žiadne zmeny úrovní.',noDifficultWords:'Žiadne náročné slovíčka – výborne!',
+  durationMin:(m,s)=>`${m} min ${s} s`,durationSec:s=>`${s} s`,
+  sessHistoryBtn:'História sedení',sessHistoryTitle:'História sedení',noSessionsYet:'Zatiaľ žiadne dokončené sedenia.',
   srsNames:['Nové','1 deň','1 týždeň','1 mesiac','2 mesiace','6 mesiacov','1 rok','Naučené'],
   kpiWordsLearned:'Naučené slovíčka',kpiAvgPerDay:'Ø na deň učenia',kpiCorrectRate:'Úspešnosť',kpiBestDay:'Najlepší deň',
   mWords:'Slovíčka',mRatio:'Kvóta',
@@ -949,6 +967,8 @@ function startLearn(mode,list){
     cc:{},    
     phase:1,  
     tts:S.set.tts!==false,
+    startTime:Date.now(),
+    wordStats:{},
   };
   showLScr();renderCard();
 }
@@ -1424,6 +1444,12 @@ function mark(ok,stageDrop){
     if(ok) S.vocab[vi].stats.correct++;else S.vocab[vi].stats.wrong++;
   }
 
+  if(!LS.wordStats[key]){
+    const curStage=vi>=0?(S.vocab[vi].stage||0):0;
+    LS.wordStats[key]={native:card.native,foreign:card.foreign,startStage:curStage,endStage:curStage,correct:0,wrong:0};
+  }
+  if(ok) LS.wordStats[key].correct++;else LS.wordStats[key].wrong++;
+
   const reqN=S.set.repeatN||3;
 
   if(ok){
@@ -1462,18 +1488,115 @@ function mark(ok,stageDrop){
     LS.dir=0;
     if(LS.mode==='deep') LS.phase=1;
   }
-  saveVocab();logLearn(ok,key);renderCard();
+  saveVocab();logLearn(ok,key);
+  if(vi>=0&&LS.wordStats[key]) LS.wordStats[key].endStage=S.vocab[vi].stage;
+  renderCard();
+}
+
+function formatDuration(ms){
+  const s=Math.max(0,Math.round(ms/1000));
+  const m=Math.floor(s/60),sec=s%60;
+  return m>0?t('durationMin')(m,sec):t('durationSec')(sec);
+}
+function buildSessionSummary(){
+  const words=Object.values(LS.wordStats||{});
+  const correct=words.reduce((s,w)=>s+w.correct,0);
+  const wrong=words.reduce((s,w)=>s+w.wrong,0);
+  const quote=(correct+wrong)>0?Math.round(correct/(correct+wrong)*100):0;
+  const moves=words.filter(w=>w.startStage!==w.endStage)
+    .map(w=>({native:w.native,foreign:w.foreign,from:w.startStage,to:w.endStage}));
+  const difficult=words.filter(w=>w.wrong>0)
+    .sort((a,b)=>b.wrong-a.wrong||a.correct-b.correct)
+    .slice(0,5).map(w=>({native:w.native,foreign:w.foreign,correct:w.correct,wrong:w.wrong}));
+  return {
+    id:Date.now(),ts:Date.now(),mode:LS.mode,
+    pair:S.pair?{native:S.pair.native,target:S.pair.target}:null,
+    totalWords:words.length,correct,wrong,quote,
+    durationMs:Date.now()-(LS.startTime||Date.now()),
+    moves,difficult,
+  };
+}
+function saveSession(summary){
+  const list=lg(SK.sessions)||[];
+  list.unshift(summary);
+  ls(SK.sessions,list.slice(0,SESSIONS_MAX));
+}
+function sessionSummaryHtml(s){
+  const movesHtml=s.moves.length?s.moves.map(m=>{
+    const up=m.to>m.from;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--br);font-size:12px;">
+      <span>${esc(m.native)} → ${esc(m.foreign)}</span>
+      <span style="color:${up?'var(--g)':'var(--r)'};font-weight:700;">${m.from} ${up?'↑':'↓'} ${m.to}</span>
+    </div>`;
+  }).join(''):`<div style="font-size:12px;color:var(--t3);padding:6px 0;">${t('noMovesYet')}</div>`;
+
+  const difficultHtml=s.difficult.length?s.difficult.map(w=>`
+    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--br);font-size:12px;">
+      <span>${esc(w.native)} → ${esc(w.foreign)}</span>
+      <span><span style="color:var(--r);font-weight:700;">✗${w.wrong}</span> <span style="color:var(--g);font-weight:700;">✓${w.correct}</span></span>
+    </div>`).join(''):`<div style="font-size:12px;color:var(--t3);padding:6px 0;">${t('noDifficultWords')}</div>`;
+
+  const qColor=s.quote>=80?'var(--g)':s.quote>=50?'var(--y)':'var(--r)';
+  return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+      <div class="card" style="margin:0;padding:10px 12px;">
+        <div style="font-size:11px;color:var(--t3);">${t('sessWords')}</div>
+        <div style="font-weight:800;font-size:18px;">${s.totalWords}</div>
+      </div>
+      <div class="card" style="margin:0;padding:10px 12px;">
+        <div style="font-size:11px;color:var(--t3);">${t('sessQuote')}</div>
+        <div style="font-weight:800;font-size:18px;color:${qColor};">${s.quote}%</div>
+      </div>
+      <div class="card" style="margin:0;padding:10px 12px;">
+        <div style="font-size:11px;color:var(--t3);">${t('sessDuration')}</div>
+        <div style="font-weight:800;font-size:14px;">${formatDuration(s.durationMs)}</div>
+      </div>
+      <div class="card" style="margin:0;padding:10px 12px;">
+        <div style="font-size:11px;color:var(--t3);">${t('sessDate')}</div>
+        <div style="font-weight:800;font-size:14px;">${fmtDate(s.ts)}</div>
+      </div>
+    </div>
+    <div class="stit" style="margin-bottom:6px;">${t('sessMoves')}</div>
+    <div style="margin-bottom:16px;">${movesHtml}</div>
+    <div class="stit" style="margin-bottom:6px;">${t('sessDifficult')}</div>
+    <div>${difficultHtml}</div>`;
+}
+function openSessionHistory(){
+  const list=lg(SK.sessions)||[];
+  if(!list.length){openMod(t('sessHistoryTitle'),`<div style="font-size:13px;color:var(--t3);padding:10px 0;">${t('noSessionsYet')}</div>`);return;}
+  const rows=list.map((s,idx)=>{
+    const pairLbl=s.pair?` · ${esc(s.pair.native)}→${esc(s.pair.target)}`:'';
+    const qColor=s.quote>=80?'var(--g)':s.quote>=50?'var(--y)':'var(--r)';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--br);cursor:pointer;" onclick="showSessionDetail(${idx})">
+      <div>
+        <div style="font-weight:600;font-size:13px;">${fmtDate(s.ts)}</div>
+        <div style="font-size:11px;color:var(--t3);">${t('sessWords')}: ${s.totalWords}${pairLbl}</div>
+      </div>
+      <div style="font-weight:800;color:${qColor};">${s.quote}%</div>
+    </div>`;
+  }).join('');
+  openMod(t('sessHistoryTitle'),`<div>${rows}</div>`);
+}
+function showSessionDetail(idx){
+  const list=lg(SK.sessions)||[];
+  const s=list[idx];if(!s)return;
+  openMod(fmtDate(s.ts),sessionSummaryHtml(s));
 }
 
 function showDone(){
   document.getElementById('lprog').textContent=`${LS.total}/${LS.total}`;
   document.getElementById('lpb').style.width='100%';
+  const summary=buildSessionSummary();
+  saveSession(summary);
   document.getElementById('lbody').innerHTML=`
-    <div style="text-align:center;padding:30px 20px;">
-      <div style="font-size:60px;margin-bottom:16px;">🎉</div>
-      <div style="font-size:22px;font-weight:800;margin-bottom:8px;">${t('allDone2')}</div>
-      <div style="font-size:14px;color:var(--t2);margin-bottom:24px;">${t('wordsCompleted')(LS.total)}</div>
-      <button class="btn bp blg" onclick="exitLearn()">${t('backBtn')}</button>
+    <div style="width:100%;max-width:400px;">
+      <div style="text-align:center;">
+        <div style="font-size:52px;margin-bottom:10px;">🎉</div>
+        <div style="font-size:20px;font-weight:800;margin-bottom:20px;">${t('allDone2')}</div>
+      </div>
+      ${sessionSummaryHtml(summary)}
+      <button class="btn bp blg bw" onclick="exitLearn()" style="margin-top:16px;">${t('backBtn')}</button>
+      <button class="btn bs bw" style="margin-top:8px;" onclick="openSessionHistory()">${t('sessHistoryBtn')}</button>
     </div>`;
   saveVocab();
 }

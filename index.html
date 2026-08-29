@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Slovník</title>
 <style>
-/* Slovník v6.26 */
+/* Slovník v6.27 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -458,6 +458,26 @@ input[type=range]{width:100%;accent-color:var(--ac);}
       <div class="srs-ch" id="srsch2"></div>
       <div class="sleg" id="sleg"></div>
     </div>
+    <div class="card" style="padding-bottom:24px;margin-bottom:32px;">
+      <div class="stit" data-i18n="srsTimelineTitle">SRS-Verteilung im Zeitverlauf</div>
+      <div class="setd" data-i18n="srsTimelineDesc" style="margin-bottom:12px;">Rekonstruiert aus deinen gespeicherten Lernsitzungen.</div>
+      <div id="srs-tl-empty" style="display:none;font-size:12px;color:var(--t3);padding:8px 0;" data-i18n="srsTimelineEmpty">Noch keine aufgezeichneten Sitzungen für einen Zeitverlauf – schließe eine Lernrunde ab, um hier Verlauf zu sehen.</div>
+      <div id="srs-tl-wrap" style="display:flex;gap:16px;">
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <input type="range" id="srs-tl-slider" min="0" max="1" value="1"
+            style="-webkit-appearance:slider-vertical;writing-mode:vertical-lr;width:28px;height:200px;"
+            oninput="updateSrsTimeline(this.value)">
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div id="srs-tl-date" style="font-size:13px;font-weight:700;text-align:center;margin-bottom:8px;"></div>
+          <div class="srs-ch" id="srs-tl-chart"></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:8px;">
+            <span id="srs-tl-oldest"></span>
+            <span data-i18n="nowLbl">Jetzt</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -485,7 +505,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.26 */
+/* Slovník v6.27 */
 // Entfernt einen evtl. hängenden alten Service Worker + Cache aus früheren Versionen,
 // da diese Version selbst keinen Service Worker mehr registriert.
 if('serviceWorker' in navigator){
@@ -493,7 +513,7 @@ if('serviceWorker' in navigator){
 }
 if(window.caches){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
 
-const VER='6.26';
+const VER='6.27';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -563,6 +583,9 @@ de:{
   noMovesYet:'Keine Stufenänderungen in dieser Sitzung.',noDifficultWords:'Keine schwierigen Wörter – sehr gut!',
   durationMin:(m,s)=>`${m} Min ${s} Sek`,durationSec:s=>`${s} Sek`,
   sessHistoryBtn:'Sitzungs-Verlauf',sessHistoryTitle:'Sitzungs-Verlauf',noSessionsYet:'Noch keine abgeschlossenen Sitzungen.',
+  srsTimelineTitle:'SRS-Verteilung im Zeitverlauf',srsTimelineDesc:'Rekonstruiert aus deinen gespeicherten Lernsitzungen. Regler ziehen, um vergangene Verteilungen zu sehen.',
+  srsTimelineEmpty:'Noch keine aufgezeichneten Sitzungen für einen Zeitverlauf – schließe eine Lernrunde ab, um hier Verlauf zu sehen.',
+  nowLbl:'Jetzt',
   srsNames:['Neu','1 Tag','1 Woche','1 Monat','2 Monate','6 Monate','1 Jahr','Gelernt'],
   kpiWordsLearned:'Wörter gelernt',kpiAvgPerDay:'Ø pro Lerntag',kpiCorrectRate:'Richtig-Quote',kpiBestDay:'Bester Tag',
   mWords:'Wörter',mRatio:'Quote',
@@ -641,6 +664,9 @@ en:{
   noMovesYet:'No level changes in this session.',noDifficultWords:'No difficult words – great job!',
   durationMin:(m,s)=>`${m} min ${s} sec`,durationSec:s=>`${s} sec`,
   sessHistoryBtn:'Session history',sessHistoryTitle:'Session history',noSessionsYet:'No completed sessions yet.',
+  srsTimelineTitle:'SRS distribution over time',srsTimelineDesc:'Reconstructed from your saved learning sessions. Drag the slider to see past distributions.',
+  srsTimelineEmpty:'No recorded sessions yet for a timeline – finish a learning round to see history here.',
+  nowLbl:'Now',
   srsNames:['New','1 day','1 week','1 month','2 months','6 months','1 year','Learned'],
   kpiWordsLearned:'Words learned',kpiAvgPerDay:'Avg per active day',kpiCorrectRate:'Correct rate',kpiBestDay:'Best day',
   mWords:'Words',mRatio:'Rate',
@@ -719,6 +745,9 @@ sk:{
   noMovesYet:'V tejto sedení žiadne zmeny úrovní.',noDifficultWords:'Žiadne náročné slovíčka – výborne!',
   durationMin:(m,s)=>`${m} min ${s} s`,durationSec:s=>`${s} s`,
   sessHistoryBtn:'História sedení',sessHistoryTitle:'História sedení',noSessionsYet:'Zatiaľ žiadne dokončené sedenia.',
+  srsTimelineTitle:'Rozdelenie SRS v čase',srsTimelineDesc:'Rekonštruované z tvojich uložených sedení. Potiahni posuvník pre zobrazenie minulých rozdelení.',
+  srsTimelineEmpty:'Zatiaľ žiadne zaznamenané sedenia pre časový priebeh – dokonči jedno učenie, aby sa tu zobrazila história.',
+  nowLbl:'Teraz',
   srsNames:['Nové','1 deň','1 týždeň','1 mesiac','2 mesiace','6 mesiacov','1 rok','Naučené'],
   kpiWordsLearned:'Naučené slovíčka',kpiAvgPerDay:'Ø na deň učenia',kpiCorrectRate:'Úspešnosť',kpiBestDay:'Najlepší deň',
   mWords:'Slovíčka',mRatio:'Kvóta',
@@ -928,14 +957,76 @@ function renderHome(){
 }
 
 /* ── SRS CHART ── */
-function renderSRS(id){
-  const el=document.getElementById(id);if(!el)return;
-  const c=Array(8).fill(0);
-  S.vocab.forEach(v=>c[Math.min(v.stage||0,7)]++);
-  const mx=Math.max(...c,1);
-  el.innerHTML=c.map((n,i)=>`<div class="srs-bw">
+function renderSrsBars(el,counts){
+  if(!el)return;
+  const mx=Math.max(...counts,1);
+  el.innerHTML=counts.map((n,i)=>`<div class="srs-bw">
     <div class="srs-b" style="height:${Math.round((n/mx)*94)+6}px;background:${SRS_C[i]};" title="${SRS_N()[i]}: ${n}"></div>
     <div class="srs-bl">${n}</div></div>`).join('');
+}
+function currentSrsDist(){
+  const c=Array(8).fill(0);
+  S.vocab.forEach(v=>c[Math.min(v.stage||0,7)]++);
+  return c;
+}
+
+/* SRS-Zeitverlauf (seit v6.27): rekonstruiert vergangene Stufen-Verteilungen,
+   indem die "moves" (from/to) gespeicherter Sitzungen (sv6_sessions) vom
+   aktuellen Stand rückwärts abgewickelt werden. Keine eigene Speicherung
+   nötig, nutzt vollständig bestehende Daten. Nur Wörter, die zum jeweiligen
+   Zeitpunkt schon existierten (created <= Zeitpunkt), werden gezählt.
+   Gelöschte Wörter können nicht rekonstruiert werden (kein Datenrest). */
+function distAtTime(stageMap,atTime){
+  const c=Array(8).fill(0);
+  S.vocab.forEach(v=>{
+    if(v.created&&v.created>atTime)return;
+    const key=v.native+'_'+v.foreign;
+    const st=Math.min(7,Math.max(0,key in stageMap?stageMap[key]:(v.stage||0)));
+    c[st]++;
+  });
+  return c;
+}
+function buildSrsTimeline(){
+  const sessions=[...(lg(SK.sessions)||[])].sort((a,b)=>b.ts-a.ts); // neueste zuerst
+  const stageMap={};
+  S.vocab.forEach(v=>{stageMap[v.native+'_'+v.foreign]=v.stage||0;});
+
+  const points=[{ts:Date.now(),label:t('nowLbl'),dist:distAtTime(stageMap,Date.now())}];
+  for(const s of sessions){
+    (s.moves||[]).forEach(m=>{
+      const key=m.native+'_'+m.foreign;
+      if(key in stageMap) stageMap[key]=m.from;
+    });
+    points.push({ts:s.ts,label:fmtDate(s.ts),dist:distAtTime(stageMap,s.ts)});
+  }
+  return points.reverse(); // älteste zuerst -> Index 0 = älteste bekannte Verteilung
+}
+
+let _srsTl=null;
+function renderSrsTimeline(){
+  const wrap=document.getElementById('srs-tl-wrap');if(!wrap)return;
+  _srsTl=buildSrsTimeline();
+  const slider=document.getElementById('srs-tl-slider');
+  if(_srsTl.length<=1){
+    wrap.style.display='none';
+    const empty=document.getElementById('srs-tl-empty');if(empty)empty.style.display='block';
+    return;
+  }
+  wrap.style.display='flex';
+  const empty=document.getElementById('srs-tl-empty');if(empty)empty.style.display='none';
+  slider.min=0;slider.max=_srsTl.length-1;slider.value=_srsTl.length-1;
+  document.getElementById('srs-tl-oldest').textContent=_srsTl[0].label;
+  updateSrsTimeline(_srsTl.length-1);
+}
+function updateSrsTimeline(idx){
+  if(!_srsTl)return;
+  const p=_srsTl[Math.max(0,Math.min(_srsTl.length-1,parseInt(idx)))];
+  if(!p)return;
+  document.getElementById('srs-tl-date').textContent=p.label;
+  renderSrsBars(document.getElementById('srs-tl-chart'),p.dist);
+}
+function renderSRS(id){
+  renderSrsBars(document.getElementById(id),currentSrsDist());
 }
 
 /* ── DUE ── */
@@ -2217,6 +2308,7 @@ function stFmt(d){return d.weekday?`${d.weekday}, ${d.label}`:d.label;}
 
 function renderStats(){
   renderSRS('srsch2');
+  renderSrsTimeline();
   const leg=document.getElementById('sleg');
   leg.innerHTML=SRS_N().map((n,i)=>`<div class="slegi"><div class="sdot" style="background:${SRS_C[i]}"></div>${n}</div>`).join('');
   const slice=stSlice();

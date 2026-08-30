@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, interactive-widget=overlays-content">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
 <title>Slovník</title>
 <style>
-/* Slovník v6.27 */
+/* Slovník v6.29 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -225,6 +226,13 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 .st-bar-col:hover .st-bar-val,.st-bar-col.sel-col .st-bar-val{opacity:1;}
 .st-xlbls{display:flex;margin-top:5px;}
 .st-xlbl{flex:1;min-width:0;font-size:8px;color:var(--t3);text-align:center;overflow:hidden;white-space:nowrap;}
+.so-wrap{display:flex;align-items:flex-end;gap:6px;background:var(--b3);border:1px solid var(--br);border-radius:8px;padding:10px 6px 6px;}
+.so-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;}
+.so-delta{font-size:10px;font-weight:700;margin-bottom:3px;}
+.so-bars{display:flex;align-items:flex-end;gap:2px;height:70px;width:100%;}
+.so-bar{flex:1;border-radius:2px 2px 0 0;min-height:2px;}
+.so-before{opacity:.35;}
+.so-legend{font-size:9px;color:var(--t3);margin-top:5px;text-align:center;}
 .st-detail{background:var(--b3);border:1px solid var(--br);border-left:3px solid var(--ac);border-radius:var(--rad);margin-top:10px;padding:14px;}
 .st-detail-head{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--acs);display:flex;justify-content:space-between;}
 .st-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
@@ -505,7 +513,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.27 */
+/* Slovník v6.29 */
 // Entfernt einen evtl. hängenden alten Service Worker + Cache aus früheren Versionen,
 // da diese Version selbst keinen Service Worker mehr registriert.
 if('serviceWorker' in navigator){
@@ -513,7 +521,7 @@ if('serviceWorker' in navigator){
 }
 if(window.caches){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
 
-const VER='6.27';
+const VER='6.29';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -579,6 +587,7 @@ de:{
   moreEntriesNote:n=>`… und ${n} weitere Einträge`,
   historyCapNote:'Ereignisse älter als 365 Tage sind nicht mehr einzeln gespeichert und fließen nur noch in die Gesamt-Zahlen oben ein.',
   sessWords:'Wörter',sessQuote:'Quote',sessDuration:'Dauer',sessDate:'Datum',
+  sessStageOverview:'Stufen-Überblick',sessStageLegend:'blass = vorher · kräftig = nachher',
   sessMoves:'Stufen-Bewegungen',sessDifficult:'Schwierige Wörter',
   noMovesYet:'Keine Stufenänderungen in dieser Sitzung.',noDifficultWords:'Keine schwierigen Wörter – sehr gut!',
   durationMin:(m,s)=>`${m} Min ${s} Sek`,durationSec:s=>`${s} Sek`,
@@ -660,6 +669,7 @@ en:{
   moreEntriesNote:n=>`… and ${n} more entries`,
   historyCapNote:'Events older than 365 days are no longer stored individually and only feed into the totals above.',
   sessWords:'Words',sessQuote:'Score',sessDuration:'Duration',sessDate:'Date',
+  sessStageOverview:'Stage overview',sessStageLegend:'pale = before · solid = after',
   sessMoves:'Level changes',sessDifficult:'Difficult words',
   noMovesYet:'No level changes in this session.',noDifficultWords:'No difficult words – great job!',
   durationMin:(m,s)=>`${m} min ${s} sec`,durationSec:s=>`${s} sec`,
@@ -741,6 +751,7 @@ sk:{
   moreEntriesNote:n=>`… a ${n} ďalších záznamov`,
   historyCapNote:'Udalosti staršie ako 365 dní už nie sú uložené jednotlivo a počítajú sa len do celkových čísel vyššie.',
   sessWords:'Slovíčka',sessQuote:'Úspešnosť',sessDuration:'Trvanie',sessDate:'Dátum',
+  sessStageOverview:'Prehľad úrovní',sessStageLegend:'bledé = predtým · sýte = potom',
   sessMoves:'Zmeny úrovní',sessDifficult:'Náročné slovíčka',
   noMovesYet:'V tejto sedení žiadne zmeny úrovní.',noDifficultWords:'Žiadne náročné slovíčka – výborne!',
   durationMin:(m,s)=>`${m} min ${s} s`,durationSec:s=>`${s} s`,
@@ -968,6 +979,26 @@ function currentSrsDist(){
   const c=Array(8).fill(0);
   S.vocab.forEach(v=>c[Math.min(v.stage||0,7)]++);
   return c;
+}
+/* Stufen-Überblick nach Sitzung (seit v6.29): gepaarte Vorher/Nachher-Balken
+   pro Stufe + Delta mit Pfeil obendrüber. Nutzt dieselben SRS_C-Farben wie
+   der Zeitverlauf-Chart, damit es sich visuell einfügt. */
+function stageOverviewHtml(before,after){
+  if(!before||!after)return '';
+  const mx=Math.max(...before,...after,1);
+  const cols=SRS_C.map((col,i)=>{
+    const b=before[i]||0,a=after[i]||0,d=a-b;
+    const bH=Math.round((b/mx)*70)+2, aH=Math.round((a/mx)*70)+2;
+    const arrow=d>0?'↑':d<0?'↓':'–';
+    return `<div class="so-col" title="${esc(SRS_N()[i])}: ${b} → ${a}">
+      <div class="so-delta" style="color:${col};">${arrow} ${Math.abs(d)}</div>
+      <div class="so-bars">
+        <div class="so-bar so-before" style="height:${bH}px;background:${col};"></div>
+        <div class="so-bar" style="height:${aH}px;background:${col};"></div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="so-wrap">${cols}</div><div class="so-legend">${t('sessStageLegend')}</div>`;
 }
 
 /* SRS-Zeitverlauf (seit v6.27): rekonstruiert vergangene Stufen-Verteilungen,
@@ -1599,12 +1630,21 @@ function buildSessionSummary(){
   const difficult=words.filter(w=>w.wrong>0)
     .sort((a,b)=>b.wrong-a.wrong||a.correct-b.correct)
     .slice(0,5).map(w=>({native:w.native,foreign:w.foreign,correct:w.correct,wrong:w.wrong}));
+  /* Stufen-Überblick (seit v6.29): Gesamtverteilung der in dieser Sitzung
+     geübten Wörter über die 8 Stufen, vorher (startStage) vs. nachher
+     (endStage) — nutzt vollständig vorhandene wordStats, keine eigene
+     Speicherung nötig. */
+  const stageBefore=Array(8).fill(0), stageAfter=Array(8).fill(0);
+  words.forEach(w=>{
+    stageBefore[Math.min(7,Math.max(0,w.startStage||0))]++;
+    stageAfter[Math.min(7,Math.max(0,w.endStage||0))]++;
+  });
   return {
     id:Date.now(),ts:Date.now(),mode:LS.mode,
     pair:S.pair?{native:S.pair.native,target:S.pair.target}:null,
     totalWords:words.length,correct,wrong,quote,
     durationMs:Date.now()-(LS.startTime||Date.now()),
-    moves,difficult,
+    moves,difficult,stageBefore,stageAfter,
   };
 }
 function saveSession(summary){
@@ -1647,6 +1687,8 @@ function sessionSummaryHtml(s){
         <div style="font-weight:800;font-size:14px;">${fmtDate(s.ts)}</div>
       </div>
     </div>
+    ${s.stageBefore&&s.stageAfter?`<div class="stit" style="margin-bottom:6px;">${t('sessStageOverview')}</div>
+    <div style="margin-bottom:16px;">${stageOverviewHtml(s.stageBefore,s.stageAfter)}</div>`:''}
     <div class="stit" style="margin-bottom:6px;">${t('sessMoves')}</div>
     <div style="margin-bottom:16px;">${movesHtml}</div>
     <div class="stit" style="margin-bottom:6px;">${t('sessDifficult')}</div>

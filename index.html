@@ -6,9 +6,11 @@
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.29 */
+/* Slovník v6.30 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -233,6 +235,11 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 .so-bar{flex:1;border-radius:2px 2px 0 0;min-height:2px;}
 .so-before{opacity:.35;}
 .so-legend{font-size:9px;color:var(--t3);margin-top:5px;text-align:center;}
+#upd-banner{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:var(--b3);border-top:1px solid var(--br);
+  padding:10px 14px;padding-bottom:calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;
+  justify-content:space-between;gap:10px;font-size:13px;color:var(--t);box-shadow:var(--sh);}
+#upd-banner button{background:var(--ac);color:#fff;border:none;border-radius:8px;padding:7px 14px;
+  font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;}
 .st-detail{background:var(--b3);border:1px solid var(--br);border-left:3px solid var(--ac);border-radius:var(--rad);margin-top:10px;padding:14px;}
 .st-detail-head{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--acs);display:flex;justify-content:space-between;}
 .st-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
@@ -513,15 +520,54 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.29 */
-// Entfernt einen evtl. hängenden alten Service Worker + Cache aus früheren Versionen,
-// da diese Version selbst keinen Service Worker mehr registriert.
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.getRegistrations().then(regs=>regs.forEach(r=>r.unregister()));
+/* Slovník v6.30 */
+/* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
+   Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
+let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
+function registerSW(){
+  if(!('serviceWorker' in navigator))return;
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    swReg=reg;
+    if(reg.waiting&&navigator.serviceWorker.controller)showUpdateBanner();
+    reg.addEventListener('updatefound',()=>{
+      const nw=reg.installing;if(!nw)return;
+      nw.addEventListener('statechange',()=>{
+        if(nw.state==='installed'&&navigator.serviceWorker.controller)showUpdateBanner();
+      });
+    });
+  }).catch(()=>{});
+  let reloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(reloaded)return;reloaded=true;window.location.reload();
+  });
 }
-if(window.caches){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
+function showUpdateBanner(){
+  if(swUpdateSeen)return;swUpdateSeen=true;
+  const b=document.createElement('div');
+  b.id='upd-banner';
+  b.innerHTML=`<span>${t('updateAvailable')}</span><button onclick="applyUpdate()">${t('updateBtn')}</button>`;
+  document.body.appendChild(b);
+}
+function applyUpdate(){
+  if(swReg&&swReg.waiting)swReg.waiting.postMessage('SKIP_WAITING');
+  document.getElementById('upd-banner')?.remove();
+}
+window.addEventListener('load',registerSW);
 
-const VER='6.29';
+/* Install-Prompt (Android/Chrome) — iOS feuert dieses Event nicht,
+   dort bleibt "Zum Home-Bildschirm" der übliche Weg. */
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredInstallPrompt=e;
+});
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;});
+async function triggerInstall(){
+  if(!deferredInstallPrompt)return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt=null;
+}
+
+const VER='6.30';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -588,6 +634,8 @@ de:{
   historyCapNote:'Ereignisse älter als 365 Tage sind nicht mehr einzeln gespeichert und fließen nur noch in die Gesamt-Zahlen oben ein.',
   sessWords:'Wörter',sessQuote:'Quote',sessDuration:'Dauer',sessDate:'Datum',
   sessStageOverview:'Stufen-Überblick',sessStageLegend:'blass = vorher · kräftig = nachher',
+  updateAvailable:'Neue Version verfügbar',updateBtn:'Aktualisieren',
+  installApp:'App installieren',installBtn:'Installieren',
   sessMoves:'Stufen-Bewegungen',sessDifficult:'Schwierige Wörter',
   noMovesYet:'Keine Stufenänderungen in dieser Sitzung.',noDifficultWords:'Keine schwierigen Wörter – sehr gut!',
   durationMin:(m,s)=>`${m} Min ${s} Sek`,durationSec:s=>`${s} Sek`,
@@ -670,6 +718,8 @@ en:{
   historyCapNote:'Events older than 365 days are no longer stored individually and only feed into the totals above.',
   sessWords:'Words',sessQuote:'Score',sessDuration:'Duration',sessDate:'Date',
   sessStageOverview:'Stage overview',sessStageLegend:'pale = before · solid = after',
+  updateAvailable:'New version available',updateBtn:'Update',
+  installApp:'Install app',installBtn:'Install',
   sessMoves:'Level changes',sessDifficult:'Difficult words',
   noMovesYet:'No level changes in this session.',noDifficultWords:'No difficult words – great job!',
   durationMin:(m,s)=>`${m} min ${s} sec`,durationSec:s=>`${s} sec`,
@@ -752,6 +802,8 @@ sk:{
   historyCapNote:'Udalosti staršie ako 365 dní už nie sú uložené jednotlivo a počítajú sa len do celkových čísel vyššie.',
   sessWords:'Slovíčka',sessQuote:'Úspešnosť',sessDuration:'Trvanie',sessDate:'Dátum',
   sessStageOverview:'Prehľad úrovní',sessStageLegend:'bledé = predtým · sýte = potom',
+  updateAvailable:'K dispozícii nová verzia',updateBtn:'Aktualizovať',
+  installApp:'Nainštalovať aplikáciu',installBtn:'Nainštalovať',
   sessMoves:'Zmeny úrovní',sessDifficult:'Náročné slovíčka',
   noMovesYet:'V tejto sedení žiadne zmeny úrovní.',noDifficultWords:'Žiadne náročné slovíčka – výborne!',
   durationMin:(m,s)=>`${m} min ${s} s`,durationSec:s=>`${s} s`,
@@ -2642,6 +2694,8 @@ function openSettings(){
   const s=S.set;const rn=s.repeatN||3;
   openMod(t('settingsTitle'),`
     <div class="card">
+      ${deferredInstallPrompt?`<div class="setr"><div class="setl">${t('installApp')}</div>
+        <button onclick="triggerInstall()" style="background:var(--ac);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;">${t('installBtn')}</button></div>`:''}
       <div class="stit">${t('appearance')}</div>
       <div class="setr"><div class="setl">${t('theme')}</div>
         <select id="s-thm" onchange="setThm(this.value)" style="background:var(--b3);border:1px solid var(--br);border-radius:6px;padding:6px;color:var(--t);">

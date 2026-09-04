@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.30 */
+/* Slovník v6.31 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -520,7 +520,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.30 */
+/* Slovník v6.31 */
 /* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
    Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
 let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
@@ -567,7 +567,7 @@ async function triggerInstall(){
   deferredInstallPrompt=null;
 }
 
-const VER='6.30';
+const VER='6.31';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -628,6 +628,7 @@ de:{
   flipMaxStage:'Umdrehen-Modus bis Stufe',flipMaxStageDesc:'Ab dieser Stufe kein Umdrehen-Modus mehr',
   ctypeBasePct:'Start-Anteil bei Stufe 0 (%)',resetSrsParams:'Auf Standard zurücksetzen',srsParamsReset:'SRS-Parameter zurückgesetzt',
   createdLbl:'Erstellt am',editedLbl:'Bearbeitet',totalLbl:'Gesamt',historyRangeLbl:'Verlauf (365 Tage)',
+  stageHistoryLbl:'Stufenverlauf',
   timelineLbl:'Zeitverlauf',neverEdited:'Nie',noHistoryYet:'Noch keine Lern-Ereignisse.',
   entriesCount:n=>n===1?'1 Eintrag':`${n} Einträge`,
   moreEntriesNote:n=>`… und ${n} weitere Einträge`,
@@ -712,6 +713,7 @@ en:{
   flipMaxStage:'Flip mode up to stage',flipMaxStageDesc:'No more flip mode from this stage on',
   ctypeBasePct:'Starting share at stage 0 (%)',resetSrsParams:'Reset to default',srsParamsReset:'SRS parameters reset',
   createdLbl:'Created',editedLbl:'Edited',totalLbl:'Total',historyRangeLbl:'History (365 days)',
+  stageHistoryLbl:'Level history',
   timelineLbl:'Timeline',neverEdited:'Never',noHistoryYet:'No learning events yet.',
   entriesCount:n=>n===1?'1 entry':`${n} entries`,
   moreEntriesNote:n=>`… and ${n} more entries`,
@@ -796,6 +798,7 @@ sk:{
   flipMaxStage:'Režim otáčania do úrovne',flipMaxStageDesc:'Od tejto úrovne už žiadny režim otáčania',
   ctypeBasePct:'Počiatočný podiel pri úrovni 0 (%)',resetSrsParams:'Obnoviť predvolené',srsParamsReset:'SRS parametre obnovené',
   createdLbl:'Vytvorené',editedLbl:'Upravené',totalLbl:'Spolu',historyRangeLbl:'História (365 dní)',
+  stageHistoryLbl:'Vývoj úrovne',
   timelineLbl:'Časový priebeh',neverEdited:'Nikdy',noHistoryYet:'Zatiaľ žiadne udalosti učenia.',
   entriesCount:n=>n===1?'1 záznam':`${n} záznamov`,
   moreEntriesNote:n=>`… a ${n} ďalších záznamov`,
@@ -1110,6 +1113,39 @@ function updateSrsTimeline(idx){
 }
 function renderSRS(id){
   renderSrsBars(document.getElementById(id),currentSrsDist());
+}
+/* Stufenverlauf pro Wort (seit v6.31): dieselbe Rückwärts-Abwickel-Logik wie
+   buildSrsTimeline(), nur auf ein einzelnes Wort gefiltert statt auf die
+   Gesamtverteilung. Gleiche bekannte Grenze: nur die letzten 100 Sitzungen
+   (sv6_sessions), keine vollständige Historie seit Worterstellung, wenn das
+   Wort älter ist. */
+function wordStageTimeline(native,foreign){
+  const sessions=[...(lg(SK.sessions)||[])].sort((a,b)=>b.ts-a.ts); // neueste zuerst
+  const v=S.vocab.find(x=>x.native===native&&x.foreign===foreign);
+  let stage=Math.min(7,Math.max(0,v?.stage||0));
+  const points=[{ts:Date.now(),stage}];
+  for(const s of sessions){
+    const m=(s.moves||[]).find(mv=>mv.native===native&&mv.foreign===foreign);
+    if(!m)continue;
+    stage=Math.min(7,Math.max(0,m.from));
+    points.push({ts:s.ts,stage});
+  }
+  return points.reverse(); // älteste zuerst
+}
+function wordStageChartHtml(points){
+  if(points.length<2)return '';
+  const W=300,H=100,padL=20,padR=10,padT=8,padB=8;
+  const plotW=W-padL-padR,plotH=H-padT-padB;
+  const x=i=>padL+(points.length===1?0:i/(points.length-1)*plotW);
+  const y=s=>padT+plotH-(s/7*plotH);
+  const pts=points.map((p,i)=>`${Math.round(x(i))},${Math.round(y(p.stage))}`).join(' ');
+  const dots=points.map((p,i)=>`<circle cx="${Math.round(x(i))}" cy="${Math.round(y(p.stage))}" r="${i===points.length-1?5:3.5}" fill="${SRS_C[p.stage]}"${i===points.length-1?' stroke="var(--b3)" stroke-width="1.5"':''}><title>${fmtDate(p.ts)}: ${SRS_N()[p.stage]}</title></circle>`).join('');
+  const yLbls=[0,2,4,6].map(s=>`<text x="2" y="${Math.round(y(s))+3}" font-size="8" fill="var(--t3)">${s}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
+    ${yLbls}
+    <polyline points="${pts}" fill="none" stroke="var(--br)" stroke-width="2"/>
+    ${dots}
+  </svg>`;
 }
 
 /* ── DUE ── */
@@ -2076,6 +2112,9 @@ function showWordDetail(i){
   const editedStr=v.editCount?`${v.editCount}× (${fmtDate(v.lastEdited)})`:t('neverEdited');
   const oldWord=v.created&&(Date.now()-v.created)>365*86400000;
 
+  const stagePts=wordStageTimeline(v.native,v.foreign);
+  const stageChart=wordStageChartHtml(stagePts);
+
   openMod(`${esc((v.article?v.article+' ':'')+v.native)} → ${esc(v.foreign)}`,`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
       <div class="vsb" style="background:${sc}22;color:${sc};width:34px;height:34px;font-size:15px;">${v.stage||0}</div>
@@ -2099,6 +2138,8 @@ function showWordDetail(i){
         <div style="font-weight:600;font-size:13px;">${t('entriesCount')(log.length)}</div>
       </div>
     </div>
+    ${stageChart?`<div class="stit" style="margin-bottom:6px;">${t('stageHistoryLbl')}</div>
+    <div class="card" style="padding:10px 12px;margin:0 0 16px;">${stageChart}</div>`:''}
     <div class="stit" style="margin-bottom:6px;">${t('timelineLbl')}</div>
     ${log.length?rows:`<div style="font-size:12px;color:var(--t3);padding:8px 0;">${t('noHistoryYet')}</div>`}
     ${log.length>50?`<div style="font-size:11px;color:var(--t3);padding:8px 0;text-align:center;">${t('moreEntriesNote')(log.length-50)}</div>`:''}

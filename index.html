@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.32 */
+/* Slovník v6.33 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -73,6 +73,9 @@ a{color:var(--acs);text-decoration:none;}
 .srs-bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;justify-content:flex-end;}
 .srs-b{width:100%;border-radius:3px 3px 0 0;min-height:3px;transition:height .4s ease;}
 .srs-bl{font-size:9px;color:var(--t3);}
+.srs-legend{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;margin:6px 0 10px;}
+.srs-lg-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--t3);}
+.srs-lg-item i{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
 /* MODE BUTTONS */
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .mbtn{background:var(--b3);border:1px solid var(--br);border-radius:var(--rad);padding:14px 12px;text-align:left;transition:all var(--tr);touch-action:manipulation;}
@@ -221,6 +224,9 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 .st-mtab{flex:1;padding:7px 2px;font-size:10px;font-weight:700;text-align:center;border-radius:7px;cursor:pointer;color:var(--t3);transition:all .2s;}
 .st-mtab.on{color:#fff;}
 .st-bar-chart{display:flex;align-items:flex-end;gap:3px;background:var(--b3);border:1px solid var(--br);border-radius:8px;padding:10px 6px;}
+.st-chart-wrap{position:relative;padding-left:26px;}
+.st-ylbls{position:absolute;left:0;top:0;width:24px;height:155px;pointer-events:none;}
+.st-ylbl{position:absolute;left:0;right:2px;font-size:9px;color:var(--t3);text-align:right;transform:translateY(50%);}
 .st-bar-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;}
 .st-bar{width:100%;border-radius:4px 4px 0 0;min-height:3px;transition:all .25s;}
 .st-bar.sel{filter:brightness(1.35);outline:2px solid rgba(255,255,255,.5);outline-offset:1px;}
@@ -321,6 +327,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
     <div class="card">
       <div class="stit" data-i18n="srsDist">SRS-Verteilung</div>
       <div class="srs-ch" id="srsch"></div>
+      <div class="srs-legend" id="srsch-legend"></div>
       <div style="display:flex;justify-content:space-between;margin-top:4px;">
         <span style="font-size:10px;color:var(--t3)" data-i18n="new">Neu</span>
         <span style="font-size:10px;color:var(--t3)" data-i18n="learned">Gelernt ✓</span>
@@ -458,6 +465,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
     <div class="card">
       <div class="stit" id="st-chart-title">Gelernte Wörter</div>
       <div class="st-chart-wrap" id="st-chart-wrap">
+        <div class="st-ylbls" id="st-ylbls"></div>
         <div class="st-bar-chart" id="st-bar-chart"></div>
         <div class="st-xlbls" id="st-xlbls"></div>
       </div>
@@ -471,6 +479,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
     <div class="card" style="padding-bottom:24px;margin-bottom:32px;">
       <div class="stit" data-i18n="srsLevels">SRS-Stufen</div>
       <div class="srs-ch" id="srsch2"></div>
+      <div class="srs-legend" id="srsch2-legend"></div>
       <div class="sleg" id="sleg"></div>
     </div>
     <div class="card" style="padding-bottom:24px;margin-bottom:32px;">
@@ -486,6 +495,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
         <div style="flex:1;min-width:0;">
           <div id="srs-tl-date" style="font-size:13px;font-weight:700;text-align:center;margin-bottom:8px;"></div>
           <div class="srs-ch" id="srs-tl-chart"></div>
+          <div class="srs-legend" id="srs-tl-chart-legend"></div>
           <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:8px;">
             <span id="srs-tl-oldest"></span>
             <span data-i18n="nowLbl">Jetzt</span>
@@ -520,7 +530,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.32 */
+/* Slovník v6.33 */
 /* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
    Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
 let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
@@ -576,7 +586,7 @@ async function triggerInstall(){
   deferredInstallPrompt=null;
 }
 
-const VER='6.32';
+const VER='6.33';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -649,7 +659,7 @@ de:{
   sessMoves:'Stufen-Bewegungen',sessDifficult:'Schwierige Wörter',
   noMovesYet:'Keine Stufenänderungen in dieser Sitzung.',noDifficultWords:'Keine schwierigen Wörter – sehr gut!',
   durationMin:(m,s)=>`${m} Min ${s} Sek`,durationSec:s=>`${s} Sek`,
-  sessHistoryBtn:'Sitzungs-Verlauf',sessHistoryTitle:'Sitzungs-Verlauf',noSessionsYet:'Noch keine abgeschlossenen Sitzungen.',
+  sessHistoryBtn:'Sitzungs-Verlauf',sessHistoryTitle:'Sitzungs-Verlauf',noSessionsYet:'Noch keine abgeschlossenen Sitzungen.',sessAbortedTitle:'Sitzung abgebrochen',
   srsTimelineTitle:'SRS-Verteilung im Zeitverlauf',srsTimelineDesc:'Rekonstruiert aus deinen gespeicherten Lernsitzungen. Regler ziehen, um vergangene Verteilungen zu sehen.',
   srsTimelineEmpty:'Noch keine aufgezeichneten Sitzungen für einen Zeitverlauf – schließe eine Lernrunde ab, um hier Verlauf zu sehen.',
   nowLbl:'Jetzt',
@@ -734,7 +744,7 @@ en:{
   sessMoves:'Level changes',sessDifficult:'Difficult words',
   noMovesYet:'No level changes in this session.',noDifficultWords:'No difficult words – great job!',
   durationMin:(m,s)=>`${m} min ${s} sec`,durationSec:s=>`${s} sec`,
-  sessHistoryBtn:'Session history',sessHistoryTitle:'Session history',noSessionsYet:'No completed sessions yet.',
+  sessHistoryBtn:'Session history',sessHistoryTitle:'Session history',noSessionsYet:'No completed sessions yet.',sessAbortedTitle:'Session ended early',
   srsTimelineTitle:'SRS distribution over time',srsTimelineDesc:'Reconstructed from your saved learning sessions. Drag the slider to see past distributions.',
   srsTimelineEmpty:'No recorded sessions yet for a timeline – finish a learning round to see history here.',
   nowLbl:'Now',
@@ -819,7 +829,7 @@ sk:{
   sessMoves:'Zmeny úrovní',sessDifficult:'Náročné slovíčka',
   noMovesYet:'V tejto sedení žiadne zmeny úrovní.',noDifficultWords:'Žiadne náročné slovíčka – výborne!',
   durationMin:(m,s)=>`${m} min ${s} s`,durationSec:s=>`${s} s`,
-  sessHistoryBtn:'História sedení',sessHistoryTitle:'História sedení',noSessionsYet:'Zatiaľ žiadne dokončené sedenia.',
+  sessHistoryBtn:'História sedení',sessHistoryTitle:'História sedení',noSessionsYet:'Zatiaľ žiadne dokončené sedenia.',sessAbortedTitle:'Sedenie predčasne ukončené',
   srsTimelineTitle:'Rozdelenie SRS v čase',srsTimelineDesc:'Rekonštruované z tvojich uložených sedení. Potiahni posuvník pre zobrazenie minulých rozdelení.',
   srsTimelineEmpty:'Zatiaľ žiadne zaznamenané sedenia pre časový priebeh – dokonči jedno učenie, aby sa tu zobrazila história.',
   nowLbl:'Teraz',
@@ -1032,12 +1042,21 @@ function renderHome(){
 }
 
 /* ── SRS CHART ── */
+/* Legende (seit v6.33): SRS-Verteilungs-Balken (Home, Statistik,
+   Zeitverlauf-Slider) hatten die Stufen-Bedeutung bisher nur als
+   Hover-Tooltip — auf Mobilgeräten kaum nutzbar. Wird jetzt immer mit
+   angezeigt, sofern ein Element "<chartId>-legend" danebenliegt. */
+function srsLegendHtml(){
+  return SRS_C.map((c,i)=>`<span class="srs-lg-item"><i style="background:${c}"></i>${SRS_N()[i]}</span>`).join('');
+}
 function renderSrsBars(el,counts){
   if(!el)return;
   const mx=Math.max(...counts,1);
   el.innerHTML=counts.map((n,i)=>`<div class="srs-bw">
     <div class="srs-b" style="height:${Math.round((n/mx)*94)+6}px;background:${SRS_C[i]};" title="${SRS_N()[i]}: ${n}"></div>
     <div class="srs-bl">${n}</div></div>`).join('');
+  const lg=document.getElementById(el.id+'-legend');
+  if(lg)lg.innerHTML=srsLegendHtml();
 }
 function currentSrsDist(){
   const c=Array(8).fill(0);
@@ -1200,12 +1219,33 @@ function showLScr(){
   document.getElementById('ttsbtn').style.opacity=LS.tts?'1':'.4';
 }
 
+/* Sitzung bei Abbruch sichern (seit v6.33): liefert die Zusammenfassung nur,
+   wenn tatsächlich mind. eine Karte beantwortet wurde — sonst null, damit
+   ein sofortiges X ohne jede Aktivität keine leere Zusammenfassung erzeugt. */
+function maybeSaveAbortedSession(){
+  if(!LS||!LS.wordStats||!Object.keys(LS.wordStats).length)return null;
+  const summary=buildSessionSummary();
+  saveSession(summary);
+  return summary;
+}
 function exitLearn(){
+  const summary=maybeSaveAbortedSession();
   LS=null;
   document.getElementById('lscr').style.display='none';
   document.getElementById('lscr').classList.remove('on');
   showMain();
+  if(summary)openMod(t('sessAbortedTitle'),sessionSummaryHtml(summary));
 }
+/* Stiller Zwischenstand beim Verstecken der App (seit v6.33): fängt echtes
+   Schließen/Wegwischen ab, das kein X-Klick auslöst. 'visibilitychange' auf
+   'hidden' ist auf Mobilgeräten deutlich zuverlässiger als beforeunload/
+   unload, die in Safari/PWA-Standalone-Modus oft gar nicht feuern. Kein
+   Popup hier — die App ist ja gerade nicht sichtbar; die Zusammenfassung
+   liegt beim nächsten Öffnen in der Sitzungs-Historie. Dank Upsert in
+   saveSession() entsteht dabei kein Duplikat, egal wie oft das feuert. */
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden')maybeSaveAbortedSession();
+});
 
 function updProg(){
   if(!LS)return;
@@ -1737,16 +1777,21 @@ function buildSessionSummary(){
     stageAfter[Math.min(7,Math.max(0,w.endStage||0))]++;
   });
   return {
-    id:Date.now(),ts:Date.now(),mode:LS.mode,
+    id:LS.startTime||Date.now(),ts:LS.startTime||Date.now(),mode:LS.mode,
     pair:S.pair?{native:S.pair.native,target:S.pair.target}:null,
     totalWords:words.length,correct,wrong,quote,
     durationMs:Date.now()-(LS.startTime||Date.now()),
     moves,difficult,stageBefore,stageAfter,
   };
 }
+/* saveSession() ist ein Upsert (seit v6.33): dieselbe Sitzung (gleiche
+   id=Startzeit) wird bei mehrfachem Speichern überschrieben statt dupliziert
+   — nötig, weil eine Sitzung jetzt auch bei Abbruch (X-Button) und beim
+   Verstecken der App zwischengespeichert wird, nicht nur beim normalen Ende. */
 function saveSession(summary){
   const list=lg(SK.sessions)||[];
-  list.unshift(summary);
+  const idx=list.findIndex(s=>s.id===summary.id);
+  if(idx>=0)list[idx]=summary;else list.unshift(summary);
   ls(SK.sessions,list.slice(0,SESSIONS_MAX));
 }
 function sessionSummaryHtml(s){
@@ -2528,11 +2573,21 @@ function renderStKPI(slice){
 const ST_UNIT={words:'',correct:'',wrong:'',ratio:'%',new:''};
 function stMetricLabel(){return {words:t('chartWords'),correct:t('chartCorrect'),wrong:t('chartWrong'),ratio:t('chartRatio'),new:t('chartNew')}[stMetric];}
 
+/* "Schöne" Rundung für Achsen-Schritte (1/2/5/10er-Potenzen), seit v6.33 —
+   sorgt für z.B. 10/20/30 statt krummer Werte wie 7/14/21. */
+function niceStep(raw){
+  if(raw<=0)return 1;
+  const mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  const norm=raw/mag;
+  const step=norm<1.5?1:norm<3?2:norm<7?5:10;
+  return Math.max(1,Math.round(step*mag));
+}
 function renderStBars(slice){
   const vals=slice.map(d=>stMetric==='ratio'?d.ratio:(d[stMetric]||0));
   const max=Math.max(...vals,1);
   const chart=document.getElementById('st-bar-chart');
   const xl=document.getElementById('st-xlbls');
+  const yl=document.getElementById('st-ylbls');
   const showEvery=Math.ceil(slice.length/7)||1;
   chart.style.width='';
   xl.style.width='';
@@ -2548,7 +2603,23 @@ function renderStBars(slice){
     </div>`;
   }).join('');
 
+  /* Y-Achse: 3 gleichmäßige Referenzwerte über niceStep(), positioniert
+     auf derselben 135px-Skala wie die Balkenhöhen (seit v6.33). */
+  const yStep=niceStep(max/3);
+  const yVals=[0,yStep,yStep*2,yStep*3].filter(v=>v<=max*1.1);
+  yl.innerHTML=yVals.map(v=>`<div class="st-ylbl" style="bottom:${10+Math.round(v/max*135)}px;">${v}${ST_UNIT[stMetric]}</div>`).join('');
+
+  /* X-Achse: bei vielen schmalen Tages-Balken clippen volle "TT.MM"-Labels
+     unleserlich (overflow:hidden greift bei zu wenig Platz pro Spalte).
+     Deshalb in der Tagesansicht nur an Monatswechseln die Monatszahl zeigen;
+     Monatsansicht (ein Balken = ein Monat) zeigt weiterhin jedes Label
+     (seit v6.33). Exaktes Datum bleibt über Antippen/Detailansicht verfügbar. */
+  const isDayView=!!slice[0]?.date;
   xl.innerHTML=slice.map((d,i)=>{
+    if(isDayView){
+      const changed=i===0||d.date.getMonth()!==slice[i-1].date.getMonth();
+      return `<div class="st-xlbl" style="opacity:${changed?.9:0}">${changed?String(d.date.getMonth()+1).padStart(2,'0'):''}</div>`;
+    }
     const show=i%showEvery===0||i===slice.length-1||i===stSelDay;
     return `<div class="st-xlbl" style="opacity:${show?.9:.15}">${d.label}</div>`;
   }).join('');

@@ -1,10 +1,10 @@
-/* Slovník Service Worker — v6.33
+/* Slovník Service Worker — v6.34
    Cache-Name ist an die App-Version gekoppelt: jeder Versionssprung in
    index.html (const VER) muss hier in CACHE_VER nachgezogen werden, dann
    wird der alte Cache beim nächsten activate automatisch gelöscht.
    WICHTIG bei künftigen Änderungen: CACHE_VER IMMER zusammen mit VER in
    index.html hochzählen — sonst liefert der SW weiter alten Code aus. */
-const CACHE_VER='slovnik-v6.33';
+const CACHE_VER='slovnik-v6.34';
 
 /* Fest gecachte App-Shell-Dateien (Icons ändern sich praktisch nie). */
 const CACHE_FIRST=['icon-192.png','icon-512.png'];

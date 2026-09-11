@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.33 */
+/* Slovník v6.34 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -479,7 +479,6 @@ input[type=range]{width:100%;accent-color:var(--ac);}
     <div class="card" style="padding-bottom:24px;margin-bottom:32px;">
       <div class="stit" data-i18n="srsLevels">SRS-Stufen</div>
       <div class="srs-ch" id="srsch2"></div>
-      <div class="srs-legend" id="srsch2-legend"></div>
       <div class="sleg" id="sleg"></div>
     </div>
     <div class="card" style="padding-bottom:24px;margin-bottom:32px;">
@@ -530,7 +529,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.33 */
+/* Slovník v6.34 */
 /* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
    Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
 let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
@@ -586,7 +585,7 @@ async function triggerInstall(){
   deferredInstallPrompt=null;
 }
 
-const VER='6.33';
+const VER='6.34';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -2492,7 +2491,12 @@ function getDataSpanDays(){
   S.vocab.forEach(v=>{if(v.created&&v.created<earliest)earliest=v.created;});
   return Math.min(365,Math.max(1,Math.round((dayKey(Date.now())-dayKey(earliest))/86400000)+1));
 }
-function stSlice(){return stTime>0?buildDayData(stTime):(getDataSpanDays()>186?buildMonthData(getDataSpanDays()):buildDayData(getDataSpanDays()));}
+/* Schwelle für Tages- vs. Monats-Balken bei "Alle" (seit v6.34): war 186 Tage,
+   viel zu hoch — bei ~90 Tages-Balken auf Mobilbreite (gap 3px × 90 Spalten
+   frisst fast die gesamte Breite auf) wurden Balken de facto unsichtbar und
+   Beschriftungen unlesbar, nicht erst ab einem halben Jahr. ~35-40 Balken ist
+   grob die Grenze, ab der auf einem Handy-Bildschirm noch was zu sehen ist. */
+function stSlice(){return stTime>0?buildDayData(stTime):(getDataSpanDays()>40?buildMonthData(getDataSpanDays()):buildDayData(getDataSpanDays()));}
 function stFmt(d){return d.weekday?`${d.weekday}, ${d.label}`:d.label;}
 
 function renderStats(){
@@ -2618,7 +2622,7 @@ function renderStBars(slice){
   xl.innerHTML=slice.map((d,i)=>{
     if(isDayView){
       const changed=i===0||d.date.getMonth()!==slice[i-1].date.getMonth();
-      return `<div class="st-xlbl" style="opacity:${changed?.9:0}">${changed?String(d.date.getMonth()+1).padStart(2,'0'):''}</div>`;
+      return `<div class="st-xlbl" style="opacity:${changed ? .9 : 0}">${changed ? String(d.date.getMonth()+1).padStart(2,'0') : ''}</div>`;
     }
     const show=i%showEvery===0||i===slice.length-1||i===stSelDay;
     return `<div class="st-xlbl" style="opacity:${show?.9:.15}">${d.label}</div>`;

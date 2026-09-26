@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.34 */
+/* Slovník v6.37 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -529,7 +529,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.34 */
+/* Slovník v6.37 */
 /* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
    Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
 let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
@@ -585,7 +585,7 @@ async function triggerInstall(){
   deferredInstallPrompt=null;
 }
 
-const VER='6.34';
+const VER='6.37';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -659,7 +659,7 @@ de:{
   noMovesYet:'Keine Stufenänderungen in dieser Sitzung.',noDifficultWords:'Keine schwierigen Wörter – sehr gut!',
   durationMin:(m,s)=>`${m} Min ${s} Sek`,durationSec:s=>`${s} Sek`,
   sessHistoryBtn:'Sitzungs-Verlauf',sessHistoryTitle:'Sitzungs-Verlauf',noSessionsYet:'Noch keine abgeschlossenen Sitzungen.',sessAbortedTitle:'Sitzung abgebrochen',
-  srsTimelineTitle:'SRS-Verteilung im Zeitverlauf',srsTimelineDesc:'Rekonstruiert aus deinen gespeicherten Lernsitzungen. Regler ziehen, um vergangene Verteilungen zu sehen.',
+  srsTimelineTitle:'SRS-Verteilung im Zeitverlauf',srsTimelineDesc:'Rekonstruiert aus deinen gespeicherten Lernsitzungen. Regler ziehen, um vergangene Verteilungen zu sehen. Wörter ohne erfasste Bewegung zeigen die höchste zum Zeitpunkt plausible Stufe (aus Erstelldatum + Intervallen berechnet), nicht zwingend die tatsächliche.',
   srsTimelineEmpty:'Noch keine aufgezeichneten Sitzungen für einen Zeitverlauf – schließe eine Lernrunde ab, um hier Verlauf zu sehen.',
   nowLbl:'Jetzt',
   srsNames:['Neu','1 Tag','1 Woche','1 Monat','2 Monate','6 Monate','1 Jahr','Gelernt'],
@@ -744,7 +744,7 @@ en:{
   noMovesYet:'No level changes in this session.',noDifficultWords:'No difficult words – great job!',
   durationMin:(m,s)=>`${m} min ${s} sec`,durationSec:s=>`${s} sec`,
   sessHistoryBtn:'Session history',sessHistoryTitle:'Session history',noSessionsYet:'No completed sessions yet.',sessAbortedTitle:'Session ended early',
-  srsTimelineTitle:'SRS distribution over time',srsTimelineDesc:'Reconstructed from your saved learning sessions. Drag the slider to see past distributions.',
+  srsTimelineTitle:'SRS distribution over time',srsTimelineDesc:'Reconstructed from your saved learning sessions. Drag the slider to see past distributions. Words without a recorded move show the highest stage plausible at that time (from creation date + intervals), not necessarily the actual one.',
   srsTimelineEmpty:'No recorded sessions yet for a timeline – finish a learning round to see history here.',
   nowLbl:'Now',
   srsNames:['New','1 day','1 week','1 month','2 months','6 months','1 year','Learned'],
@@ -829,7 +829,7 @@ sk:{
   noMovesYet:'V tejto sedení žiadne zmeny úrovní.',noDifficultWords:'Žiadne náročné slovíčka – výborne!',
   durationMin:(m,s)=>`${m} min ${s} s`,durationSec:s=>`${s} s`,
   sessHistoryBtn:'História sedení',sessHistoryTitle:'História sedení',noSessionsYet:'Zatiaľ žiadne dokončené sedenia.',sessAbortedTitle:'Sedenie predčasne ukončené',
-  srsTimelineTitle:'Rozdelenie SRS v čase',srsTimelineDesc:'Rekonštruované z tvojich uložených sedení. Potiahni posuvník pre zobrazenie minulých rozdelení.',
+  srsTimelineTitle:'Rozdelenie SRS v čase',srsTimelineDesc:'Rekonštruované z tvojich uložených sedení. Potiahni posuvník pre zobrazenie minulých rozdelení. Slová bez zaznamenaného pohybu zobrazujú najvyššiu vtedy možnú úroveň (z dátumu vytvorenia + intervalov), nie nutne skutočnú.',
   srsTimelineEmpty:'Zatiaľ žiadne zaznamenané sedenia pre časový priebeh – dokonči jedno učenie, aby sa tu zobrazila história.',
   nowLbl:'Teraz',
   srsNames:['Nové','1 deň','1 týždeň','1 mesiac','2 mesiace','6 mesiacov','1 rok','Naučené'],
@@ -1088,13 +1088,38 @@ function stageOverviewHtml(before,after){
    aktuellen Stand rückwärts abgewickelt werden. Keine eigene Speicherung
    nötig, nutzt vollständig bestehende Daten. Nur Wörter, die zum jeweiligen
    Zeitpunkt schon existierten (created <= Zeitpunkt), werden gezählt.
-   Gelöschte Wörter können nicht rekonstruiert werden (kein Datenrest). */
+   Gelöschte Wörter können nicht rekonstruiert werden (kein Datenrest).
+
+   Plausibilitäts-Obergrenze (seit v6.36): Wörter ohne erfasste Bewegung
+   blieben bisher über den GESAMTEN Zeitverlauf auf ihrer aktuellen Stufe
+   eingefroren — auch an Zeitpunkten, zu denen sie diese Stufe laut
+   Erstelldatum unmöglich schon erreicht haben konnten (vom Nutzer per
+   Export-Abgleich entdeckt). maxPossibleStage() rechnet aus Erstelldatum +
+   aktuell eingestellten SRS_D-Intervallen die theoretisch schnellstmögliche
+   Stufe zu einem Zeitpunkt aus (immer sofort bei Fälligkeit korrekt
+   beantwortet) und deckelt die Rekonstruktion damit nach oben. Nutzt
+   AKTUELLE SRS_D-Werte als Näherung, nicht die zum jeweiligen Zeitpunkt
+   tatsächlich aktiven (falls die Intervalle seither geändert wurden) — nicht
+   historisch exakt, aber eine echte Verbesserung gegenüber gar keiner
+   Grenze. Wörter ohne Erstelldatum (vor v6.25 angelegt) bleiben unbegrenzt. */
+function maxPossibleStage(created,atTime){
+  if(!created)return 7;
+  let remaining=(atTime-created)/86400000;
+  if(remaining<0)return 0;
+  let stage=0;
+  for(let s=0;s<7;s++){
+    if(remaining>=SRS_D[s]){remaining-=SRS_D[s];stage=s+1;}
+    else break;
+  }
+  return stage;
+}
 function distAtTime(stageMap,atTime){
   const c=Array(8).fill(0);
   S.vocab.forEach(v=>{
     if(v.created&&v.created>atTime)return;
     const key=v.native+'_'+v.foreign;
-    const st=Math.min(7,Math.max(0,key in stageMap?stageMap[key]:(v.stage||0)));
+    let st=Math.min(7,Math.max(0,key in stageMap?stageMap[key]:(v.stage||0)));
+    st=Math.min(st,maxPossibleStage(v.created,atTime));
     c[st]++;
   });
   return c;
@@ -1145,17 +1170,19 @@ function renderSRS(id){
    buildSrsTimeline(), nur auf ein einzelnes Wort gefiltert statt auf die
    Gesamtverteilung. Gleiche bekannte Grenze: nur die letzten 100 Sitzungen
    (sv6_sessions), keine vollständige Historie seit Worterstellung, wenn das
-   Wort älter ist. */
+   Wort älter ist. Seit v6.36 zusätzlich mit derselben maxPossibleStage()-
+   Plausibilitätsgrenze wie der globale Zeitverlauf (siehe dort). */
 function wordStageTimeline(native,foreign){
   const sessions=[...(lg(SK.sessions)||[])].sort((a,b)=>b.ts-a.ts); // neueste zuerst
   const v=S.vocab.find(x=>x.native===native&&x.foreign===foreign);
   let stage=Math.min(7,Math.max(0,v?.stage||0));
-  const points=[{ts:Date.now(),stage}];
+  const cap=t=>Math.min(stage,maxPossibleStage(v?.created,t));
+  const points=[{ts:Date.now(),stage:cap(Date.now())}];
   for(const s of sessions){
     const m=(s.moves||[]).find(mv=>mv.native===native&&mv.foreign===foreign);
     if(!m)continue;
     stage=Math.min(7,Math.max(0,m.from));
-    points.push({ts:s.ts,stage});
+    points.push({ts:s.ts,stage:cap(s.ts)});
   }
   return points.reverse(); // älteste zuerst
 }
@@ -1190,12 +1217,46 @@ function isDue(v){const s=v.stage||0;if(s>=7)return false;const d=SRS_D[s];if(d=
 /* ════════════════════════════════
    LEARN ENGINE
    ════════════════════════════════ */
+/* Warteschlangen-Priorisierung (seit v6.37): bei mehr fälligen Wörtern als an
+   einem Tag schaffbar, sollen niedrige Stufen (kürzeres Intervall, "fragiler")
+   vor hohen Stufen (längeres Intervall, schon gefestigt) drankommen — sonst
+   bleiben bei wachsendem Rückstau per Zufall auch mal frische Wörter tagelang
+   liegen, während längst gefestigte zufällig öfter dran sind.
+   Anti-Verhungern: wartet ein Wort mehr als 50% seines eigenen Stufen-
+   Intervalls über die Fälligkeit hinaus (QUEUE_FORCE_RATIO), wird es trotzdem
+   wieder ganz nach vorne geholt — sonst könnten hohe Stufen bei dauerhaftem
+   Rückstau nie mehr drankommen. 50% ist bei kurzen Intervallen (Stufe 1: nur
+   0,5 Tage) ohnehin fast immer sofort erreicht — dort ändert sich durch die
+   Grenze praktisch nichts, sie wirkt spürbar erst ab Stufe 3 aufwärts.
+   Kleiner Zufalls-Jitter (QUEUE_JITTER) sorgt für etwas Abwechslung zwischen
+   benachbarten Stufen, ohne die Grundordnung zu untergraben — ein Sprung über
+   mehrere Stufen hinweg bleibt unwahrscheinlich. Gilt nur für die normale
+   Fällig-Warteschlange (Quick-Modus); Gezielt üben (Deep) bleibt zufällig
+   gemischt wie bisher, da es nicht auf Fälligkeit basiert. */
+const QUEUE_FORCE_RATIO=0.5,QUEUE_JITTER=0.75;
+function queuePriority(v){
+  const s=v.stage||0;
+  const interval=SRS_D[s];
+  if(!interval||interval===Infinity)return 0; // Stufe 0: immer Top-Priorität
+  const daysWaited=(dayStart()-(v.lastReviewed||0))/86400000;
+  const overdueRatio=(daysWaited-interval)/interval;
+  const forced=overdueRatio>=QUEUE_FORCE_RATIO;
+  return (forced?0:s)+(Math.random()*QUEUE_JITTER*2-QUEUE_JITTER);
+}
+function sortByPriority(list){
+  return list.map(v=>({v,p:queuePriority(v)})).sort((a,b)=>a.p-b.p).map(x=>x.v);
+}
 function startLearn(mode,list){
   let queue;
-  if(mode==='deep') queue=list&&list.length?[...list]:[...S.vocab];
-  else queue=getDue();
-  if(queue.length===0){toast(t('noDueToast'));return;}
-  queue=shuffle(queue);
+  if(mode==='deep'){
+    queue=list&&list.length?[...list]:[...S.vocab];
+    if(queue.length===0){toast(t('noDueToast'));return;}
+    queue=shuffle(queue);
+  }else{
+    queue=getDue();
+    if(queue.length===0){toast(t('noDueToast'));return;}
+    queue=sortByPriority(queue);
+  }
   const rn=S.set.repeatN||3;
   LS={
     mode,

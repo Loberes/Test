@@ -1,6 +1,6 @@
 # Slovník — Technische Dokumentation
 
-**Version:** 6.37 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
+**Version:** 6.38 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
 
 > **Fortsetzungs-Chat (v6.28):** Neue Sitzung, aufgesetzt auf der hochgeladenen `index.html` (v6.27) und dieser Doku, wie im Abschnitt „Fortsetzung in neuem Chat" der Vorversion vorgesehen. `const VER='6.27'` wurde vor der Änderung gegengeprüft (stimmte).
 
@@ -356,7 +356,7 @@ Bei `tier==='wrong'` (komplett falsche Antwort, kein Typo/Akzent-Fall) prüft `c
 | `sv6langs` | Array der Sprachpaare `[{native, target, label}]` |
 | `sv6pair` | Aktives Sprachpaar `{native, target, label}` |
 | `sv6set` | Einstellungen (theme, tts, repeatN, gapN, uiLang, …) |
-| `sv6log` | Array von Lern-Events: `{t: timestamp, ok: bool, w: wordKey}` |
+| `sv6log` | Array von Lern-Events: `{t, ok, w}` **+ seit v6.38:** `x` (gepackte Zusatzinfo), optional `cw` — siehe Abschnitt „Lern-Event-Zusatzinfo (x/cw)" |
 | `sv6tut` | `1` wenn Tutorial abgeschlossen |
 | `sv6_tc_{lang}` | Übersetzungs-Cache pro Zielsprache |
 | `sv6_tf_{lang}` | Fail-Cache für Übersetzungen (7 Tage) |
@@ -403,8 +403,31 @@ Dieser Abschnitt hat in diesem Chat die mit Abstand meisten Iterationen durchlau
 ### Datengrundlage
 
 - `buildDayData(nDays)` aggregiert weiterhin live aus `sv6log`.
-- **Neu seit v6.10:** `buildMonthData(spanDays)` — wenn die tatsächliche Datenspanne (`getDataSpanDays()`, gedeckelt auf 365 Tage wegen Log-Pruning) mehr als ~186 Tage (6 Monate) beträgt, aggregiert die "Alle"-Ansicht automatisch auf Monats-Balken (max. 13) statt Tages-Balken zu zeigen. Vermeidet unleserlich viele/dünne Tages-Balken bei langer Nutzungshistorie.
+- **Neu seit v6.10, Schwelle seit v6.34 auf 40 Tage gesenkt (war 186):** `buildMonthData(spanDays)` — wenn die tatsächliche Datenspanne (`getDataSpanDays()`, gedeckelt auf 365 Tage wegen Log-Pruning) mehr als ~40 Tage beträgt, aggregiert die "Alle"-Ansicht automatisch auf Monats-Balken (max. 13) statt Tages-Balken zu zeigen. Die ursprünglichen 186 Tage waren zu hoch angesetzt — schon deutlich früher wurden Tages-Balken auf Mobilbreite unleserlich dünn (siehe v6.34-Changelog).
 - "Wörter gelernt" zählt weiterhin eindeutige Wörter pro Tag, nicht Abfrage-Versuche.
+
+### Lern-Event-Zusatzinfo (`x`/`cw`, seit v6.38)
+
+Hintergrund: Beim Beantworten einer Karte wird intern schon einiges berechnet (Kartentyp, Abfrage-Richtung, wie genau die Antwort stimmte, ob mit einem anderen Wort verwechselt) — bis v6.37 aber sofort nach der UI-Rückmeldung wieder verworfen, nicht im Log gespeichert. Ziel laut Nutzer: eine Datengrundlage für spätere gezielte Auswertungen schaffen — vor allem für einen optimierten Lernprozess (siehe die Warteschlangen-Priorisierung aus v6.37) und einen genaueren Schwerpunkt beim Üben. Nicht nur das unmittelbar Nötige aufzeichnen, sondern auch, was später gebraucht werden könnte.
+
+**Bewusst als eine gepackte Zahl `x` statt vier Einzelfeldern**, auf ausdrücklichen Wunsch des Nutzers (kurze Feldnamen, dafür an einer Stelle erklärt statt an jeder Antwort ausgeschrieben) — bei ~100 Log-Einträgen/Tag und 365 Tagen Aufbewahrung sparen vier gepackte Bits gegenüber vier separaten Feldern spürbar Platz im ohnehin knappen `localStorage`.
+
+```
+x = c + 4*d + 8*s + 16*ty
+```
+
+| Bits | Bedeutung | Werte |
+|---|---|---|
+| `c` (0–1) | Kartentyp | 0=Umdrehen · 1=Tippen · 2=Buchstaben |
+| `d` (2) | Abfrage-Richtung | 0=Frage Muttersprache→Antwort Fremdsprache · 1=umgekehrt |
+| `s` (3) | Sitzungsart | 0=Fällige (Quick) · 1=Gezielt üben (Deep) |
+| `ty` (4–6) | Antwort-Güte | 0=nicht erfasst (Umdrehen, selbstbewertet) · 1=exakt · 2=nur Akzente falsch · 3=Buchstabenfehler (Levenshtein-Abstand 1) · 4=falsch · 5=Wort exakt, nur Artikel falsch · 6="Weiß nicht" (aufgegeben) |
+
+Zusätzlich, **nur** wenn `ty=4` (falsch) **und** eine Verwechslung erkannt wurde (nur Tipp-Modus, siehe `checkConfusion()`): `cw` — der Schlüssel (`native_foreign`) des tatsächlich eingegebenen, falschen Worts.
+
+**Dekodieren:** `logDecode(e)` → `{c, d, s, ty, cw}`. Ältere Einträge (reine Zahl, oder `{t,ok,w}` ohne `x`) liefern `null` — Bestandsdaten sind unverändert lesbar, nur ohne die neue Zusatzinfo. Kein Abwärtskompatibilitäts-Problem, da `logLearn()` bei fehlendem Kontext einfach keine `x`/`cw`-Felder schreibt.
+
+**Verifiziert:** alle 3×2×2×7=84 Kombinationen aus Kartentyp/Richtung/Sitzungsart/Güte kodiert und wieder dekodiert, 0 Abweichungen. Legacy-Einträge (Zahl und altes `{t,ok,w}`-Objekt ohne `x`) liefern korrekt `null`. Reine Datenerfassung in dieser Version — noch keine Auswertungs-Ansicht dafür, siehe „Offene Punkte".
 
 ### Chart-Darstellung — Verlauf und finaler Stand
 
@@ -522,17 +545,27 @@ Unverändert in diesem Chat. Dateistruktur, `.nojekyll`-Pflicht, GitHub-Pages-Se
 
 ## Offene Punkte (besprochen, nicht umgesetzt)
 
-Erledigt seit letzter Revision: Typografie-Fix, Sitzungs-Zusammenfassung → v6.26; SRS-Zeitverlauf → v6.27 (deckt Idee 2 unten teilweise ab, siehe Anmerkung).
+Erledigt seit letzter Revision: Typografie-Fix, Sitzungs-Zusammenfassung → v6.26; SRS-Zeitverlauf → v6.27 (deckt Idee 2 unten teilweise ab, siehe Anmerkung); Warteschlangen-Priorisierung nach Stufe → v6.37; Tracking-Grundlage für Verwechslungs-Paare/Antwort-Güte/Kartentyp/Richtung → v6.38 (deckt Idee 3, Verwechslungs-Teil, tracking-seitig ab — Auswertungs-Ansicht weiterhin offen).
 
 **Weiterhin offen, nur als Ausblick genannt, nicht konkret beauftragt:**
-1. **"Gezielt üben" mit Pro-Wort-Daten verbessern:** z. B. Filter nach "kürzlich häufig falsch" (aus Sitzungs-/Log-Daten) statt nur dem bisherigen globalen `wrong≥correct`-Filter (`dsOften`). Weiterhin nicht umgesetzt.
+1. **"Gezielt üben" mit Pro-Wort-Daten verbessern:** z. B. Filter nach "kürzlich häufig falsch" (aus Sitzungs-/Log-Daten) statt nur dem bisherigen globalen `wrong≥correct`-Filter (`dsOften`). Seit v6.38 stünde dafür zusätzlich die Antwort-Güte (`ty`, z. B. nur echte Fehler statt auch Tippfehler zählen) zur Verfügung. Weiterhin nicht umgesetzt.
 2. **Statistik-Seite um Pro-Wort-Auswertungen erweitern** (z. B. "Problemwörter"-Liste, anklickbar → direkt in Gezielt üben starten): Der SRS-Zeitverlauf (v6.27) ist ein erster Schritt in diese Richtung, aber keine vollständige Problemwörter-Auswertung — die konkrete Idee aus dem Chat ist also nur teilweise abgedeckt.
-3. Weitere in einem früheren Chat genannte Ideen zur erweiterten Statistiknutzung (Verwechslungs-Paare auswerten, Auswertung nach Pack/Kategorie) — beide würden zusätzliches Tracking benötigen, das aktuell nicht existiert. Rein als Ideen im Raum, nicht angefragt.
+3. Weitere in einem früheren Chat genannte Ideen zur erweiterten Statistiknutzung: Verwechslungs-Paare auswerten — **das dafür nötige Tracking existiert seit v6.38** (`x`/`cw` im Log, siehe Abschnitt „Lern-Event-Zusatzinfo"), die Auswertungs-Ansicht selbst aber noch nicht, hier ansetzen. Auswertung nach Pack/Kategorie steht weiterhin ganz offen (kein Tracking dafür). Beides rein als Ideen im Raum, nicht konkret beauftragt.
 4. **Eigener Übungsmodus für Kasus/Aspekt (Slowakisch), siehe „Lernphilosophie":** Nur als Idee besprochen, nicht angefragt. Wäre inhaltlich etwas anderes als die bisherigen Modi — kein einfaches Wortpaar mehr, sondern Deklinationstabellen (6 Kasus × Singular/Plural × Genusklassen) bzw. Aspekt-Paare mit Beispielsätzen. Dafür existiert aktuell **keine Datenbasis** — die Pack-Dateien enthalten nur `n`/`f`/`a` (Wort, Übersetzung, deutscher Artikel), keine slowakische Kasus- oder Aspekt-Information. Größerer Umfang als bisherige Features, auch weil die grammatischen Inhalte selbst sorgfältig verifiziert werden müssten, nicht nur der Code.
 
 ---
 
 ## Changelog
+
+### v6.38 — Lern-Event-Zusatzinfo fürs Log (Kartentyp, Richtung, Antwort-Güte, Verwechslung)
+Nutzerwunsch: Datengrundlage für spätere gezielte Auswertungen schaffen (optimierter Lernprozess, genauerer Schwerpunkt) — nicht nur unmittelbar Nötiges aufzeichnen, auch was künftig gebraucht werden könnte. Vorab abgestimmt: kurze Zusammenfassung vor dem Einbau, Rückfragen zu Antwortzeit (vorerst weggelassen) und Feldnamen (kurz, mit zentraler Legende statt ausgeschrieben).
+
+- **Neues Feld `x`** pro Log-Eintrag (gepackte Zahl: Kartentyp, Abfrage-Richtung, Sitzungsart, Antwort-Güte — 4 Werte in einem Feld statt vier, siehe Abschnitt „Lern-Event-Zusatzinfo" für die volle Legende) und optionales `cw` (Schlüssel des verwechselten Worts, nur bei Tippfehler mit erkannter Verwechslung).
+- **Nichts davon war vorher verloren, nur verworfen:** Kartentyp/Richtung standen in `LS`, die Antwort-Güte-Klassifizierung (`tier`: exact/diacritic/typo/wrong) existierte schon seit v6.23 für die UI-Rückmeldung, Verwechslungs-Erkennung (`checkConfusion()`) ebenfalls seit v6.23 — alles wurde nur nie in den `logLearn()`-Aufruf durchgereicht. Jetzt über `LS.ctx` (an den jeweiligen Stellen in `chkType()`/Buchstaben-Modus/`dontKnow()` gesetzt) bis zu `mark()` transportiert und dort **vor** den Stufen-Änderungen gesichert (`LS.dir` wird in `mark()` selbst noch verändert).
+- **Abwärtskompatibel:** `logDecode(e)` liefert für ältere Einträge (reine Zahl oder `{t,ok,w}` ohne `x`) `null` — Bestandsdaten bleiben unverändert lesbar.
+- **Reine Datenerfassung** — keine neue Auswertungs-Ansicht in dieser Version, das ist als nächster Schritt in „Offene Punkte" vermerkt.
+- **Nebenbei repariert:** Ein Dokumentationsfehler in „Statistik & Tages-Log" — dort stand noch die alte 186-Tage-Schwelle für Monats- vs. Tages-Balken, obwohl v6.34 sie längst auf 40 Tage gesenkt hatte.
+- **Verifikation:** Alle 3×2×2×7=84 Kombinationen aus Kartentyp/Richtung/Sitzungsart/Güte kodiert und wieder dekodiert (Node-Skript) — 0 Abweichungen. Legacy-Einträge (Zahl, altes Objekt ohne `x`) liefern korrekt `null`. Größenprobe: ein typischer neuer Eintrag mit `x` liegt bei ~53 statt ~46 Zeichen JSON — bei ~100 Einträgen/Tag über 365 Tage eine überschaubare, bewusst in Kauf genommene Mehrgröße gegenüber vier ausgeschriebenen Feldern. Node-Syntax-Check beider Dateien, Diff gegen v6.37 zeigt nur die beabsichtigten Zeilen. Kein Playwright-Testlauf, kein echtes Gerät — die eigentliche Antwort-Erfassung in allen drei Modi (Umdrehen/Tippen/Buchstaben, inkl. "Weiß nicht") ließe sich nur im echten Gebrauch abschließend verifizieren, die Kodierungs-Logik selbst ist aber vollständig getestet.
 
 ### v6.37 — Warteschlangen-Priorisierung nach Stufe
 Hintergrund: Nutzer schafft oft nur ~50 Wörter/Tag, der Fällig-Rückstau wächst aber (81-91 gesehen). Bisher wurden alle fälligen Wörter komplett zufällig gemischt (`shuffle()`) — bei wachsendem Rückstau blieben so auch mal frische, fragile Wörter (Stufe 1) tagelang liegen, während längst gefestigte (Stufe 5) zufällig öfter drankamen.
@@ -707,4 +740,4 @@ Dieser Chat endet nach v6.27 auf Wunsch des Nutzers. Für den nächsten Chat:
 
 ---
 
-*Dokumentation zuletzt aktualisiert: September 2026, basierend auf Code-Stand **v6.37** (`index.html` + `sw.js`). v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.37 nur per Syntax-Check/Codesichtung, nicht per Playwright — v6.30–v6.32 (Service Worker, Update-Erkennung) sind bislang die einzigen Punkte in dieser Doku, die tatsächlich auf einem echten Gerät nachverfolgt wurden; v6.33/v6.34 lieferten bereits echtes Geräte-Feedback, v6.35–v6.37 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*
+*Dokumentation zuletzt aktualisiert: September 2026, basierend auf Code-Stand **v6.38** (`index.html` + `sw.js`). v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.38 nur per Syntax-Check/Codesichtung, nicht per Playwright — v6.30–v6.32 (Service Worker, Update-Erkennung) sind bislang die einzigen Punkte in dieser Doku, die tatsächlich auf einem echten Gerät nachverfolgt wurden; v6.33/v6.34 lieferten bereits echtes Geräte-Feedback, v6.35–v6.38 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*

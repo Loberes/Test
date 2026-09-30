@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.37 */
+/* Slovník v6.38 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -529,7 +529,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.37 */
+/* Slovník v6.38 */
 /* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
    Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
 let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
@@ -585,7 +585,7 @@ async function triggerInstall(){
   deferredInstallPrompt=null;
 }
 
-const VER='6.37';
+const VER='6.38';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -1546,13 +1546,13 @@ function chkType(){
   const cArt=card.article?.toLowerCase();
   const artWrong=hasArt&&tArt&&cArt&&tArt!==cArt;
 
-  let tier;
+  let tier,artOnly=false;
   if(acceptedKeep.includes(typedKeep)&&!artWrong){
     tier='exact';
   } else if(acceptedFree.includes(typedFree)&&!artWrong){
     tier='diacritic';
   } else if(acceptedKeep.includes(typedKeep)&&artWrong){
-    tier='typo'; // Wort exakt, nur Artikel falsch
+    tier='typo';artOnly=true; // Wort exakt, nur Artikel falsch
   } else {
     const minDist=Math.min(...acceptedFree.map(c=>editDistance(typedFree,c)));
     tier=minDist===1?'typo':'wrong';
@@ -1561,6 +1561,7 @@ function chkType(){
   const fb=document.getElementById('tyfb');
   const nx=document.getElementById('tynxt');
   if(tier==='exact'||tier==='diacritic'){
+    LS.ctx={ty:tier==='exact'?1:2}; // fürs Log (siehe Legende bei logLearn)
     // Tippen: Akzente/Diakritika = 100% Toleranz, kein Stufenabzug — aber Hinweis auf korrekte Schreibweise
     inp.classList.add('ok');
     fb.innerHTML=tier==='diacritic'
@@ -1576,9 +1577,11 @@ function chkType(){
   inp.classList.add(tier==='wrong'?'err':'warn');
 
   let confusionHtml='';
+  LS.ctx={ty:tier==='wrong'?4:(artOnly?5:3)}; // fürs Log (siehe Legende bei logLearn)
   if(tier==='wrong'){
     const confusedWith=checkConfusion(typed,aSide,card);
     if(confusedWith){
+      LS.ctx.cw=confusedWith.native+'_'+confusedWith.foreign;
       confusedWith.stage=Math.max(0,(confusedWith.stage||0)-penaltyCfg().confusion);
       const otherMeaning=aSide==='foreign'?confusedWith.native:confusedWith.foreign;
       confusionHtml=`<div style="font-size:12px;color:var(--y);background:rgba(245,158,11,.1);padding:6px 10px;border-radius:6px;margin-top:8px;">${t('confusionWarn')(typed,otherMeaning)}</div>`;
@@ -1630,16 +1633,19 @@ function pickL(id,ch){
     const typed=chosen.map(x=>x.ch).join('');
     const fb=document.getElementById('ltfb');
     if(typed===target){
+      LS.ctx={ty:1};
       fb.innerHTML=`<span style="color:var(--g)">${t('richtigBtn')} <button class="btn bg bsm" style="margin-left:8px;" onclick="mark(true)">${t('weiterBtn')}</button></span>`;
       spk(target);
     } else if(norm(typed)===norm(target)){
       // Reiner Akzentfehler: 100% Toleranz, kein Stufenabzug — Hinweis auf korrekte Schreibweise
+      LS.ctx={ty:2};
       fb.innerHTML=`<span style="color:var(--g)">${t('richtigBtn')}</span><br>
         <span style="font-size:12px;color:var(--t3)">${t('correctIs')}: <strong>${esc(target)}</strong></span>
         <div><button class="btn bg bsm" style="margin-top:8px;" onclick="mark(true)">${t('weiterBtn')}</button></div>`;
       spk(target);
     } else {
       const dist=editDistance(typed,target);
+      LS.ctx={ty:dist===1?3:4};
       const stageDrop=dist===1?penaltyCfg().typo:undefined;
       const msgKey=dist===1?'closeTypo':'falschBtn';
       const color=dist===1?'var(--y)':'var(--r)';
@@ -1721,6 +1727,7 @@ function dsStart(){
 /* WEISS ICH NICHT */
 function dontKnow(){
   if(!LS||!LS.queue.length)return;
+  LS.ctx={ty:6}; // "Weiß nicht" (aufgegeben) — fürs Log
   const card=LS.queue[0];const dir=LS.dir;
   const correct=dir===0?card.foreign:card.native;
   const ctype=LS._ctype||'flip';
@@ -1751,6 +1758,8 @@ function dontKnow(){
 /* MARK ANSWER */
 function mark(ok,stageDrop){
   if(!LS)return;
+  // Kontext fürs Log VOR den Änderungen unten sichern (LS.dir wird weiter unten verändert)
+  const logX={ct:LS._ctype,d:LS.dir,s:LS.mode,ctx:LS.ctx};LS.ctx=null;
   const card=LS.queue[0];
   const key=card.native+'_'+card.foreign;
   if(!LS.cc[key]) LS.cc[key]={fwd:0,bwd:0,any:0,att:0,wrong:false};
@@ -1807,7 +1816,7 @@ function mark(ok,stageDrop){
     LS.dir=0;
     if(LS.mode==='deep') LS.phase=1;
   }
-  saveVocab();logLearn(ok,key);
+  saveVocab();logLearn(ok,key,logX);
   if(vi>=0&&LS.wordStats[key]) LS.wordStats[key].endStage=S.vocab[vi].stage;
   renderCard();
 }
@@ -2755,9 +2764,38 @@ function calcStreak(){
   return str;
 }
 
-function logLearn(ok,key){
-  const log=lg(SK.log)||[];log.push({t:Date.now(),ok:ok!==false,w:key||null});
+/* LOG-EINTRAG (seit v6.38): {t,ok,w} wie bisher, plus x (gepackte Zusatzinfo)
+   und nur bei Verwechslung cw. Bewusst als EINE kleine Zahl gepackt statt vier
+   Einzelfelder: das Log hat ~100 Einträge/Tag (365 Tage Aufbewahrung), jedes
+   zusätzliche Feld kostet dort schnell Hunderte KB im knappen localStorage.
+   ══ LEGENDE (einzige Stelle im Code, ausführlich auch in der Doku) ══
+   x = c + 4*d + 8*s + 16*ty
+     c  (Bits 0-1)  Kartentyp:  0=Umdrehen  1=Tippen  2=Buchstaben
+     d  (Bit 2)     Richtung:   0=Frage in Muttersprache (Antwort Fremdsprache)
+                                1=Frage in Fremdsprache (Antwort Muttersprache)
+     s  (Bit 3)     Sitzung:    0=Fällige (quick)  1=Gezielt üben (deep)
+     ty (Bits 4-6)  Antwort-Güte (nur Tippen/Buchstaben, sonst 0):
+                    0=nicht erfasst (Umdrehen ist selbstbewertet)
+                    1=exakt  2=nur Akzente falsch  3=Buchstabenfehler (Abstand 1)
+                    4=falsch  5=Wort exakt, nur Artikel falsch  6="Weiß nicht"
+   cw (optional)  Schlüssel ("native_foreign") des Worts, das statt des
+                  gefragten eingegeben wurde (nur Tippen, nur bei ty=4)
+   Dekodieren: logDecode(e). Ältere Einträge (Zahl oder {t,ok,w}) haben kein x. */
+const LOG_CT={flip:0,type:1,letters:2};
+function logLearn(ok,key,X){
+  const e={t:Date.now(),ok:ok!==false,w:key||null};
+  if(X){
+    const c=LOG_CT[X.ct]||0,d=X.d?1:0,s=X.s==='deep'?1:0,ty=(X.ctx&&X.ctx.ty)||0;
+    e.x=c+4*d+8*s+16*ty;
+    if(X.ctx&&X.ctx.cw)e.cw=X.ctx.cw;
+  }
+  const log=lg(SK.log)||[];log.push(e);
   ls(SK.log,log.filter(d=>logT(d)>Date.now()-365*86400000));
+}
+function logDecode(e){
+  const x=(e&&typeof e==='object'&&typeof e.x==='number')?e.x:null;
+  if(x===null)return null; // Altbestand ohne Zusatzinfo
+  return{c:x&3,d:(x>>2)&1,s:(x>>3)&1,ty:(x>>4)&7,cw:e.cw||null};
 }
 
 /* ── STATS DAY AGGREGATION ── */

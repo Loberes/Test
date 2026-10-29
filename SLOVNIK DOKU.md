@@ -1,6 +1,8 @@
 # Slovník — Technische Dokumentation
 
-**Version:** 6.38 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
+**Version:** 6.40 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
+
+> **Stand v6.40 (Oktober 2026):** baut direkt auf **v6.38** auf. Die zwischenzeitlich entwickelte **v6.39 wurde vom Nutzer als zu fehlerhaft verworfen** (nie als Basis übernommen) und soll später **komplett neu** gebaut werden — die Nummer 6.39 bleibt deshalb unbesetzt (auch, damit ein evtl. irgendwo schon geladener 6.39-Stand keinen gleichnamigen Update-Banner/Cache-Konflikt auslöst). Was v6.39 enthalten sollte, steht unter „Offene Punkte".
 
 > **Fortsetzungs-Chat (v6.28):** Neue Sitzung, aufgesetzt auf der hochgeladenen `index.html` (v6.27) und dieser Doku, wie im Abschnitt „Fortsetzung in neuem Chat" der Vorversion vorgesehen. `const VER='6.27'` wurde vor der Änderung gegengeprüft (stimmte).
 
@@ -360,7 +362,7 @@ Bei `tier==='wrong'` (komplett falsche Antwort, kein Typo/Akzent-Fall) prüft `c
 | `sv6tut` | `1` wenn Tutorial abgeschlossen |
 | `sv6_tc_{lang}` | Übersetzungs-Cache pro Zielsprache |
 | `sv6_tf_{lang}` | Fail-Cache für Übersetzungen (7 Tage) |
-| `sv6_sessions` | **Neu seit v6.26:** Array der letzten 100 Sitzungs-Zusammenfassungen, neueste zuerst (`SESSIONS_MAX`) — siehe Abschnitt „Sitzungs-Zusammenfassung & Verlauf" |
+| `sv6_sessions` | **Neu seit v6.26:** Array der letzten 100 Sitzungs-Zusammenfassungen, neueste zuerst (`SESSIONS_MAX`) — siehe Abschnitt „Sitzungs-Zusammenfassung & Verlauf". **Seit v6.40 Teil des JSON-Exports** (Format 4) |
 
 > **`sv6_hidden`** (Array ausgeblendeter häufiger Wörter) **existiert seit v6.10 nicht mehr** — das komplette "Häufige Vokabeln"-Feature auf der Home-Seite wurde entfernt (siehe Abschnitt „Sprachpaare & Packs"). Der zugehörige State (`S.freqPage`, `S.freqHid`), die Funktionen (`renderFreq`, `freqPg`, `hideFreqW`, `addFreqW`) und das `FREQ`-Wortarray wurden ersatzlos entfernt.
 
@@ -372,13 +374,150 @@ Log-Eintrag-Format: Objekte `{t, ok, w}`. `logT(e)` liest den Timestamp (Rückw�
 
 ## Externe Dateien
 
-Unverändert in diesem Chat. Alle Pack-/Suggest-JSON-Dateien liegen im selben Verzeichnis wie `index.html`, Lazy Loading beim Öffnen des Packs-Tabs bzw. beim ersten Tippen im Hinzufügen-Tab. Details siehe vorherige Doku-Version (Pack-Format, Suggest-Format, Fallback-Pfade unverändert).
+**Neu seit v6.40 — einheitliche Namen, minifiziert, ein einziger Ladepfad.** Alle Pack-/Suggest-JSON-Dateien liegen im selben Verzeichnis wie `index.html` (Lazy Loading beim Öffnen des Packs-Tabs bzw. beim ersten Tippen im Hinzufügen-Tab) und heißen ausnahmslos:
+
+- `lang_<von>_<nach>.json` — Packs: `lang_de_sk.json`, `lang_de_en.json`, `lang_de_hu.json`, `lang_en_sk.json`, `lang_sk_ko.json`
+- `lang_<von>_<nach>_suggest.json` — nur Wörter für die Autovervollständigung im Hinzufügen-Tab: `lang_de_sk_suggest.json`, `lang_sk_ko_suggest.json`
+
+**Pack-Format (für alle Paare gleich):** `{"packs":[{"id","name"|"title","icon","words":[{"n":Wort,"f":Übersetzung,"a":Artikel (optional),"notes":(optional)}]}]}`. Suggest-Format: `{"words":[{"n","f"?,"a"?}]}` — enthält bewusst nur Wörter, die **nicht** schon in einem Pack stehen (sonst erscheinen sie doppelt in der Vorschlagsliste).
+
+**Warum geändert (v6.40):**
+- Die Dateien waren eingerückt gespeichert (DE-SK allein 113 KB). Minifiziert: alle 7 Dateien zusammen **276 KB → 176 KB** (rund −100 KB), Inhalt unverändert bis auf die Bereinigungen unten. Beim künftigen Bearbeiten: Dateien dürfen weiter minifiziert bleiben (jeder JSON-Editor formatiert sie bei Bedarf vorübergehend).
+- `fetchRelative()` hatte einen vierfachen Fallback (Pfad, `/`-Pfad, jeweils auch mit Leerzeichen statt Unterstrichen im Dateinamen), weil zwei SK-KO-Dateien im Repo Leerzeichen im Namen hatten (`lang sk ko.json`). Seit v6.40 gibt es nur noch den Pfad relativ zur `index.html` — **die beiden alten Dateien mit Leerzeichen im Repo können und sollen gelöscht werden.** Ein fehlendes Pack kostet damit nur noch einen Request statt vier.
 
 ---
 
 ## Sprachpaare & Packs
 
-Eingebaute Packs (DE→SK 18 Packs/1308 Wörter, DE→EN, DE→HU, EN→SK, SK→DE/SK→EN gespiegelt, SK→KO 18 Kategorien/551 Wörter) unverändert.
+Eingebaute Packs (Stand v6.40): DE→SK 18 Packs/**1227** Wörter, DE→EN 8 Packs/208, DE→HU 8 Packs/136, EN→SK 8 Packs/134, SK→KO 18 Packs/**533** Wörter (SK→DE/SK→EN gespiegelt wie bisher).
+
+### Pack-Bereinigung in v6.40 (Doppelte Wortpaare)
+
+Vorher kam dasselbe Wortpaar teils in mehreren Packs vor (z. B. „Herz“ in *Farben* und *Körper*): DE-SK 76 Paare (1308 Einträge, nur 1227 eindeutig), SK-KO 18, DE-EN 2, EN-SK 2. Folge: Der „x/y importiert“-Zähler eines Packs war irreführend, und „Alle importieren“ meldete viele „übersprungen“. **Jetzt steht jedes Paar nur noch in einem Pack** — in dem, das thematisch am besten passt (Themen-Pack vor Wortart-Pack wie `verben`/`adjektive`; Ausnahmen siehe Tabellen). Bereits importierte Vokabeln bleiben **völlig unberührt** (Packs sind nur die Quelle).
+
+**Gegenprobe (automatisiert, im Browser):** „Alle importieren“ über alle Packs eines Paares liefert vor und nach der Bereinigung **exakt denselben Vokabelbestand** (DE-SK 1207, DE-EN 208, DE-HU 136, EN-SK 134). Dafür mussten zwei Zuordnungen bewusst angepasst werden, weil gleiche deutsche Wörter mit *verschiedenen* Übersetzungen existieren und beim Import das zuerst gefundene gewinnt (Reihenfolge der Packs): *Rechnung → účet* (bleibt in `essen`, sonst würde *faktúra* gewinnen) und *Sport → šport* (bleibt in `koerper`, sonst würde *telocvik* gewinnen).
+
+**Zuordnung DE→SK** (bleibt in / entfernt aus):
+
+| Wort | Übersetzung | bleibt in | entfernt aus |
+|---|---|---|---|
+| breit | široký | `adjektive` | `farben` |
+| groß | veľký | `adjektive` | `farben` |
+| klein | malý | `adjektive` | `farben` |
+| laut | hlučný | `adjektive` | `gefuehle` |
+| leer | prázdny | `adjektive` | `farben` |
+| schmal | úzky | `adjektive` | `farben` |
+| schwach | slabý | `adjektive` | `koerper` |
+| stark | silný | `adjektive` | `koerper` |
+| tief | hlboký | `adjektive` | `farben` |
+| unbekannt | neznámy | `adjektive` | (doppelt im selben Pack) |
+| voll | plný | `adjektive` | `farben` |
+| Arzt | lekár | `beruf` | `koerper` |
+| kaufen | kúpiť | `einkaufen` | `verben` |
+| Fisch | ryba | `essen` | `tiere` |
+| kochen | variť | `essen` | `freizeit`, `verben` |
+| Rechnung | účet | `essen` | `einkaufen` |
+| schneiden | krájať | `essen` | `verben` |
+| Wasser | voda | `essen` | `tiere`, `wetter` |
+| eckig | hranatý | `farben` | `adjektive` |
+| Farbe | farba | `farben` | `einkaufen` |
+| flach | plochý | `farben` | `adjektive` |
+| rund | okrúhly | `farben` | `adjektive` |
+| malen | maľovať | `freizeit` | `verben` |
+| singen | spievať | `freizeit` | `verben` |
+| spielen | hrať | `freizeit` | `verben` |
+| Training | tréning | `freizeit` | `koerper` |
+| lustig | vtipný | `gefuehle` | `adjektive` |
+| müde | unavený | `gefuehle` | `koerper` |
+| traurig | smutný | `gefuehle` | `adjektive` |
+| Apotheke | lekáreň | `koerper` | `einkaufen` |
+| Herz | srdce | `koerper` | `farben` |
+| Sport | šport | `koerper` | `freizeit` |
+| antworten | odpovedať | `kommunikation` | `schule`, `verben` |
+| beschreiben | opísať | `kommunikation` | `verben` |
+| E-Mail | e-mail | `kommunikation` | `technik` |
+| erklären | vysvetliť | `kommunikation` | `verben` |
+| Nachricht | správa | `kommunikation` | `technik` |
+| sagen | povedať | `kommunikation` | `verben` |
+| sprechen | hovoriť | `kommunikation` | `verben` |
+| Telefon | telefón | `kommunikation` | `zuhause` |
+| Museum | múzeum | `reisen` | `freizeit` |
+| Rucksack | ruksak | `reisen` | `einkaufen` |
+| Urlaub | dovolenka | `reisen` | `zahlen`, `beruf` |
+| erinnern | pamätať si | `schule` | `verben` |
+| fragen | pýtať sa | `schule` | `verben` |
+| lernen | učiť sa | `schule` | `verben` |
+| lesen | čítať | `schule` | `freizeit`, `verben` |
+| Musik | hudba | `schule` | `technik` |
+| schreiben | písať | `schule` | `verben` |
+| vergessen | zabudnúť | `schule` | `verben` |
+| verstehen | rozumieť | `schule` | `verben` |
+| Computer | počítač | `technik` | `zuhause` |
+| Drucker | tlačiareň | `technik` | `zuhause` |
+| Fernseher | televízor | `technik` | `zuhause` |
+| Radio | rádio | `technik` | `zuhause` |
+| Berg | hora | `tiere` | `reisen` |
+| Maus | myš | `tiere` | `technik` |
+| Meer | more | `tiere` | `reisen` |
+| See | jazero | `tiere` | `reisen` |
+| Stern | hviezda | `tiere` | `farben` |
+| Wald | les | `tiere` | `wetter` |
+| Wiese | lúka | `tiere` | `wetter` |
+| reisen | cestovať | `verben` | `freizeit` |
+| Blitz | blesk | `wetter` | `tiere` |
+| Donner | hrom | `wetter` | `tiere` |
+| Regen | dážď | `wetter` | `tiere` |
+| Schnee | sneh | `wetter` | `tiere` |
+| Sonne | slnko | `wetter` | `tiere` |
+| Sturm | búrka | `wetter` | `tiere` |
+| aufräumen | upratovať | `zuhause` | `verben` |
+| bauen | stavať | `zuhause` | `verben` |
+| bügeln | žehliť | `zuhause` | `verben` |
+| putzen | čistiť | `zuhause` | `verben` |
+| reparieren | opravovať | `zuhause` | `verben` |
+| waschen | prať | `zuhause` | `verben` |
+| Zimmer | izba | `zuhause` | `reisen` |
+
+**Zuordnung SK→KO:**
+
+| Wort | Übersetzung | bleibt in | entfernt aus |
+|---|---|---|---|
+| hrad | 성 | `cestovanie` | `mesto` |
+| pláž | 해변 | `cestovanie` | `priroda` |
+| reštaurácia | 식당 | `jedlo` | `mesto` |
+| mesto | 도시 | `mesto` | `cestovanie` |
+| most | 다리 | `mesto` | `cestovanie` |
+| múzeum | 박물관 | `mesto` | `cestovanie` |
+| banka | 은행 | `nakupovanie` | `mesto` |
+| kúpiť | 사다 | `nakupovanie` | `slovesa` |
+| obchod | 가게 | `nakupovanie` | `mesto` |
+| lekár | 의사 | `praca` | `telo` |
+| hviezda | 별 | `priroda` | `farby` |
+| jazero | 호수 | `priroda` | `cestovanie` |
+| strom | 나무 | `priroda` | `zvierata` |
+| sused | 이웃 | `rodina` | `dom` |
+| učiteľ | 선생님 | `skola` | `praca` |
+| škola | 학교 | `skola` | `mesto` |
+| nemocnica | 병원 | `telo` | `mesto` |
+| mesiac | 달 | `zahnat` | `priroda` |
+
+**Zuordnung DE→EN:**
+
+| Wort | Übersetzung | bleibt in | entfernt aus |
+|---|---|---|---|
+| Fisch | fish | `essen` | `tiere` |
+| Zimmer | room | `zuhause` | `reisen` |
+
+**Zuordnung EN→SK:**
+
+| Wort | Übersetzung | bleibt in | entfernt aus |
+|---|---|---|---|
+| fish | ryba | `food` | `animals` |
+| room | izba | `home` | `travel` |
+
+### SK→KO-Packs waren in v6.38 nicht importierbar (Fund + Fix in v6.40)
+
+`lang_sk_ko.json` verwendete als Wortschlüssel `sk`/`ko` statt `n`/`f` (wie alle anderen Pack-Dateien und wie der Pack-Code in `index.html` es erwartet: `w.n||w.native`). Ergebnis in v6.38 (im Browser nachgestellt): Der Packs-Tab zeigte für SK→KO nur leere Zeilen, **„Alle importieren“ importierte 0 Wörter**, die Packs steuerten nichts zur Autovervollständigung bei. **Fix rein in den Daten** (kein Code geändert): `sk`→`n`, `ko`→`f`; Ergebnis im Browser: 530 Wörter importierbar (533 Einträge, 3 davon teilen sich ein slowakisches Wort mit anderer Übersetzung). Folgeänderung: `lang_sk_ko_suggest.json` enthielt 520 Wörter, die jetzt in den Packs stehen (sonst doppelte Vorschläge, einmal mit, einmal ohne Übersetzung) → entfernt, **1707 → 1187 Einträge**. Der `meta`-Block der Datei bleibt erhalten (wird von der App nicht gelesen).
 
 > **"Häufige Wörter (DE)" — entfernt seit v6.10.** Vorherige Doku beschrieb 120 häufige deutsche Wörter im Home-Tab mit Ausblend-Funktion. Auf Nutzerwunsch komplett aus der App entfernt: HTML-Sektion, Render-Funktion, `FREQ`-Array (~110 Wörter), zugehörige i18n-Keys (`freqWords`, `freqOnlyDe`, `freqAllLearned`, `learnBtnPlus`, `page`) in allen drei Sprachen, sowie `SK.hid`-Nutzung. Kein Ersatz vorgesehen.
 
@@ -392,7 +531,16 @@ Unverändert in diesem Chat.
 
 ## Import / Export
 
-Unverändert in diesem Chat.
+**JSON-Export (`expJSON`) — Format 4 seit v6.40** (vorher 3): `{version:4, app, appVersion, exported, pairId, langs, activePair, settings, vocab:{sv6_vocab_<von>_<nach>:[…]}, log:[…], sessions:[…]}`. **Neu: `sessions`** (die bis zu 100 Sitzungs-Zusammenfassungen aus `sv6_sessions`) — vorher gingen Sitzungsverlauf, Stufen-Zeitverlauf (v6.27) und Pro-Wort-Stufenverlauf (v6.31) bei Neuinstallation/Gerätewechsel verloren. Toter Code (`vocabList` setzen und sofort wieder löschen) entfernt.
+
+**JSON-Import (`impData`)** akzeptiert Format 2, 3 und 4 (alte Backups bleiben importierbar; Format 3 hat kein `sessions`-Feld, das wird übersprungen).
+- **Sitzungen:** werden über die Sitzungs-`id` zusammengeführt (bereits lokal vorhandene `id` gewinnt, unbekannte kommen dazu), danach neueste zuerst und auf `SESSIONS_MAX` (100) gekappt.
+- **Log-Bugfix (v6.40):** Log-Einträge sind seit langem Objekte (`{t,ok,w,…}`); der alte Merge nutzte ein `Set` über die Objekte selbst (vergleicht Referenzen, entfernt also nichts) und sortierte per `a-b` (bei Objekten `NaN`). **Folge in v6.38 (im Browser nachgestellt): Ein Re-Import des eigenen Backups auf demselben Gerät verdoppelte alle Log-Einträge** (4 → 7 im Test; reine Zahlen-Einträge aus ganz alten Versionen wurden dagegen korrekt dedupliziert). Jetzt Dedupe über den Inhalt (`JSON.stringify` je Eintrag) und Sortierung nach `logT()`; im selben Test 4 → 4.
+
+**Bekannte Eigenheiten, bewusst NICHT in v6.40 geändert (offen, siehe „Offene Punkte"):**
+- Beim Zusammenführen bereits vorhandener Wörter werden **`stats` (richtig/falsch) addiert**. Das ist für das Zusammenführen zweier *verschiedener* Geräte sinnvoll, **verdoppelt aber die Zähler, wenn man das eigene Backup auf demselben Gerät erneut einspielt** (im Test: 5/1 → 10/2). Stufe/`lastReviewed` werden dagegen nur übernommen, wenn die importierte Stufe höher ist.
+- Von `settings` werden nur `repeatN`, `theme` und `uiLang` zurückgespielt (obwohl alle Einstellungen im Export stehen) — SRS-Parameter, Lückenabstand usw. gehen beim Restore verloren.
+- Im Legacy-Pfad für Format-2-Backups (`d.vocab` als Array) wird `mergeWord()` pro Wort zweimal aufgerufen (Stats würden doppelt addiert, „übersprungen“-Zähler falsch). Aktuelle Exporte nutzen diesen Pfad nicht.
 
 ---
 
@@ -537,7 +685,9 @@ Unverändert in diesem Chat.
 
 ## Deployment
 
-Unverändert in diesem Chat. Dateistruktur, `.nojekyll`-Pflicht, GitHub-Pages-Settings wie zuvor.
+**Dateien im Repo-Hauptverzeichnis (Stand v6.40):** `index.html`, `sw.js`, `manifest.json`, `.nojekyll`, `icon-192.png`, `icon-512.png`, die 5 Pack-Dateien `lang_{de_sk,de_en,de_hu,en_sk,sk_ko}.json` und die 2 Suggest-Dateien `lang_{de_sk,sk_ko}_suggest.json` (optional: `README.md`, diese Doku). GitHub-Pages-Settings wie zuvor, `.nojekyll`-Pflicht unverändert.
+
+**Beim Update auf v6.40 alles zusammen hochladen** (sonst findet die App die umbenannten SK-KO-Packs nicht), danach die beiden alten Dateien **`lang sk ko.json`** und **`lang sk ko suggest.json`** (mit Leerzeichen) im Repo löschen. Die alte `SLOVNIK DOKU 6 22.md` im Repo ist veraltet und kann ebenfalls weg. Ob `manifest.json` und die Icons im Repo liegen, ließ sich am 24.10.2026 nur aus der Dateiliste der GitHub-Startseite ablesen (dort nicht aufgeführt) — mit `manifest.json` im Upload ist das mit v6.40 abgedeckt; Die Icons wurden auf Nutzerwunsch nicht neu erzeugt (Nutzer: Das Icon wird beim Verknüpfen über Safari auf dem Home-Bildschirm bereits geliefert). `manifest.json`, `sw.js` und `<link rel="apple-touch-icon">` verweisen weiterhin auf `icon-192.png`/`icon-512.png`; fehlen diese Dateien, schlägt seit v6.40 nur noch ihr eigenes Vorab-Cachen fehl, nicht mehr der gesamte Cache.
 
 > **Wichtiger Hinweis aus diesem Chat:** Änderungen, die hier im Chat an der Datei vorgenommen werden, wirken sich **nicht automatisch** auf die Live-Version unter `loberes.github.io/Test/` aus. Die aktualisierte `index.html` muss jedes Mal manuell ins GitHub-Repo hochgeladen werden.
 
@@ -546,6 +696,10 @@ Unverändert in diesem Chat. Dateistruktur, `.nojekyll`-Pflicht, GitHub-Pages-Se
 ## Offene Punkte (besprochen, nicht umgesetzt)
 
 Erledigt seit letzter Revision: Typografie-Fix, Sitzungs-Zusammenfassung → v6.26; SRS-Zeitverlauf → v6.27 (deckt Idee 2 unten teilweise ab, siehe Anmerkung); Warteschlangen-Priorisierung nach Stufe → v6.37; Tracking-Grundlage für Verwechslungs-Paare/Antwort-Güte/Kartentyp/Richtung → v6.38 (deckt Idee 3, Verwechslungs-Teil, tracking-seitig ab — Auswertungs-Ansicht weiterhin offen).
+
+**v6.39 — verworfen, soll später komplett neu gebaut werden (Nutzerentscheidung, Oktober 2026).** Die damalige Version wurde als zu fehlerhaft verworfen und ist **nicht** Teil des Codes; v6.40 basiert auf v6.38. Inhalt der verworfenen Version als Auftragsliste für den Neubau (damals vom Nutzer als Paket bestätigt: „alles gleich“): (1) eigene Einstellung `wrongRepeatN` (2–5, Standard 3): wie oft ein in der Sitzung falsches Wort hintereinander richtig sein muss, unabhängig vom allgemeinen `repeatN`; (2) „Gezielt üben“-Auswahl als echte Checkbox-Wortliste statt Stufenfilter+Anzahl; (3) zeitgewichteter Dringlichkeits-Score statt des flachen `wrong≥correct`-Filters (Halbwertszeit 60 Tage, Auswertung aus dem Log inkl. `x`-Feld; Wörter mit positivem Score vorausgewählt); (4) Verwechslungs-Paare üben über einen neuen Kartentyp „Auswahl“ (richtige Übersetzung vs. verwechseltes Wort); (5) Gezielt üben bevorzugt pro Wort die schwächste Kombination aus Kartentyp+Richtung (erst ab ≥3 Versuchen je Kombination) statt immer Flip — **Achtung:** Phase 2 war in `renderCard()` und `dp2()` fest auf `flip` verdrahtet, das war der größere Umbau; (6) Wörter, die zuletzt mit „Weiß ich nicht“ beantwortet wurden, als eigene wählbare Kategorie mit bewusst gemischten Kartentypen. Beim Neubau: kleiner schneiden und pro Teil auf dem Gerät testen, statt alles in einer Version zu bündeln.
+
+**Aus der Analyse von v6.38/v6.40 offen geblieben (siehe Abschnitt „Import / Export"):** Stats-Verdopplung beim Re-Import des eigenen Backups; unvollständiger Settings-Restore; doppelter `mergeWord()`-Aufruf im Format-2-Pfad. Jeweils nur gefunden, nicht beauftragt.
 
 **Weiterhin offen, nur als Ausblick genannt, nicht konkret beauftragt:**
 1. **"Gezielt üben" mit Pro-Wort-Daten verbessern:** z. B. Filter nach "kürzlich häufig falsch" (aus Sitzungs-/Log-Daten) statt nur dem bisherigen globalen `wrong≥correct`-Filter (`dsOften`). Seit v6.38 stünde dafür zusätzlich die Antwort-Güte (`ty`, z. B. nur echte Fehler statt auch Tippfehler zählen) zur Verfügung. Weiterhin nicht umgesetzt.
@@ -556,6 +710,18 @@ Erledigt seit letzter Revision: Typografie-Fix, Sitzungs-Zusammenfassung → v6.
 ---
 
 ## Changelog
+
+### v6.40 — Aufräumen: Packs, Service Worker, Export/Import (v6.39 verworfen, Basis v6.38)
+Nutzerentscheidung: v6.39 war zu fehlerhaft und wurde verworfen; Neubau später. v6.40 setzt auf der hochgeladenen v6.38 auf (`VER`, `sw.js`, Doku stimmten überein) und setzt die in der Analyse gefundenen Punkte um — vorab als Plan abgestimmt (Version 6.40, Icons weglassen). Leitlinie „App klein halten“: `index.html` 171.389 → 171.953 Byte (+0,6 KB durch den Sitzungs-Merge, minus der entfernten Fallbacks), dafür die Pack-Dateien **−100 KB**.
+
+1. **Packs minifiziert und einheitlich benannt** (`lang_<von>_<nach>[_suggest].json`), 276 KB → 176 KB. `fetchRelative()` ohne Fallback-Kette (siehe „Externe Dateien“).
+2. **`manifest.json`:** `theme_color` `#0f0e0c` → `#1a1a2e` (= `<meta name="theme-color">`, Toolbar-Farbe), `background_color` (Splash) → `#0f0f1a` (= App-Hintergrund `--b`). Icons nicht angefasst (auf Nutzerwunsch weggelassen).
+3. **`sw.js`:** Vorab-Cache pro Datei (`Promise.allSettled` + `cache.add`) statt `cache.addAll()` (das war alles-oder-nichts: fehlte *eine* Datei, wurde gar nichts vorab gecacht); nur noch **erfolgreiche** Antworten (`res.ok`) werden gecacht (vorher auch 404). Im Browser nachgestellt (Icons absichtlich nicht vorhanden): alt → nach Installation nur `index.html` im Cache und 404-Antwort gecacht; neu → `/`, `index.html`, `manifest.json` vorab gecacht, 404 nicht gecacht, Offline-Start funktioniert. `CACHE_VER` = `slovnik-v6.40`.
+4. **Dateinamen:** siehe 1.; die alten Dateien mit Leerzeichen im Repo löschen.
+5. **Export Format 4 mit `sessions`**, Import akzeptiert 2/3/4, Sitzungs-Merge nach `id`, toter Code in `expJSON` entfernt. **Zusätzlich gefunden und behoben:** der Log-Merge beim Import verdoppelte bei jedem Re-Import alle Log-Einträge (siehe „Import / Export“). Die anderen dort genannten Eigenheiten wurden bewusst nicht angefasst.
+6. **Doppelte Wortpaare in den Packs bereinigt** (Tabellen unter „Sprachpaare & Packs“), „Alle importieren“-Ergebnis vorher/nachher identisch geprüft. **Beim Umsetzen zusätzlich gefunden:** die SK-KO-Packs waren in v6.38 gar nicht importierbar (falsche Schlüssel) — in den Daten behoben, `lang_sk_ko_suggest.json` entsprechend bereinigt. (Korrektur zur Vorab-Planung: dort war für SK-KO versehentlich „1“ doppeltes Paar genannt, tatsächlich sind es 18; der Fehler lag an der Zählweise mit den abweichenden Schlüsseln.)
+
+**Verifikation:** `node --check` auf JS und `sw.js`; automatisierte Browser-Tests (Playwright/Chromium, Alt-vs.-Neu-Vergleich): Export/Import (Format 4, Re-Import, frischer Import, Format-3-Import), Pack-Import aller 5 Paare inkl. Autovervollständigung SK-KO, Service Worker (Vorab-Cache, 404, Offline-Start); keine JS-Fehler. **Nicht getestet:** echtes Gerät (iPhone/Safari-PWA), Update-Banner-Ablauf nach dem Deploy.
 
 ### v6.38 — Lern-Event-Zusatzinfo fürs Log (Kartentyp, Richtung, Antwort-Güte, Verwechslung)
 Nutzerwunsch: Datengrundlage für spätere gezielte Auswertungen schaffen (optimierter Lernprozess, genauerer Schwerpunkt) — nicht nur unmittelbar Nötiges aufzeichnen, auch was künftig gebraucht werden könnte. Vorab abgestimmt: kurze Zusammenfassung vor dem Einbau, Rückfragen zu Antwortzeit (vorerst weggelassen) und Feldnamen (kurz, mit zentraler Legende statt ausgeschrieben).
@@ -726,18 +892,18 @@ Siehe vorherige Doku-Version (`SLOVNIK_DOKU_6_6.md`) — Kernpunkte: abgestufte 
 
 ## Hinweis: Fortsetzung in neuem Chat
 
-Dieser Chat endet nach v6.27 auf Wunsch des Nutzers. Für den nächsten Chat:
+Stand nach v6.40. Für den nächsten Chat:
 
-1. **Diese Doku-Datei** (`SLOVNIK_DOKU_6_27.md`) und die aktuelle **`index.html`** (v6.27) zusammen hochladen — die Doku ist der verlässliche Kontext, nicht Chatverlauf-Erinnerung.
-2. **Als Erstes tun:** `index.html` öffnen, `const VER=` gegenprüfen (muss `'6.27'` sein — falls nicht, hat der Nutzer zwischenzeitlich selbst etwas geändert oder eine andere Version hochgeladen, dann Vorsicht mit Annahmen aus dieser Doku).
+1. **Diese Doku-Datei** (`SLOVNIK_DOKU.md`) und die aktuelle **`index.html`** (v6.40) zusammen hochladen — idealerweise auch `sw.js` und `manifest.json` — die Doku ist der verlässliche Kontext, nicht Chatverlauf-Erinnerung.
+2. **Als Erstes tun:** `index.html` öffnen, `const VER=` gegenprüfen (muss `'6.40'` sein — falls nicht, hat der Nutzer zwischenzeitlich selbst etwas geändert oder eine andere Version hochgeladen, dann Vorsicht mit Annahmen aus dieser Doku).
 3. **Interner Build-Workflow (3-Teile-Aufbau, Abschnitt „Architektur"):** existiert nur innerhalb einer laufenden Sitzung, muss im neuen Chat bei Bedarf neu aus der hochgeladenen `index.html` hergestellt werden (an den `<style>`/`<script>`-Grenzen extrahieren, siehe `src/build.js`-Beschreibung im Architektur-Abschnitt). Nicht automatisch vorhanden.
 4. **Standing Instructions, die weiterhin gelten sollten** (bisher in diesem Chat etabliert, nicht in der App selbst gespeichert, also hier explizit vermerkt):
    - Diese Doku nach jeder Versionsänderung automatisch mit aktualisieren, ohne dass extra danach gefragt werden muss (siehe Hinweis-Box ganz oben im Dokument).
    - Vor größeren Umbauten kurz Rückfrage/Bestätigung einholen (ursprüngliche Nutzer-Präferenz aus sehr frühem Chat-Verlauf, nicht mit dieser Doku-Instanz neu bestätigt — im neuen Chat ggf. nochmal explizit erfragen, ob das weiterhin gilt).
    - Nach jeder Änderung: Versionsnummer hochzählen, Syntax-Check (Node `new Function()`-Test), wo sinnvoll automatisierter Playwright-Test vor Auslieferung.
    - Änderungen an der Datei wirken sich nicht automatisch auf die Live-Version bei GitHub Pages aus — Nutzer muss jedes Mal manuell hochladen (siehe Abschnitt „Deployment").
-5. **Abschnitt „Offene Punkte"** enthält alle im Chat besprochenen, aber nicht umgesetzten Ideen — Ausgangspunkt, falls der Nutzer im neuen Chat dort weitermachen möchte.
+5. **Abschnitt „Offene Punkte"** (ganz oben: die verworfene v6.39 als Auftragsliste für den Neubau) enthält alle im Chat besprochenen, aber nicht umgesetzten Ideen — Ausgangspunkt, falls der Nutzer im neuen Chat dort weitermachen möchte.
 
 ---
 
-*Dokumentation zuletzt aktualisiert: September 2026, basierend auf Code-Stand **v6.38** (`index.html` + `sw.js`). v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.38 nur per Syntax-Check/Codesichtung, nicht per Playwright — v6.30–v6.32 (Service Worker, Update-Erkennung) sind bislang die einzigen Punkte in dieser Doku, die tatsächlich auf einem echten Gerät nachverfolgt wurden; v6.33/v6.34 lieferten bereits echtes Geräte-Feedback, v6.35–v6.38 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*
+*Dokumentation zuletzt aktualisiert: Oktober 2026, basierend auf Code-Stand **v6.40** (`index.html` + `sw.js` + `manifest.json` + Pack-Dateien). v6.40 per Syntax-Check und automatisierten Playwright-/Chromium-Tests (Export/Import, Packs, Service Worker) verifiziert, nicht auf einem echten Gerät. v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.38 nur per Syntax-Check/Codesichtung — v6.30–v6.32 (Service Worker, Update-Erkennung) und v6.33/v6.34 wurden auf einem echten Gerät nachverfolgt, v6.35–v6.38 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*

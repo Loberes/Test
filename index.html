@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.38 */
+/* Slovník v6.40 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -529,7 +529,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.38 */
+/* Slovník v6.40 */
 /* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
    Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
 let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
@@ -585,7 +585,7 @@ async function triggerInstall(){
   deferredInstallPrompt=null;
 }
 
-const VER='6.38';
+const VER='6.40';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -2275,14 +2275,10 @@ function showWordDetail(i){
    ════════════════════════════════ */
 
 async function fetchRelative(fn){
+  /* seit v6.40: nur noch der saubere Pfad relativ zur index.html — alle Pack-Dateien
+     heißen jetzt lang_<von>_<nach>[_suggest].json (Unterstriche, keine Leerzeichen) */
   const base=window.location.pathname.replace(/\/[^\/]*$/,'/');
-
   try{const r=await fetch(base+fn);if(r.ok)return await r.json();}catch(e){}
-  try{const r=await fetch('/'+fn);if(r.ok)return await r.json();}catch(e){}
-
-  const fnSpace=fn.replace(/_/g,' ');
-  try{const r=await fetch(base+fnSpace);if(r.ok)return await r.json();}catch(e){}
-  try{const r=await fetch('/'+fnSpace);if(r.ok)return await r.json();}catch(e){}
   return null;
 }
 async function loadPackFile(pair){
@@ -2395,20 +2391,19 @@ function addPair(){
 function expJSON(){
 
   const backup={
-    version:3,app:'slovnik',appVersion:VER,
+    version:4,app:'slovnik',appVersion:VER,
     exported:new Date().toISOString(),
     pairId:`${S.pair?.native}-${S.pair?.target}`,
     langs:S.langs,activePair:S.pair,
     settings:S.set,
     vocab:{},log:lg(SK.log)||[],
+    sessions:lg(SK.sessions)||[],
   };
   S.langs.forEach(p=>{
     const k=`sv6_vocab_${p.native}_${p.target}`;
     backup.vocab[k]=lg(k)||[];
   });
 
-  backup.vocabList=S.vocab;
-  delete backup.vocabList; 
   dl(JSON.stringify(backup),`slovnik_backup_${new Date().toISOString().slice(0,10)}.json`,'application/json');
 }
 
@@ -2482,7 +2477,7 @@ function impData(ev){
   rd.onload=e=>{
     try{
       const d=JSON.parse(e.target.result);
-      if(d.version!==2&&d.version!==3){toast(t('unknownFormat'));return;}
+      if(d.version!==2&&d.version!==3&&d.version!==4){toast(t('unknownFormat'));return;}
       let added=0,skipped=0;
       const LN={de:'Deutsch',en:'Englisch',sk:'Slowakisch',hu:'Ungarisch',fr:'Französisch',it:'Italienisch',pl:'Polnisch',cs:'Tschechisch',ru:'Russisch',es:'Spanisch',pt:'Portugiesisch',nl:'Niederländisch'};
 
@@ -2540,7 +2535,18 @@ function impData(ev){
           const t=new Date(dt).getTime();
           if(!isNaN(t)) for(let j=0;j<cnt;j++) ts.push(t+j*1000);
         });
-        ls(SK.log,[...new Set([...ex,...ts])].sort((a,b)=>a-b));
+        /* Dedupe über den Inhalt: Log-Einträge sind seit v6.x Objekte, ein Set über
+           Objekt-Referenzen würde nichts entfernen (Re-Import verdoppelte das Log) */
+        const seen=new Set(ex.map(e=>JSON.stringify(e)));
+        ts.forEach(e=>{const k=JSON.stringify(e);if(!seen.has(k)){seen.add(k);ex.push(e);}});
+        ls(SK.log,ex.sort((a,b)=>logT(a)-logT(b)));
+      }
+
+      if(Array.isArray(d.sessions)){ // seit Export-Format 4; ältere Backups haben das Feld nicht
+        const ex=lg(SK.sessions)||[];
+        const ids=new Set(ex.map(x=>x.id));
+        d.sessions.forEach(x=>{if(x&&x.id!=null&&!ids.has(x.id)){ex.push(x);ids.add(x.id);}});
+        ls(SK.sessions,ex.sort((a,b)=>b.ts-a.ts).slice(0,SESSIONS_MAX));
       }
       updateTB();renderHome();
       toast(t('importedMerged')(added,skipped));

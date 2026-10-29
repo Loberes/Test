@@ -1,18 +1,21 @@
-/* Slovník Service Worker — v6.38
+/* Slovník Service Worker — v6.40
    Cache-Name ist an die App-Version gekoppelt: jeder Versionssprung in
    index.html (const VER) muss hier in CACHE_VER nachgezogen werden, dann
    wird der alte Cache beim nächsten activate automatisch gelöscht.
    WICHTIG bei künftigen Änderungen: CACHE_VER IMMER zusammen mit VER in
    index.html hochzählen — sonst liefert der SW weiter alten Code aus. */
-const CACHE_VER='slovnik-v6.38';
+const CACHE_VER='slovnik-v6.40';
 
 /* Fest gecachte App-Shell-Dateien (Icons ändern sich praktisch nie). */
 const CACHE_FIRST=['icon-192.png','icon-512.png'];
 
 self.addEventListener('install',e=>{
+  /* Jede Datei einzeln vorab cachen: fehlt eine (z. B. ein Icon), scheitert nur sie
+     und nicht mehr das gesamte Vorab-Caching wie bei cache.addAll() (seit v6.40). */
   e.waitUntil(
-    caches.open(CACHE_VER).then(c=>c.addAll(['./','./index.html','./manifest.json',...CACHE_FIRST]))
-      .catch(()=>{}) // offline beim Erstbesuch: kein harter Fehler, SW installiert trotzdem
+    caches.open(CACHE_VER).then(c=>Promise.allSettled(
+      ['./','./index.html','./manifest.json',...CACHE_FIRST].map(u=>c.add(u))
+    ))
   );
 });
 
@@ -40,8 +43,7 @@ self.addEventListener('fetch',e=>{
   if(isCacheFirst){
     e.respondWith(
       caches.match(req).then(cached=>cached||fetch(req).then(res=>{
-        const copy=res.clone();
-        caches.open(CACHE_VER).then(c=>c.put(req,copy));
+        if(res.ok){const copy=res.clone();caches.open(CACHE_VER).then(c=>c.put(req,copy));}
         return res;
       }))
     );
@@ -55,8 +57,7 @@ self.addEventListener('fetch',e=>{
      Deploy auf altem Code hängen bleibt. */
   e.respondWith(
     fetch(req).then(res=>{
-      const copy=res.clone();
-      caches.open(CACHE_VER).then(c=>c.put(req,copy));
+      if(res.ok){const copy=res.clone();caches.open(CACHE_VER).then(c=>c.put(req,copy));} // 404 & Co. nicht cachen (seit v6.40)
       return res;
     }).catch(()=>caches.match(req).then(cached=>cached||caches.match('./index.html')))
   );

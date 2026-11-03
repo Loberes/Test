@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.40 */
+/* Slovník v6.42 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -49,6 +49,7 @@ a{color:var(--acs);text-decoration:none;}
 .scroll::-webkit-scrollbar-thumb{background:var(--br);border-radius:2px;}
 /* CARD */
 .card{background:var(--b2);border:1px solid var(--br);border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.ic{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--br);cursor:pointer;font-size:14px;} .ic input{flex:none;width:18px;height:18px;margin-top:2px;accent-color:var(--ac);} .ic small{display:block;color:var(--t3);font-size:12px;margin-top:2px;line-height:1.4;}
 .stit{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:var(--rads);font-weight:600;font-size:14px;transition:all var(--tr);touch-action:manipulation;}
@@ -419,7 +420,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
     <div class="dvd"></div>
     <div class="stit" data-i18n="dataSection">Daten</div>
     <div class="card">
-      <button class="btn bs bw" onclick="expJSON()" style="margin-bottom:8px;" data-i18n="jsonExport">⬇ JSON-Export (mit Statistik)</button>
+      <button class="btn bs bw" onclick="expJSON()" style="margin-bottom:8px;" data-i18n="jsonExport">⬇ Vollbackup (JSON)</button>
       <button class="btn bs bw" onclick="expCSV()" style="margin-bottom:8px;" data-i18n="csvExport">📄 CSV-Export</button>
       <label class="btn bs bw" style="display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;">
         <span data-i18n="jsonImport">⬆ Import (JSON)</span> <input type="file" accept=".json" style="display:none;" onchange="impData(event)">
@@ -529,7 +530,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.40 */
+/* Slovník v6.42 */
 /* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
    Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
 let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
@@ -585,7 +586,7 @@ async function triggerInstall(){
   deferredInstallPrompt=null;
 }
 
-const VER='6.40';
+const VER='6.42';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -604,7 +605,7 @@ de:{
   search:'🔍 Suchen…',sortAlpha:'A–Z',sortStage:'Stufe',sortDate:'Datum',
   fAll:'Alle',fNew:'Neu',f1d:'1T',f1w:'1W',f1m:'1M',f2m:'2M',f6m:'6M',f1y:'1J',fDone:'✓',
   noVocab:'Keine Vokabeln',
-  packsTitle:'Vokabelpacks',dataSection:'Daten',jsonExport:'⬇ JSON-Export (mit Statistik)',csvExport:'📄 CSV-Export',
+  packsTitle:'Vokabelpacks',dataSection:'Daten',jsonExport:'⬇ Vollbackup (JSON)',csvExport:'📄 CSV-Export',
   jsonImport:'⬆ Import (JSON)',addPairSection:'Sprachpaar hinzufügen',targetLangLbl:'Zielsprache (Kürzel)',targetLangPh:'sk, hu, fr, it, pl …',
   addBtnShort:'Hinzufügen',noLangPair:'Kein Sprachpaar gewählt',loadingPacks:'⏳ Lade Packs…',
   noPacksHere:'Keine Packs für dieses Sprachpaar',imported:'importiert',select:'Auswählen',all:'Alle',
@@ -627,7 +628,8 @@ de:{
   wordAdded:w=>`"${w}" hinzugefügt`,importedSkipped:(a,s)=>`✓ ${a} importiert, ${s} übersprungen`,
   pleaseEnterCode:'Bitte Sprachkürzel eingeben',pairAdded:'Sprachpaar hinzugefügt',
   needTranslCheck:w=>`"${w}" eingefügt — Übersetzung prüfen & speichern`,
-  unknownFormat:'Unbekanntes Format',importedMerged:(a,s)=>`✓ ${a} importiert, ${s} zusammengeführt`,importErr:e=>`Import-Fehler: ${e}`,
+  unknownFormat:'Unbekanntes Format',importErr:e=>`Import-Fehler: ${e}`,
+  impTitle:'Import',impFile:(d,v)=>`Backup vom ${d} (App v${v})`,impWhat:'Was importieren?',impVocab:p=>`Vokabeln ${p}`,impLog:'Lernverlauf (Antworten)',impSess:'Sitzungsverlauf',impSet:'Einstellungen',impLangs:'Sprachpaare & aktives Paar',impCache:'Übersetzungs-Cache',impOther:'Weitere Daten',impNew:'neu',impUpd:'aktualisiert',impMode:'Modus',impMerge:'Zusammenführen',impMergeH:'Neues kommt dazu, Vorhandenes bleibt. Bei Wörtern auf beiden Seiten gewinnt die Seite mit mehr Antworten. Kann gefahrlos wiederholt werden.',impReplace:'Ersetzen',impReplaceH:'Die gewählten Bereiche werden komplett durch das Backup ersetzt (Wiederherstellung).',impBackupFirst:'Vorher aktuellen Stand sichern (Download)',impReplaceConfirm:'Die gewählten Bereiche auf diesem Gerät werden ersetzt. Fortfahren?',impGo:'Importieren',impNone:'Nichts auswählbar bzw. ausgewählt',impDone:'Import abgeschlossen',
   tutTitles:['Topbar','Navigation','Lernmodi','Übersicht','SRS-Chart','Packs & Export'],
   tutTexts:['Streak 🔥, fällige Vokabeln, Sprachpaar-Wechsel und Einstellungen.','Zwischen Lernen, Hinzufügen, Vokabelliste, Packs und Statistik wechseln.','Schnell: zufälliger Kartenmodus (Flip/Tippen/Buchstaben). Gezielt: Deep Learn mit einstellbarer Wiederholzahl.','Gesamtzahl deiner Vokabeln und heute fällige Karten.','Balkendiagramm: Verteilung auf alle 8 Lernstufen.','Externe Vokabelpacks laden, Daten exportieren und importieren.'],
   tutSkip:'Überspringen',tutNext:'Weiter →',tutDone:'Fertig ✓',tutFinished:'Tutorial abgeschlossen! 🎉',
@@ -689,7 +691,7 @@ en:{
   search:'🔍 Search…',sortAlpha:'A–Z',sortStage:'Stage',sortDate:'Date',
   fAll:'All',fNew:'New',f1d:'1d',f1w:'1w',f1m:'1m',f2m:'2m',f6m:'6m',f1y:'1y',fDone:'✓',
   noVocab:'No words',
-  packsTitle:'Vocab packs',dataSection:'Data',jsonExport:'⬇ JSON export (with stats)',csvExport:'📄 CSV export',
+  packsTitle:'Vocab packs',dataSection:'Data',jsonExport:'⬇ Full backup (JSON)',csvExport:'📄 CSV export',
   jsonImport:'⬆ Import (JSON)',addPairSection:'Add language pair',targetLangLbl:'Target language (code)',targetLangPh:'sk, hu, fr, it, pl …',
   addBtnShort:'Add',noLangPair:'No language pair selected',loadingPacks:'⏳ Loading packs…',
   noPacksHere:'No packs for this language pair',imported:'imported',select:'Select',all:'All',
@@ -712,7 +714,8 @@ en:{
   wordAdded:w=>`"${w}" added`,importedSkipped:(a,s)=>`✓ ${a} imported, ${s} skipped`,
   pleaseEnterCode:'Please enter a language code',pairAdded:'Language pair added',
   needTranslCheck:w=>`"${w}" inserted — check translation & save`,
-  unknownFormat:'Unknown format',importedMerged:(a,s)=>`✓ ${a} imported, ${s} merged`,importErr:e=>`Import error: ${e}`,
+  unknownFormat:'Unknown format',importErr:e=>`Import error: ${e}`,
+  impTitle:'Import',impFile:(d,v)=>`Backup from ${d} (app v${v})`,impWhat:'What to import?',impVocab:p=>`Vocabulary ${p}`,impLog:'Learning history (answers)',impSess:'Session history',impSet:'Settings',impLangs:'Language pairs & active pair',impCache:'Translation cache',impOther:'Other data',impNew:'new',impUpd:'updated',impMode:'Mode',impMerge:'Merge',impMergeH:'New items are added, existing ones stay. For words on both sides, the side with more answers wins. Safe to repeat.',impReplace:'Replace',impReplaceH:'The selected areas are fully replaced by the backup (restore).',impBackupFirst:'Save current data first (download)',impReplaceConfirm:'The selected areas on this device will be replaced. Continue?',impGo:'Import',impNone:'Nothing selectable / selected',impDone:'Import complete',
   tutTitles:['Top bar','Navigation','Learning modes','Overview','SRS chart','Packs & export'],
   tutTexts:['Streak 🔥, due words, language pair switch and settings.','Switch between Learn, Add, Word list, Packs and Stats.','Quick: random card mode (flip/type/letters). Focused: Deep learn with adjustable repeat count.','Total number of words and how many are due today.','Bar chart: distribution across all 8 learning stages.','Load external vocab packs, export and import data.'],
   tutSkip:'Skip',tutNext:'Next →',tutDone:'Done ✓',tutFinished:'Tutorial completed! 🎉',
@@ -774,7 +777,7 @@ sk:{
   search:'🔍 Hľadať…',sortAlpha:'A–Z',sortStage:'Stupeň',sortDate:'Dátum',
   fAll:'Všetko',fNew:'Nové',f1d:'1d',f1w:'1t',f1m:'1m',f2m:'2m',f6m:'6m',f1y:'1r',fDone:'✓',
   noVocab:'Žiadne slovíčka',
-  packsTitle:'Balíčky slovíčok',dataSection:'Dáta',jsonExport:'⬇ JSON export (so štatistikou)',csvExport:'📄 CSV export',
+  packsTitle:'Balíčky slovíčok',dataSection:'Dáta',jsonExport:'⬇ Úplná záloha (JSON)',csvExport:'📄 CSV export',
   jsonImport:'⬆ Import (JSON)',addPairSection:'Pridať jazykový pár',targetLangLbl:'Cieľový jazyk (skratka)',targetLangPh:'sk, hu, fr, it, pl …',
   addBtnShort:'Pridať',noLangPair:'Nie je vybraný jazykový pár',loadingPacks:'⏳ Načítavam balíčky…',
   noPacksHere:'Žiadne balíčky pre tento jazykový pár',imported:'importovaných',select:'Vybrať',all:'Všetko',
@@ -797,7 +800,8 @@ sk:{
   wordAdded:w=>`"${w}" pridané`,importedSkipped:(a,s)=>`✓ ${a} importovaných, ${s} preskočených`,
   pleaseEnterCode:'Zadaj prosím skratku jazyka',pairAdded:'Jazykový pár pridaný',
   needTranslCheck:w=>`"${w}" vložené — skontroluj preklad a ulož`,
-  unknownFormat:'Neznámy formát',importedMerged:(a,s)=>`✓ ${a} importovaných, ${s} zlúčených`,importErr:e=>`Chyba importu: ${e}`,
+  unknownFormat:'Neznámy formát',importErr:e=>`Chyba importu: ${e}`,
+  impTitle:'Import',impFile:(d,v)=>`Záloha z ${d} (app v${v})`,impWhat:'Čo importovať?',impVocab:p=>`Slovíčka ${p}`,impLog:'História učenia (odpovede)',impSess:'História sedení',impSet:'Nastavenia',impLangs:'Jazykové páry a aktívny pár',impCache:'Cache prekladov',impOther:'Ďalšie dáta',impNew:'nové',impUpd:'aktualizované',impMode:'Režim',impMerge:'Zlúčiť',impMergeH:'Nové sa pridá, existujúce zostane. Pri slovách na oboch stranách vyhráva strana s viacerými odpoveďami. Možno bezpečne opakovať.',impReplace:'Nahradiť',impReplaceH:'Vybrané oblasti sa úplne nahradia zálohou (obnovenie).',impBackupFirst:'Najprv uložiť aktuálny stav (stiahnuť)',impReplaceConfirm:'Vybrané oblasti v tomto zariadení budú nahradené. Pokračovať?',impGo:'Importovať',impNone:'Nič nie je vybrateľné / vybrané',impDone:'Import dokončený',
   tutTitles:['Horná lišta','Navigácia','Režimy učenia','Prehľad','SRS graf','Balíčky a export'],
   tutTexts:['Séria 🔥, slovíčka na opakovanie, prepínanie jazykových párov a nastavenia.','Prepínanie medzi Učiť sa, Pridať, Zoznam slov, Balíčky a Štatistika.','Rýchlo: náhodný režim kariet (otočiť/písať/písmená). Cielené: hlboké učenie s nastaviteľným počtom opakovaní.','Celkový počet slovíčok a koľko ich je dnes na opakovanie.','Stĺpcový graf: rozdelenie do všetkých 8 úrovní učenia.','Načítanie externých balíčkov, export a import dát.'],
   tutSkip:'Preskočiť',tutNext:'Ďalej →',tutDone:'Hotovo ✓',tutFinished:'Tutoriál dokončený! 🎉',
@@ -2275,10 +2279,13 @@ function showWordDetail(i){
    ════════════════════════════════ */
 
 async function fetchRelative(fn){
-  /* seit v6.40: nur noch der saubere Pfad relativ zur index.html — alle Pack-Dateien
-     heißen jetzt lang_<von>_<nach>[_suggest].json (Unterstriche, keine Leerzeichen) */
+  /* seit v6.41: zwei Namensvarianten relativ zur index.html — erst lang_de_sk.json,
+     dann lang de sk.json. Dateien aus Chat-Downloads kommen teils mit Leerzeichen statt
+     Unterstrichen an; liegen beide Varianten im Repo, gewinnt die mit Unterstrichen. */
   const base=window.location.pathname.replace(/\/[^\/]*$/,'/');
-  try{const r=await fetch(base+fn);if(r.ok)return await r.json();}catch(e){}
+  for(const n of [fn,fn.replace(/_/g,' ')]){
+    try{const r=await fetch(base+n);if(r.ok)return await r.json();}catch(e){}
+  }
   return null;
 }
 async function loadPackFile(pair){
@@ -2388,23 +2395,18 @@ function addPair(){
 /* ════════════════════════════════
    EXPORT / IMPORT
    ════════════════════════════════ */
+/* Vollbackup (Format 5, seit v6.42): ALLE sv6*-Daten 1:1 aus dem Speicher — keine feste Feldliste,
+   neue Felder/Schlüssel sind damit künftig automatisch dabei. Nur sv6_tf_* (7-Tage-Fehlschlag-
+   Marker der Übersetzung) bleibt draußen. Nicht als JSON lesbare Werte landen in "raw". */
+const BK_VER=5;
 function expJSON(){
-
-  const backup={
-    version:4,app:'slovnik',appVersion:VER,
-    exported:new Date().toISOString(),
-    pairId:`${S.pair?.native}-${S.pair?.target}`,
-    langs:S.langs,activePair:S.pair,
-    settings:S.set,
-    vocab:{},log:lg(SK.log)||[],
-    sessions:lg(SK.sessions)||[],
-  };
-  S.langs.forEach(p=>{
-    const k=`sv6_vocab_${p.native}_${p.target}`;
-    backup.vocab[k]=lg(k)||[];
+  const data={},raw={};
+  Object.keys(localStorage).filter(k=>k.startsWith('sv6')&&!k.startsWith('sv6_tf_')).sort().forEach(k=>{
+    const v=localStorage.getItem(k);try{data[k]=JSON.parse(v);}catch(e){raw[k]=v;}
   });
-
-  dl(JSON.stringify(backup),`slovnik_backup_${new Date().toISOString().slice(0,10)}.json`,'application/json');
+  const b={app:'slovnik',version:BK_VER,appVersion:VER,exported:new Date().toISOString(),data};
+  if(Object.keys(raw).length)b.raw=raw;
+  dl(JSON.stringify(b),`slovnik_backup_${new Date().toISOString().slice(0,10)}.json`,'application/json');
 }
 
 function expCSV(){
@@ -2434,125 +2436,197 @@ function fixArticles(words){
   return words;
 }
 
-function mergeWord(existing,w){
-  const sp=splitArticle(w.native||w.n||'');
-  const nat=sp.n.toLowerCase();
-  const art=w.article||w.a||sp.a||'';
-  if(!nat||(!(w.foreign||w.f)))return 0;
-
-  const wSynNat=w.synonymsNative||w.synonyms||[];
-  const wSynFor=w.synonymsForeign||w.synonyms||[];
-  const wNoteNat=w.notesNative!==undefined?w.notesNative:w.notes;
-  const wNoteFor=w.notesForeign!==undefined?w.notesForeign:w.notes;
-
-  const ei=existing.findIndex(e=>{
-    const esn=splitArticle(e.native).n.toLowerCase();
-    return esn===nat||e.native.toLowerCase()===nat;
-  });
-  if(ei>=0){
-    const e=existing[ei];
-    if((w.stage||0)>(e.stage||0)){e.stage=w.stage;e.lastReviewed=w.lastReviewed||e.lastReviewed;}
-    if(w.stats){e.stats=e.stats||{correct:0,wrong:0};e.stats.correct+=w.stats.correct||0;e.stats.wrong+=w.stats.wrong||0;}
-
-    const esn=splitArticle(e.native);
-    if(esn.a){e.article=e.article||esn.a;e.native=esn.n;}
-    if(art&&!e.article) e.article=art;
-    if(wNoteNat&&!getNotes(e,'native')) e.notesNative=wNoteNat;
-    if(wNoteFor&&!getNotes(e,'foreign')) e.notesForeign=wNoteFor;
-    wSynNat.forEach(s=>{const cur=getSyns(e,'native');if(!cur.includes(s)){e.synonymsNative=[...cur,s];}});
-    wSynFor.forEach(s=>{const cur=getSyns(e,'foreign');if(!cur.includes(s)){e.synonymsForeign=[...cur,s];}});
-    return 0; 
+/* ── Import (seit v6.42): Datei → einheitliche Datenstruktur → Auswahl-Dialog → Anwenden ── */
+function normWord(w){ // Altformate (n/f/a/synonyms/notes) → aktuelles Wortformat; unbekannte Felder bleiben erhalten
+  const sp=splitArticle(w.native||w.n||''),f=w.foreign||w.f||'';
+  if(!sp.n||!f)return null;
+  const o={...w};['n','f','a','synonyms','notes'].forEach(k=>delete o[k]);
+  return Object.assign(o,{native:sp.n,foreign:f,article:w.article||w.a||sp.a||'',
+    synonymsNative:w.synonymsNative||w.synonyms||[],synonymsForeign:w.synonymsForeign||w.synonyms||[],
+    notesNative:(w.notesNative!==undefined?w.notesNative:w.notes)||'',notesForeign:(w.notesForeign!==undefined?w.notesForeign:w.notes)||'',
+    stage:w.stage||0,lastReviewed:w.lastReviewed||0,stats:w.stats||{correct:0,wrong:0}});
+}
+function normBackup(d){ // Format 5 direkt; Format 2/3/4 werden in dieselbe Schlüssel→Wert-Struktur umgesetzt
+  if(d&&d.version===BK_VER&&d.data&&typeof d.data==='object')return {data:d.data,raw:d.raw||{}};
+  if(!d||![2,3,4].includes(d.version))return null;
+  const LN={de:'Deutsch',en:'Englisch',sk:'Slowakisch',hu:'Ungarisch',fr:'Französisch',it:'Italienisch',pl:'Polnisch',cs:'Tschechisch',ru:'Russisch',es:'Spanisch',pt:'Portugiesisch',nl:'Niederländisch'};
+  const data={};
+  if(Array.isArray(d.langs)){
+    const L=[];
+    d.langs.forEach(l=>{
+      let nat,tgt,label;
+      if(l.native&&l.target&&!l.id){nat=l.native;tgt=l.target;label=l.label||`${LN[nat]||nat} → ${LN[tgt]||tgt}`;}
+      else if(l.id){const pt=l.id.split('-');nat=pt[0];tgt=l.langcode||pt[1];label=`${LN[nat]||nat} → ${LN[tgt]||tgt}`;}
+      if(nat&&tgt&&!L.find(x=>x.native===nat&&x.target===tgt))L.push({native:nat,target:tgt,label});
+    });
+    data[SK.langs]=L;
   }
-  existing.push({
-    native:sp.n||w.native||w.n||'',foreign:w.foreign||w.f||'',
-    article:art,synonymsNative:wSynNat,synonymsForeign:wSynFor,
-    notesNative:wNoteNat||'',notesForeign:wNoteFor||'',stage:w.stage||0,
-    lastReviewed:w.lastReviewed||0,stats:w.stats||{correct:0,wrong:0}
+  if(d.activePair&&d.activePair.native)data[SK.pair]=d.activePair;
+  if(d.settings){
+    const s={...d.settings};
+    if(s.repeatInterval&&!s.repeatN)s.repeatN=s.repeatInterval;
+    if(s.appLang)s.uiLang=s.appLang;
+    delete s.repeatInterval;delete s.appLang;data[SK.set]=s;
+  }
+  const wl=a=>a.map(normWord).filter(Boolean);
+  if(Array.isArray(d.vocab)){const pt=(d.pairId||'de-sk').split('-');data[`sv6_vocab_${pt[0]||'de'}_${pt[1]||'sk'}`]=wl(d.vocab);}
+  else if(d.vocab&&typeof d.vocab==='object')Object.entries(d.vocab).forEach(([k,w])=>{if(Array.isArray(w))data[k]=wl(w);});
+  if(d.log){
+    let ts=[];
+    if(Array.isArray(d.log))ts=d.log;
+    else Object.entries(d.log).forEach(([dt,val])=>{ // ganz altes Format: {Datum:Anzahl}
+      const cnt=typeof val==='number'?val:(val.count||0),tm=new Date(dt).getTime();
+      if(!isNaN(tm))for(let j=0;j<cnt;j++)ts.push(tm+j*1000);
+    });
+    data[SK.log]=ts;
+  }
+  if(Array.isArray(d.sessions))data[SK.sessions]=d.sessions;
+  return {data,raw:{}};
+}
+
+/* Zusammenführen — alle drei sind wiederholbar ohne Nebenwirkung (zweiter Import ändert nichts) */
+function mergeVocab(loc,inc){ // loc wird verändert → {add,upd}
+  const wk=w=>splitArticle(w.native||'').n.toLowerCase(),idx=new Map();
+  loc.forEach((e,i)=>idx.set(wk(e),i));
+  const att=x=>(x.stats?.correct||0)+(x.stats?.wrong||0);
+  let add=0,upd=0;
+  inc.forEach(w=>{
+    const k=wk(w);if(!k)return;
+    const i=idx.get(k);
+    if(i===undefined){loc.push(JSON.parse(JSON.stringify(w)));idx.set(k,loc.length-1);add++;return;}
+    const e=loc[i];let ch=false;
+    /* Stufe, Zeitpunkt und Zähler kommen als Einheit von der Seite mit mehr Antworten — es wird nie addiert */
+    if(att(w)>att(e)){e.stage=w.stage||0;e.lastReviewed=w.lastReviewed||0;e.stats={...(w.stats||{correct:0,wrong:0})};ch=true;}
+    if(!e.article&&w.article){e.article=w.article;ch=true;}
+    if(!e.foreign&&w.foreign){e.foreign=w.foreign;ch=true;}
+    if(w.created&&(!e.created||w.created<e.created)){e.created=w.created;ch=true;}
+    [['native','Native'],['foreign','Foreign']].forEach(([s,N])=>{
+      if(w['notes'+N]&&!getNotes(e,s)){e['notes'+N]=w['notes'+N];ch=true;}
+      const cur=getSyns(e,s),extra=(w['synonyms'+N]||[]).filter(x=>!cur.includes(x));
+      if(extra.length){e['synonyms'+N]=[...cur,...extra];ch=true;}
+    });
+    Object.keys(w).forEach(f=>{if(e[f]===undefined){e[f]=w[f];ch=true;}}); // künftige Felder
+    if(ch)upd++;
   });
-  return 1; 
+  return {add,upd};
+}
+function mergeLog(loc,inc){ // Dedupe über den Inhalt (Einträge sind Objekte)
+  const seen=new Set(loc.map(e=>JSON.stringify(e)));let n=0;
+  inc.forEach(e=>{const k=JSON.stringify(e);if(!seen.has(k)){seen.add(k);loc.push(e);n++;}});
+  loc.sort((a,b)=>logT(a)-logT(b));return n;
+}
+function mergeSess(loc,inc){ // nach Sitzungs-id, neueste zuerst, auf SESSIONS_MAX gekappt
+  const ids=new Set(loc.map(x=>x.id));let n=0;
+  inc.forEach(x=>{if(x&&x.id!=null&&!ids.has(x.id)){ids.add(x.id);loc.push(x);n++;}});
+  loc.sort((a,b)=>b.ts-a.ts);loc.length=Math.min(loc.length,SESSIONS_MAX);return n;
+}
+
+let _imp=null,_impDone=false;
+const VK=/^sv6_vocab_([^_]+)_([^_]+)$/;
+function impCats(bk){ // Bereiche, die im Backup stecken, inkl. Vorschau "wie viel davon neu"
+  const D=bk.data,R=bk.raw,cats=[],used=new Set(),arr=k=>Array.isArray(D[k]);
+  Object.keys(D).forEach(k=>{
+    const m=k.match(VK);if(!m||!arr(k))return;used.add(k);
+    const pl=(D[SK.langs]||[]).find(l=>l.native===m[1]&&l.target===m[2])?.label||`${m[1]} → ${m[2]}`;
+    const r=mergeVocab(JSON.parse(JSON.stringify(lg(k)||[])),D[k]);
+    cats.push({id:'v:'+k,keys:[k],pl,label:t('impVocab')(pl),n:D[k].length,nw:r.add,up:r.upd});
+  });
+  if(arr(SK.log)){used.add(SK.log);const seen=new Set((lg(SK.log)||[]).map(e=>JSON.stringify(e)));
+    cats.push({id:'log',keys:[SK.log],label:t('impLog'),n:D[SK.log].length,nw:D[SK.log].filter(e=>!seen.has(JSON.stringify(e))).length});}
+  if(arr(SK.sessions)){used.add(SK.sessions);const ids=new Set((lg(SK.sessions)||[]).map(x=>x.id));
+    cats.push({id:'ses',keys:[SK.sessions],label:t('impSess'),n:D[SK.sessions].length,nw:D[SK.sessions].filter(x=>x&&!ids.has(x.id)).length});}
+  const sk=[SK.set,SK.tut].filter(k=>k in D);
+  if(sk.length){sk.forEach(k=>used.add(k));cats.push({id:'set',keys:sk,label:t('impSet'),n:null});}
+  const lk=[SK.langs,SK.pair].filter(k=>k in D);
+  if(lk.length){lk.forEach(k=>used.add(k));cats.push({id:'lng',keys:lk,label:t('impLangs'),n:null});}
+  const ck=Object.keys(D).filter(k=>k.startsWith('sv6_tc_')&&D[k]&&typeof D[k]==='object'&&!arr(k));
+  if(ck.length){let n=0,nw=0;ck.forEach(k=>{used.add(k);const l=lg(k)||{};Object.keys(D[k]).forEach(w=>{n++;if(!(w in l))nw++;});});
+    cats.push({id:'tc',keys:ck,label:t('impCache'),n,nw,off:1});}
+  const ok=[...Object.keys(D).filter(k=>!used.has(k)),...Object.keys(R)];
+  if(ok.length)cats.push({id:'oth',keys:ok,label:t('impOther'),n:ok.length});
+  return cats;
+}
+function impApply(bk,cs,rep){ // schreibt strikt (put wirft bei vollem Speicher) → Rückgabe: Ergebnis-Zeilen
+  const D=bk.data,R=bk.raw,put=(k,v)=>localStorage.setItem(k,JSON.stringify(v)),out=[],nw=t('impNew'),up=t('impUpd');
+  cs.forEach(c=>{
+    let r='';
+    if(c.id[0]==='v'){
+      const k=c.keys[0],inc=D[k];
+      if(rep){put(k,inc);r=`${inc.length}`;}
+      else{const loc=lg(k)||[],x=mergeVocab(loc,inc);put(k,loc);r=`+${x.add} ${nw}`+(x.upd?`, ${x.upd} ${up}`:'');}
+    }else if(c.id==='log'){
+      if(rep){put(SK.log,D[SK.log]);r=`${D[SK.log].length}`;}
+      else{const loc=lg(SK.log)||[],n=mergeLog(loc,D[SK.log]);put(SK.log,loc);r=`+${n} ${nw}`;}
+    }else if(c.id==='ses'){
+      if(rep){put(SK.sessions,D[SK.sessions].slice(0,SESSIONS_MAX));r=`${D[SK.sessions].length}`;}
+      else{const loc=lg(SK.sessions)||[],n=mergeSess(loc,D[SK.sessions]);put(SK.sessions,loc);r=`+${n} ${nw}`;}
+    }else if(c.id==='set'){
+      if(SK.set in D)put(SK.set,rep?D[SK.set]:{...(lg(SK.set)||{}),...D[SK.set]});
+      if(SK.tut in D)put(SK.tut,D[SK.tut]);r='✓';
+    }else if(c.id==='lng'){
+      if(SK.langs in D){
+        const L=rep?[]:(lg(SK.langs)||[]);
+        D[SK.langs].forEach(l=>{if(!L.find(x=>x.native===l.native&&x.target===l.target))L.push(l);});
+        put(SK.langs,L);
+      }
+      if(SK.pair in D&&(rep||!lg(SK.pair)))put(SK.pair,D[SK.pair]);r='✓';
+    }else if(c.id==='tc'){
+      c.keys.forEach(k=>put(k,rep?D[k]:{...D[k],...(lg(k)||{})}));r=`+${c.nw} ${nw}`;
+    }else{
+      let n=0;
+      c.keys.forEach(k=>{
+        if(!rep&&localStorage.getItem(k)!==null)return;
+        if(k in D)put(k,D[k]);else localStorage.setItem(k,R[k]);
+        n++;
+      });r=`${n}`;
+    }
+    out.push(`✓ ${c.label}: ${r}`);
+  });
+  /* Vokabeln eines Sprachpaars, das hier noch nicht angelegt ist: Paar automatisch ergänzen */
+  const L=lg(SK.langs)||[];let chg=false;
+  cs.filter(c=>c.id[0]==='v').forEach(c=>{
+    const m=c.keys[0].match(VK);
+    if(!L.find(x=>x.native===m[1]&&x.target===m[2])){L.push({native:m[1],target:m[2],label:c.pl});chg=true;}
+  });
+  if(chg)put(SK.langs,L);
+  return out;
 }
 function impData(ev){
   const f=ev.target.files[0];if(!f)return;
   const rd=new FileReader();
   rd.onload=e=>{
     try{
-      const d=JSON.parse(e.target.result);
-      if(d.version!==2&&d.version!==3&&d.version!==4){toast(t('unknownFormat'));return;}
-      let added=0,skipped=0;
-      const LN={de:'Deutsch',en:'Englisch',sk:'Slowakisch',hu:'Ungarisch',fr:'Französisch',it:'Italienisch',pl:'Polnisch',cs:'Tschechisch',ru:'Russisch',es:'Spanisch',pt:'Portugiesisch',nl:'Niederländisch'};
-
-      if(d.langs){
-        d.langs.forEach(l=>{
-          let nat,tgt,label;
-          if(l.native&&l.target&&!l.id){
-            nat=l.native;tgt=l.target;
-            label=l.label||`${LN[nat]||nat} → ${LN[tgt]||tgt}`;
-          } else if(l.id){
-            const pt=l.id.split('-');nat=pt[0];tgt=l.langcode||pt[1];
-            label=`${LN[nat]||nat} → ${LN[tgt]||tgt}`;
-          }
-          if(nat&&tgt&&!S.langs.find(x=>x.native===nat&&x.target===tgt))
-            S.langs.push({native:nat,target:tgt,label});
-        });
-        ls(SK.langs,S.langs);
-      }
-
-      if(Array.isArray(d.vocab)){
-
-        const pt=(d.pairId||'de-sk').split('-');
-        const k=`sv6_vocab_${pt[0]||'de'}_${pt[1]||'sk'}`;
-        const ex=lg(k)||[];
-        d.vocab.forEach(w=>{added+=mergeWord(ex,w);skipped+=mergeWord(ex,w)===0?1:0;});
-
-        ls(k,ex);
-        if(S.pair?.native===pt[0]&&S.pair?.target===pt[1]) loadVocab();
-      }
-      if(d.vocab&&typeof d.vocab==='object'&&!Array.isArray(d.vocab)){
-
-        Object.entries(d.vocab).forEach(([k,words])=>{
-          const ex=lg(k)||[];
-          words.forEach(w=>{added+=mergeWord(ex,w);});
-          ls(k,ex);
-        });
-        loadVocab();
-      }
-
-      if(d.settings){
-        const s=d.settings;
-        if(s.repeatInterval) S.set.repeatN=s.repeatInterval;
-        if(s.repeatN) S.set.repeatN=s.repeatN;
-        if(s.theme) S.set.theme=s.theme;
-        if(s.appLang||s.uiLang) S.set.uiLang=s.appLang||s.uiLang;
-        ls(SK.set,S.set);applyTheme(S.set.theme);
-      }
-
-      if(d.log){
-        const ex=lg(SK.log)||[];
-        let ts=[];
-        if(Array.isArray(d.log)) ts=d.log;
-        else Object.entries(d.log).forEach(([dt,val])=>{
-          const cnt=typeof val==='number'?val:(val.count||0);
-          const t=new Date(dt).getTime();
-          if(!isNaN(t)) for(let j=0;j<cnt;j++) ts.push(t+j*1000);
-        });
-        /* Dedupe über den Inhalt: Log-Einträge sind seit v6.x Objekte, ein Set über
-           Objekt-Referenzen würde nichts entfernen (Re-Import verdoppelte das Log) */
-        const seen=new Set(ex.map(e=>JSON.stringify(e)));
-        ts.forEach(e=>{const k=JSON.stringify(e);if(!seen.has(k)){seen.add(k);ex.push(e);}});
-        ls(SK.log,ex.sort((a,b)=>logT(a)-logT(b)));
-      }
-
-      if(Array.isArray(d.sessions)){ // seit Export-Format 4; ältere Backups haben das Feld nicht
-        const ex=lg(SK.sessions)||[];
-        const ids=new Set(ex.map(x=>x.id));
-        d.sessions.forEach(x=>{if(x&&x.id!=null&&!ids.has(x.id)){ex.push(x);ids.add(x.id);}});
-        ls(SK.sessions,ex.sort((a,b)=>b.ts-a.ts).slice(0,SESSIONS_MAX));
-      }
-      updateTB();renderHome();
-      toast(t('importedMerged')(added,skipped));
+      const d=JSON.parse(e.target.result),bk=normBackup(d);
+      if(!bk){toast(t('unknownFormat'));return;}
+      const cats=impCats(bk);
+      if(!cats.length){toast(t('impNone'));return;}
+      _imp={bk,cats};
+      const ct=c=>c.n==null?'':`${c.n}`+(c.nw!=null?` · ${c.nw} ${t('impNew')}`:'')+(c.up?` · ${c.up} ${t('impUpd')}`:'');
+      const dt=d.exported?new Date(d.exported).toLocaleDateString():'?';
+      openMod(t('impTitle'),`
+        <div style="font-size:12px;color:var(--t3);margin-bottom:12px;">${esc(t('impFile')(dt,d.appVersion||'?'))}</div>
+        <div class="stit">${t('impWhat')}</div>
+        ${cats.map((c,i)=>`<label class="ic"><input type="checkbox" class="imc" value="${i}"${c.off?'':' checked'}><span>${esc(c.label)}<small>${ct(c)}</small></span></label>`).join('')}
+        <div class="stit" style="margin-top:16px;">${t('impMode')}</div>
+        <label class="ic"><input type="radio" name="imod" value="m" checked onchange="impMode()"><span>${t('impMerge')}<small>${t('impMergeH')}</small></span></label>
+        <label class="ic"><input type="radio" name="imod" value="r" onchange="impMode()"><span>${t('impReplace')}<small>${t('impReplaceH')}</small></span></label>
+        <label class="ic" id="impBk" style="display:none;"><input type="checkbox" id="impBkc" checked><span>${t('impBackupFirst')}</span></label>
+        <button class="btn bp bw" style="margin-top:16px;" onclick="impGo()">${t('impGo')}</button>`);
     }catch(err){toast(t('importErr')(err.message));}
   };
   rd.readAsText(f);ev.target.value='';
+}
+function impMode(){document.getElementById('impBk').style.display=document.querySelector('input[name=imod]:checked').value==='r'?'flex':'none';}
+function impGo(){
+  const cs=[...document.querySelectorAll('.imc:checked')].map(x=>_imp.cats[+x.value]);
+  if(!cs.length){toast(t('impNone'));return;}
+  const rep=document.querySelector('input[name=imod]:checked').value==='r';
+  if(rep){if(!confirm(t('impReplaceConfirm')))return;if(document.getElementById('impBkc').checked)expJSON();}
+  try{
+    const out=impApply(_imp.bk,cs,rep);
+    _impDone=true; // Schließen lädt die App neu, damit Einstellungen/Sprache/Vokabeln überall aktuell sind
+    openMod(t('impDone'),`<div style="font-size:14px;line-height:1.8;">${out.map(esc).join('<br>')}</div><button class="btn bp bw" style="margin-top:16px;" onclick="location.reload()">OK</button>`);
+  }catch(err){toast(t('importErr')(err.message));}
 }
 
 /* ════════════════════════════════
@@ -3124,7 +3198,7 @@ function skipTut(){document.getElementById('spo').innerHTML='';document.getEleme
 /* ── MODAL ── */
 function openMod(t,b){document.getElementById('mti-t').textContent=t;document.getElementById('mbd').innerHTML=b;document.getElementById('mov').classList.add('on');}
 function closeMov(e){if(e.target===document.getElementById('mov'))closeMod();}
-function closeMod(){document.getElementById('mov').classList.remove('on');}
+function closeMod(){document.getElementById('mov').classList.remove('on');if(_impDone)location.reload();}
 
 /* ── TOAST ── */
 let _tt;

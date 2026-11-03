@@ -1,8 +1,8 @@
 # Slovník — Technische Dokumentation
 
-**Version:** 6.40 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
+**Version:** 6.42 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
 
-> **Stand v6.40 (Oktober 2026):** baut direkt auf **v6.38** auf. Die zwischenzeitlich entwickelte **v6.39 wurde vom Nutzer als zu fehlerhaft verworfen** (nie als Basis übernommen) und soll später **komplett neu** gebaut werden — die Nummer 6.39 bleibt deshalb unbesetzt (auch, damit ein evtl. irgendwo schon geladener 6.39-Stand keinen gleichnamigen Update-Banner/Cache-Konflikt auslöst). Was v6.39 enthalten sollte, steht unter „Offene Punkte".
+> **Stand v6.42 (Oktober 2026):** baut über v6.40/v6.41 direkt auf **v6.38** auf. Die zwischenzeitlich entwickelte **v6.39 wurde vom Nutzer als zu fehlerhaft verworfen** (nie als Basis übernommen) und soll später **komplett neu** gebaut werden — die Nummer 6.39 bleibt deshalb unbesetzt (auch, damit ein evtl. irgendwo schon geladener 6.39-Stand keinen gleichnamigen Update-Banner/Cache-Konflikt auslöst). Was v6.39 enthalten sollte, steht unter „Offene Punkte".
 
 > **Fortsetzungs-Chat (v6.28):** Neue Sitzung, aufgesetzt auf der hochgeladenen `index.html` (v6.27) und dieser Doku, wie im Abschnitt „Fortsetzung in neuem Chat" der Vorversion vorgesehen. `const VER='6.27'` wurde vor der Änderung gegengeprüft (stimmte).
 
@@ -362,7 +362,7 @@ Bei `tier==='wrong'` (komplett falsche Antwort, kein Typo/Akzent-Fall) prüft `c
 | `sv6tut` | `1` wenn Tutorial abgeschlossen |
 | `sv6_tc_{lang}` | Übersetzungs-Cache pro Zielsprache |
 | `sv6_tf_{lang}` | Fail-Cache für Übersetzungen (7 Tage) |
-| `sv6_sessions` | **Neu seit v6.26:** Array der letzten 100 Sitzungs-Zusammenfassungen, neueste zuerst (`SESSIONS_MAX`) — siehe Abschnitt „Sitzungs-Zusammenfassung & Verlauf". **Seit v6.40 Teil des JSON-Exports** (Format 4) |
+| `sv6_sessions` | **Neu seit v6.26:** Array der letzten 100 Sitzungs-Zusammenfassungen, neueste zuerst (`SESSIONS_MAX`) — siehe Abschnitt „Sitzungs-Zusammenfassung & Verlauf". **Seit v6.40 Teil des JSON-Exports, seit v6.42 des Vollbackups** (Format 5) |
 
 > **`sv6_hidden`** (Array ausgeblendeter häufiger Wörter) **existiert seit v6.10 nicht mehr** — das komplette "Häufige Vokabeln"-Feature auf der Home-Seite wurde entfernt (siehe Abschnitt „Sprachpaare & Packs"). Der zugehörige State (`S.freqPage`, `S.freqHid`), die Funktionen (`renderFreq`, `freqPg`, `hideFreqW`, `addFreqW`) und das `FREQ`-Wortarray wurden ersatzlos entfernt.
 
@@ -374,7 +374,7 @@ Log-Eintrag-Format: Objekte `{t, ok, w}`. `logT(e)` liest den Timestamp (Rückw�
 
 ## Externe Dateien
 
-**Neu seit v6.40 — einheitliche Namen, minifiziert, ein einziger Ladepfad.** Alle Pack-/Suggest-JSON-Dateien liegen im selben Verzeichnis wie `index.html` (Lazy Loading beim Öffnen des Packs-Tabs bzw. beim ersten Tippen im Hinzufügen-Tab) und heißen ausnahmslos:
+**Seit v6.40 einheitliche Namen und minifiziert, seit v6.41 mit zweistufigem Ladepfad.** Alle Pack-/Suggest-JSON-Dateien liegen im selben Verzeichnis wie `index.html` (Lazy Loading beim Öffnen des Packs-Tabs bzw. beim ersten Tippen im Hinzufügen-Tab) und heißen **sollgemäß**:
 
 - `lang_<von>_<nach>.json` — Packs: `lang_de_sk.json`, `lang_de_en.json`, `lang_de_hu.json`, `lang_en_sk.json`, `lang_sk_ko.json`
 - `lang_<von>_<nach>_suggest.json` — nur Wörter für die Autovervollständigung im Hinzufügen-Tab: `lang_de_sk_suggest.json`, `lang_sk_ko_suggest.json`
@@ -383,7 +383,8 @@ Log-Eintrag-Format: Objekte `{t, ok, w}`. `logT(e)` liest den Timestamp (Rückw�
 
 **Warum geändert (v6.40):**
 - Die Dateien waren eingerückt gespeichert (DE-SK allein 113 KB). Minifiziert: alle 7 Dateien zusammen **276 KB → 176 KB** (rund −100 KB), Inhalt unverändert bis auf die Bereinigungen unten. Beim künftigen Bearbeiten: Dateien dürfen weiter minifiziert bleiben (jeder JSON-Editor formatiert sie bei Bedarf vorübergehend).
-- `fetchRelative()` hatte einen vierfachen Fallback (Pfad, `/`-Pfad, jeweils auch mit Leerzeichen statt Unterstrichen im Dateinamen), weil zwei SK-KO-Dateien im Repo Leerzeichen im Namen hatten (`lang sk ko.json`). Seit v6.40 gibt es nur noch den Pfad relativ zur `index.html` — **die beiden alten Dateien mit Leerzeichen im Repo können und sollen gelöscht werden.** Ein fehlendes Pack kostet damit nur noch einen Request statt vier.
+- `fetchRelative()` hatte in v6.38 einen vierfachen Fallback (Pfad, `/`-Pfad, jeweils auch mit Leerzeichen statt Unterstrichen im Dateinamen), weil zwei SK-KO-Dateien im Repo Leerzeichen im Namen hatten (`lang sk ko.json`). **v6.40 entfernte ihn komplett — das war zu streng:** Dateien, die aus dem Chat heruntergeladen werden, kommen beim Nutzer teils mit Leerzeichen statt Unterstrichen im Namen an (die Dateikarten zeigen Anzeigenamen wie „lang de sk“; ob das die Ursache ist, ist nicht verifiziert). Mit Leerzeichen-Namen im Repo hätte die App in v6.40 keine Packs gefunden.
+- **Seit v6.41 zweistufig:** erst `lang_de_sk.json`, bei Misserfolg `lang de sk.json` (die redundanten `/`-Pfade bleiben weg). Beide Schreibweisen funktionieren. **Wichtig:** Liegen für dieselbe Datei **beide** Varianten im Repo, gewinnt die mit Unterstrichen — eine alte Unterstrich-Datei überdeckt dann stillschweigend eine neue Leerzeichen-Datei (im Browser nachgestellt: DE-SK blieb bei 1308 statt 1227 Wörtern). Im Repo darf deshalb pro Datei nur **eine** Variante liegen. Kosten: eine nicht gefundene Variante ist ein Request mehr (404), sonst nichts.
 
 ---
 
@@ -531,18 +532,36 @@ Unverändert in diesem Chat.
 
 ## Import / Export
 
-**JSON-Export (`expJSON`) — Format 4 seit v6.40** (vorher 3): `{version:4, app, appVersion, exported, pairId, langs, activePair, settings, vocab:{sv6_vocab_<von>_<nach>:[…]}, log:[…], sessions:[…]}`. **Neu: `sessions`** (die bis zu 100 Sitzungs-Zusammenfassungen aus `sv6_sessions`) — vorher gingen Sitzungsverlauf, Stufen-Zeitverlauf (v6.27) und Pro-Wort-Stufenverlauf (v6.31) bei Neuinstallation/Gerätewechsel verloren. Toter Code (`vocabList` setzen und sofort wieder löschen) entfernt.
+**Seit v6.42 Vollbackup + Import mit Auswahl** (Format 5). Ziel laut Nutzer: „alles exportieren und importieren können, auch die neuen Parameter — dient auch als Backup“.
 
-**JSON-Import (`impData`)** akzeptiert Format 2, 3 und 4 (alte Backups bleiben importierbar; Format 3 hat kein `sessions`-Feld, das wird übersprungen).
-- **Sitzungen:** werden über die Sitzungs-`id` zusammengeführt (bereits lokal vorhandene `id` gewinnt, unbekannte kommen dazu), danach neueste zuerst und auf `SESSIONS_MAX` (100) gekappt.
-- **Log-Bugfix (v6.40):** Log-Einträge sind seit langem Objekte (`{t,ok,w,…}`); der alte Merge nutzte ein `Set` über die Objekte selbst (vergleicht Referenzen, entfernt also nichts) und sortierte per `a-b` (bei Objekten `NaN`). **Folge in v6.38 (im Browser nachgestellt): Ein Re-Import des eigenen Backups auf demselben Gerät verdoppelte alle Log-Einträge** (4 → 7 im Test; reine Zahlen-Einträge aus ganz alten Versionen wurden dagegen korrekt dedupliziert). Jetzt Dedupe über den Inhalt (`JSON.stringify` je Eintrag) und Sortierung nach `logT()`; im selben Test 4 → 4.
+### Wo die Lern-Parameter liegen (wichtig für das Verständnis)
+Die Vokabel selbst trägt nur: `native, article, foreign, synonymsNative/Foreign, notesNative/Foreign, stage, lastReviewed, created, stats{correct,wrong}`. **Alles Feinere — wann eine Antwort richtig/falsch war, wie oft „Weiß nicht“ geklickt wurde, Kartentyp, Richtung, Verwechslung — steht pro Antwort im Log `sv6log`** (`{t,ok,w:"<native>_<foreign>",x:<kodiert>,cw}`, siehe „Log-Eintrag“), die Stufenwechsel pro Sitzung in `sv6_sessions` (`moves`). Beides ist im Backup enthalten. **Grenze, nicht Export-bedingt:** das Log wird beim Schreiben auf die letzten 365 Tage gekappt — ältere Antworten gibt es auf dem Gerät nicht mehr, also auch nicht im Backup.
 
-**Bekannte Eigenheiten, bewusst NICHT in v6.40 geändert (offen, siehe „Offene Punkte"):**
-- Beim Zusammenführen bereits vorhandener Wörter werden **`stats` (richtig/falsch) addiert**. Das ist für das Zusammenführen zweier *verschiedener* Geräte sinnvoll, **verdoppelt aber die Zähler, wenn man das eigene Backup auf demselben Gerät erneut einspielt** (im Test: 5/1 → 10/2). Stufe/`lastReviewed` werden dagegen nur übernommen, wenn die importierte Stufe höher ist.
-- Von `settings` werden nur `repeatN`, `theme` und `uiLang` zurückgespielt (obwohl alle Einstellungen im Export stehen) — SRS-Parameter, Lückenabstand usw. gehen beim Restore verloren.
-- Im Legacy-Pfad für Format-2-Backups (`d.vocab` als Array) wird `mergeWord()` pro Wort zweimal aufgerufen (Stats würden doppelt addiert, „übersprungen“-Zähler falsch). Aktuelle Exporte nutzen diesen Pfad nicht.
+### Export (`expJSON`)
+`{app:'slovnik', version:5, appVersion, exported, data:{<localStorage-Schlüssel>:<Wert>…}, raw?:{…}}`
+- **Abbild des Speichers, keine Feldliste:** exportiert werden **alle Schlüssel mit Präfix `sv6`** 1:1 (Werte als JSON, nicht als String-in-String). Neue Felder an Vokabeln oder neue Schlüssel sind damit künftig **automatisch** im Backup — nichts mehr „vergessen“ (das war die Ursache der Lücken in Format 3/4). Dasselbe Präfix nutzt `resetAll()`.
+- **Ausgenommen nur `sv6_tf_*`** (Übersetzungs-Fehlschlag-Marker, laufen nach 7 Tagen von selbst ab). Eingeschlossen ist der Übersetzungs-Cache `sv6_tc_*`.
+- `raw` enthält Werte, die sich nicht als JSON lesen lassen (sollte nie vorkommen; bleibt dann trotzdem erhalten).
+- Beschriftung in der UI: „Vollbackup (JSON)“ (Schlüssel `jsonExport`), im Packs-Tab und im Einstellungs-Modal. **CSV-Export (`expCSV`) unverändert** (reiner Lese-Export, kein CSV-Import vorhanden; enthält weiterhin nicht `created`).
 
----
+### Import (`impData` → Dialog → `impGo` → `impApply`)
+1. **Datei lesen & vereinheitlichen (`normBackup`):** Format 5 wird direkt übernommen. **Format 2, 3 und 4 bleiben importierbar** und werden in dieselbe Schlüssel→Wert-Struktur umgesetzt (Legacy-Sprachpaar-Format `{id,langcode}`, `repeatInterval`/`appLang`, Wortformat `n/f/a/synonyms/notes` über `normWord`, ganz altes Log-Format `{Datum:Anzahl}`; Wörter ohne Übersetzung werden dort wie früher verworfen). Format-5-Wörter werden **nicht** angefasst, nur 1:1 kopiert.
+2. **Auswahl-Dialog (Modal):** zeigt Backup-Datum und App-Version und eine Checkbox pro Bereich, jeweils mit Anzahl und „davon neu“ (bei Vokabeln zusätzlich „aktualisiert“) — berechnet per Probelauf auf einer Kopie, ohne etwas zu schreiben:
+   - **Vokabeln je Sprachpaar** (`sv6_vocab_<von>_<nach>`; fehlt das Paar lokal, wird es automatisch in `sv6langs` ergänzt)
+   - **Lernverlauf (Log)**, **Sitzungsverlauf**
+   - **Einstellungen** (`sv6set` komplett + Tutorial-Flag `sv6tut`)
+   - **Sprachpaare & aktives Paar** (`sv6langs`, `sv6pair`)
+   - **Übersetzungs-Cache** (`sv6_tc_*`; **standardmäßig aus**, lässt sich neu erzeugen)
+   - **Weitere Daten** (alle übrigen `sv6*`-Schlüssel inkl. `raw` — damit auch künftige Schlüssel importierbar sind)
+   Nur Bereiche, die im Backup vorkommen, werden angeboten. Alle außer Cache sind vorangekreuzt.
+3. **Modus** (gilt für alle gewählten Bereiche):
+   - **Zusammenführen (Standard) — wiederholbar ohne Nebenwirkung:** Ein zweiter Import derselben Datei ändert nichts (getestet). Regeln: *Vokabeln* nach nativem Wort (ohne Artikel, ohne Groß/Klein): unbekannte Wörter kommen **komplett mit allen Feldern** dazu; bei Wörtern auf beiden Seiten liefert **die Seite mit mehr Antworten (`correct+wrong`) Stufe, `lastReviewed` und `stats` als Einheit — es wird nie addiert**, bei Gleichstand bleibt das lokale Wort; leere Felder (Artikel, Notizen, Übersetzung) werden aus dem Backup gefüllt, Synonyme vereinigt, `created` nimmt das frühere Datum, unbekannte/künftige Felder werden übernommen, wenn sie lokal fehlen; eine abweichende Übersetzung desselben nativen Worts ändert die lokale nicht. *Log* nach Inhalt (`JSON.stringify` je Eintrag) dedupliziert und nach `logT()` sortiert. *Sitzungen* nach `id`, neueste zuerst, auf `SESSIONS_MAX` gekappt. *Einstellungen*: importierte Werte überschreiben gleichnamige lokale, lokale Extras bleiben. *Sprachpaare*: Vereinigung; aktives Paar nur, wenn lokal keins gesetzt ist. *Cache*: lokal gewinnt. *Weitere Daten*: nur Schlüssel, die lokal fehlen.
+   - **Ersetzen = Wiederherstellung:** die gewählten Bereiche werden komplett durch den Inhalt des Backups ersetzt (nicht gewählte bleiben unberührt). Davor Rückfrage (`confirm`) und eine vorangekreuzte Option **„Vorher aktuellen Stand sichern (Download)“**, die `expJSON()` auslöst.
+4. **Anwenden (`impApply`)** schreibt strikt (`localStorage.setItem` ohne Verschlucken von Fehlern): läuft der Speicher voll, erscheint „Import-Fehler: …“ statt eines stillen Teilergebnisses. Danach zeigt ein Ergebnis-Dialog pro Bereich, was passiert ist; **OK bzw. Schließen lädt die App neu** (`_impDone` in `closeMod()`), damit Einstellungen, UI-Sprache, Theme, SRS-Parameter und Vokabeln überall aktuell sind (vorher wurden nur Theme und Listen nachgezogen).
+
+**Bekannte Einschränkung:** Der Import-Button liegt im Packs-Tab, ein ganz frisches Gerät muss also erst das Onboarding (Sprachwahl) durchlaufen; die Wiederherstellung im Modus „Ersetzen“ stellt danach Paare, Aktiv-Paar und Einstellungen wieder her.
+
+**Behobene Fehler gegenüber v6.38/v6.40 (alle im Browser nachgestellt, siehe Changelog v6.42):** `created` ging beim Import verloren; nur 3 von 9 Einstellungen wurden zurückgespielt; aktives Paar und Tutorial-Flag wurden nicht gesichert; Zähler (`stats`) wurden beim erneuten Import des eigenen Backups addiert (verdoppelt); `mergeWord()` wurde im Format-2-Pfad doppelt aufgerufen (die Funktion ist entfernt); UI-Sprache/SRS-Einstellungen wirkten erst nach manuellem Neustart.
 
 ## Statistik & Tages-Log
 
@@ -687,7 +706,7 @@ Unverändert in diesem Chat.
 
 **Dateien im Repo-Hauptverzeichnis (Stand v6.40):** `index.html`, `sw.js`, `manifest.json`, `.nojekyll`, `icon-192.png`, `icon-512.png`, die 5 Pack-Dateien `lang_{de_sk,de_en,de_hu,en_sk,sk_ko}.json` und die 2 Suggest-Dateien `lang_{de_sk,sk_ko}_suggest.json` (optional: `README.md`, diese Doku). GitHub-Pages-Settings wie zuvor, `.nojekyll`-Pflicht unverändert.
 
-**Beim Update auf v6.40 alles zusammen hochladen** (sonst findet die App die umbenannten SK-KO-Packs nicht), danach die beiden alten Dateien **`lang sk ko.json`** und **`lang sk ko suggest.json`** (mit Leerzeichen) im Repo löschen. Die alte `SLOVNIK DOKU 6 22.md` im Repo ist veraltet und kann ebenfalls weg. Ob `manifest.json` und die Icons im Repo liegen, ließ sich am 24.10.2026 nur aus der Dateiliste der GitHub-Startseite ablesen (dort nicht aufgeführt) — mit `manifest.json` im Upload ist das mit v6.40 abgedeckt; Die Icons wurden auf Nutzerwunsch nicht neu erzeugt (Nutzer: Das Icon wird beim Verknüpfen über Safari auf dem Home-Bildschirm bereits geliefert). `manifest.json`, `sw.js` und `<link rel="apple-touch-icon">` verweisen weiterhin auf `icon-192.png`/`icon-512.png`; fehlen diese Dateien, schlägt seit v6.40 nur noch ihr eigenes Vorab-Cachen fehl, nicht mehr der gesamte Cache.
+**Beim Update alles zusammen hochladen.** Dateinamen mit Unterstrichen *oder* Leerzeichen funktionieren (seit v6.41); **pro Datei darf nur eine Variante im Repo liegen** — nach dem Upload in der Dateiliste prüfen, ob z. B. sowohl `lang_de_sk.json` als auch `lang de sk.json` existieren, und dann die **ältere** löschen (Unterstrich-Variante gewinnt sonst, siehe „Externe Dateien“). Die alten SK-KO-Dateien (`lang sk ko.json`, `lang sk ko suggest.json`) werden beim Upload der neuen gleichnamigen Dateien überschrieben, falls diese ebenfalls Leerzeichen-Namen haben; heißen die neuen mit Unterstrichen, die alten löschen. Die alte `SLOVNIK DOKU 6 22.md` im Repo ist veraltet und kann ebenfalls weg. Ob `manifest.json` und die Icons im Repo liegen, ließ sich am 24.10.2026 nur aus der Dateiliste der GitHub-Startseite ablesen (dort nicht aufgeführt) — mit `manifest.json` im Upload ist das mit v6.40 abgedeckt; Die Icons wurden auf Nutzerwunsch nicht neu erzeugt (Nutzer: Das Icon wird beim Verknüpfen über Safari auf dem Home-Bildschirm bereits geliefert). `manifest.json`, `sw.js` und `<link rel="apple-touch-icon">` verweisen weiterhin auf `icon-192.png`/`icon-512.png`; fehlen diese Dateien, schlägt seit v6.40 nur noch ihr eigenes Vorab-Cachen fehl, nicht mehr der gesamte Cache.
 
 > **Wichtiger Hinweis aus diesem Chat:** Änderungen, die hier im Chat an der Datei vorgenommen werden, wirken sich **nicht automatisch** auf die Live-Version unter `loberes.github.io/Test/` aus. Die aktualisierte `index.html` muss jedes Mal manuell ins GitHub-Repo hochgeladen werden.
 
@@ -699,7 +718,7 @@ Erledigt seit letzter Revision: Typografie-Fix, Sitzungs-Zusammenfassung → v6.
 
 **v6.39 — verworfen, soll später komplett neu gebaut werden (Nutzerentscheidung, Oktober 2026).** Die damalige Version wurde als zu fehlerhaft verworfen und ist **nicht** Teil des Codes; v6.40 basiert auf v6.38. Inhalt der verworfenen Version als Auftragsliste für den Neubau (damals vom Nutzer als Paket bestätigt: „alles gleich“): (1) eigene Einstellung `wrongRepeatN` (2–5, Standard 3): wie oft ein in der Sitzung falsches Wort hintereinander richtig sein muss, unabhängig vom allgemeinen `repeatN`; (2) „Gezielt üben“-Auswahl als echte Checkbox-Wortliste statt Stufenfilter+Anzahl; (3) zeitgewichteter Dringlichkeits-Score statt des flachen `wrong≥correct`-Filters (Halbwertszeit 60 Tage, Auswertung aus dem Log inkl. `x`-Feld; Wörter mit positivem Score vorausgewählt); (4) Verwechslungs-Paare üben über einen neuen Kartentyp „Auswahl“ (richtige Übersetzung vs. verwechseltes Wort); (5) Gezielt üben bevorzugt pro Wort die schwächste Kombination aus Kartentyp+Richtung (erst ab ≥3 Versuchen je Kombination) statt immer Flip — **Achtung:** Phase 2 war in `renderCard()` und `dp2()` fest auf `flip` verdrahtet, das war der größere Umbau; (6) Wörter, die zuletzt mit „Weiß ich nicht“ beantwortet wurden, als eigene wählbare Kategorie mit bewusst gemischten Kartentypen. Beim Neubau: kleiner schneiden und pro Teil auf dem Gerät testen, statt alles in einer Version zu bündeln.
 
-**Aus der Analyse von v6.38/v6.40 offen geblieben (siehe Abschnitt „Import / Export"):** Stats-Verdopplung beim Re-Import des eigenen Backups; unvollständiger Settings-Restore; doppelter `mergeWord()`-Aufruf im Format-2-Pfad. Jeweils nur gefunden, nicht beauftragt.
+**Aus der Analyse von v6.38/v6.40 (Export/Import-Lücken, Stats-Verdopplung, Settings-Restore, doppelter `mergeWord()`-Aufruf) — alles erledigt in v6.42.** Offen bleiben nur: Import direkt aus dem Onboarding (ein frisches Gerät muss erst die Sprachwahl durchlaufen), ein CSV-Import und `created` im CSV-Export — jeweils nur festgestellt, nicht beauftragt.
 
 **Weiterhin offen, nur als Ausblick genannt, nicht konkret beauftragt:**
 1. **"Gezielt üben" mit Pro-Wort-Daten verbessern:** z. B. Filter nach "kürzlich häufig falsch" (aus Sitzungs-/Log-Daten) statt nur dem bisherigen globalen `wrong≥correct`-Filter (`dsOften`). Seit v6.38 stünde dafür zusätzlich die Antwort-Güte (`ty`, z. B. nur echte Fehler statt auch Tippfehler zählen) zur Verfügung. Weiterhin nicht umgesetzt.
@@ -710,6 +729,21 @@ Erledigt seit letzter Revision: Typografie-Fix, Sitzungs-Zusammenfassung → v6.
 ---
 
 ## Changelog
+
+### v6.42 — Export/Import: Vollbackup (Format 5) und Import mit Auswahl
+Vom Nutzer gewünscht und als Vorschlag bestätigt („alles exportieren und importieren, auch die neuen Parameter; dient auch als Backup“, „auswählen, was importiert wird“). Ergebnis der vorangegangenen Prüfung (auf einem simulierten leeren Gerät nachgestellt): Der Import verlor `created`, 6 von 9 Einstellungen, aktives Paar und Tutorial-Flag; die per-Antwort-Parameter („Weiß nicht“, richtig/falsch mit Zeit) stecken im Log und waren im Export, gingen aber nur dort mit, wo der Import sie nicht verfälschte.
+- **Export:** Abbild aller `sv6*`-Schlüssel (ohne `sv6_tf_*`), Format 5 — Details unter „Import / Export“.
+- **Import:** Auswahl-Dialog pro Bereich mit Vorschau (neu/aktualisiert), Modus **Zusammenführen** (Standard, idempotent, Regel „mehr Antworten gewinnt“, nie addieren) oder **Ersetzen** (mit Rückfrage und optionaler Vorher-Sicherung), strikte Schreibfehler, Neuladen nach dem Import. Format 2/3/4 weiter importierbar.
+- **Entfernt:** `mergeWord()` (ersetzt durch `mergeVocab`/`mergeLog`/`mergeSess`), Schlüssel `importedMerged` in allen drei Sprachen. **Neu:** ~20 Texte (`imp*`) in de/en/sk, CSS-Klasse `.ic`. Beschriftung „JSON-Export (mit Statistik)“ → „Vollbackup (JSON)“.
+- **Größe:** `index.html` 172.091 → 181.451 Byte (**+9,4 KB**; davon rund 2,5 KB die Texte in drei Sprachen, der Rest Code und CSS abzüglich des entfernten alten Codes) — etwas über der vorab genannten Schätzung von 6–9 KB.
+- **Im Browser getestet (Playwright/Chromium, 390×844):** Export enthält alle Schlüssel inkl. unbekanntem Zukunftsschlüssel und Nicht-JSON-Wert, aber keinen `sv6_tf_*`; **Wiederherstellung auf frischem Gerät im Modus Ersetzen = bitgenau identisch zum Original** (inkl. `created`, Zusatzfeld, alle 9 Einstellungen, Tutorial, Paar); erneutes Zusammenführen derselben Datei ändert **nichts** (Zähler 7/2 bleiben 7/2, Log bleibt 4 statt Verdopplung); Zwei-Geräte-Fall (mehr Antworten gewinnt, Lücken füllen, Synonyme vereinigen, früheres `created`, neue Wörter); Teilauswahl nur Vokabeln (Log/Einstellungen unberührt, Paare automatisch ergänzt); **echtes 6.38-Backup (Format 3)** wird vollständig wiederhergestellt; handgebautes Format 2 (Legacy-Felder, Datums-Log, `repeatInterval`/`appLang`); Format 4 mit Sitzungen; Fehlerfälle (kaputtes JSON, unbekannte Version, leeres Backup); Neuladen übernimmt UI-Sprache/Theme/tts sofort; Layout des Dialogs per Screenshot geprüft. Keine JS-Fehler.
+- **Nicht getestet:** echtes Gerät (iPhone/Safari-PWA), Download-Verhalten des Backups auf iOS, sehr große Backups nahe dem Speicherlimit (dafür gibt es die Fehlermeldung, aber kein Test).
+
+### v6.41 — Dateinamen-Fallback wieder eingebaut (Unterstrich oder Leerzeichen)
+Anlass (Nutzerfrage): Einige der in v6.40 gelieferten Dateien haben beim Nutzer Leerzeichen statt Unterstriche im Namen. Da v6.40 den Fallback entfernt hatte, hätte die App solche Dateien nicht gefunden. Vorgeschlagen und vom Nutzer bestätigt: schlanker Zwei-Stufen-Fallback statt der ursprünglichen vier Versuche.
+- **`fetchRelative()`:** probiert `lang_de_sk.json`, dann `lang de sk.json` (siehe „Externe Dateien“). Sonst nichts geändert; `sw.js` nur `CACHE_VER` → `slovnik-v6.41`.
+- **Im Browser getestet (3 Szenarien):** nur Unterstriche (7 Requests, 0×404), nur Leerzeichen (alle Packs/Suggest geladen, 7×404 durch den ersten Versuch), beide Varianten gemischt (Unterstrich-Variante gewinnt — Warnhinweis oben). Keine JS-Fehler.
+- **Offen/unverändert:** Der Export/Import-Umbau (Vollbackup, Import mit Auswahl, Merge-Regel) ist als Vorschlag gemacht, aber noch nicht bestätigt — er würde v6.42.
 
 ### v6.40 — Aufräumen: Packs, Service Worker, Export/Import (v6.39 verworfen, Basis v6.38)
 Nutzerentscheidung: v6.39 war zu fehlerhaft und wurde verworfen; Neubau später. v6.40 setzt auf der hochgeladenen v6.38 auf (`VER`, `sw.js`, Doku stimmten überein) und setzt die in der Analyse gefundenen Punkte um — vorab als Plan abgestimmt (Version 6.40, Icons weglassen). Leitlinie „App klein halten“: `index.html` 171.389 → 171.953 Byte (+0,6 KB durch den Sitzungs-Merge, minus der entfernten Fallbacks), dafür die Pack-Dateien **−100 KB**.
@@ -892,10 +926,10 @@ Siehe vorherige Doku-Version (`SLOVNIK_DOKU_6_6.md`) — Kernpunkte: abgestufte 
 
 ## Hinweis: Fortsetzung in neuem Chat
 
-Stand nach v6.40. Für den nächsten Chat:
+Stand nach v6.42. Für den nächsten Chat:
 
-1. **Diese Doku-Datei** (`SLOVNIK_DOKU.md`) und die aktuelle **`index.html`** (v6.40) zusammen hochladen — idealerweise auch `sw.js` und `manifest.json` — die Doku ist der verlässliche Kontext, nicht Chatverlauf-Erinnerung.
-2. **Als Erstes tun:** `index.html` öffnen, `const VER=` gegenprüfen (muss `'6.40'` sein — falls nicht, hat der Nutzer zwischenzeitlich selbst etwas geändert oder eine andere Version hochgeladen, dann Vorsicht mit Annahmen aus dieser Doku).
+1. **Diese Doku-Datei** (`SLOVNIK_DOKU.md`) und die aktuelle **`index.html`** (v6.42) zusammen hochladen — idealerweise auch `sw.js` und `manifest.json` — die Doku ist der verlässliche Kontext, nicht Chatverlauf-Erinnerung.
+2. **Als Erstes tun:** `index.html` öffnen, `const VER=` gegenprüfen (muss `'6.42'` sein — falls nicht, hat der Nutzer zwischenzeitlich selbst etwas geändert oder eine andere Version hochgeladen, dann Vorsicht mit Annahmen aus dieser Doku).
 3. **Interner Build-Workflow (3-Teile-Aufbau, Abschnitt „Architektur"):** existiert nur innerhalb einer laufenden Sitzung, muss im neuen Chat bei Bedarf neu aus der hochgeladenen `index.html` hergestellt werden (an den `<style>`/`<script>`-Grenzen extrahieren, siehe `src/build.js`-Beschreibung im Architektur-Abschnitt). Nicht automatisch vorhanden.
 4. **Standing Instructions, die weiterhin gelten sollten** (bisher in diesem Chat etabliert, nicht in der App selbst gespeichert, also hier explizit vermerkt):
    - Diese Doku nach jeder Versionsänderung automatisch mit aktualisieren, ohne dass extra danach gefragt werden muss (siehe Hinweis-Box ganz oben im Dokument).
@@ -906,4 +940,4 @@ Stand nach v6.40. Für den nächsten Chat:
 
 ---
 
-*Dokumentation zuletzt aktualisiert: Oktober 2026, basierend auf Code-Stand **v6.40** (`index.html` + `sw.js` + `manifest.json` + Pack-Dateien). v6.40 per Syntax-Check und automatisierten Playwright-/Chromium-Tests (Export/Import, Packs, Service Worker) verifiziert, nicht auf einem echten Gerät. v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.38 nur per Syntax-Check/Codesichtung — v6.30–v6.32 (Service Worker, Update-Erkennung) und v6.33/v6.34 wurden auf einem echten Gerät nachverfolgt, v6.35–v6.38 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*
+*Dokumentation zuletzt aktualisiert: Oktober 2026, basierend auf Code-Stand **v6.42** (`index.html` + `sw.js` + `manifest.json` + Pack-Dateien). v6.40–v6.42 per Syntax-Check und automatisierten Playwright-/Chromium-Tests (Export/Import, Packs, Service Worker) verifiziert, nicht auf einem echten Gerät. v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.38 nur per Syntax-Check/Codesichtung — v6.30–v6.32 (Service Worker, Update-Erkennung) und v6.33/v6.34 wurden auf einem echten Gerät nachverfolgt, v6.35–v6.38 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*

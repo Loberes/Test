@@ -1,8 +1,8 @@
 # Slovník — Technische Dokumentation
 
-**Version:** 6.42 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
+**Version:** 6.43 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
 
-> **Stand v6.42 (Oktober 2026):** baut über v6.40/v6.41 direkt auf **v6.38** auf. Die zwischenzeitlich entwickelte **v6.39 wurde vom Nutzer als zu fehlerhaft verworfen** (nie als Basis übernommen) und soll später **komplett neu** gebaut werden — die Nummer 6.39 bleibt deshalb unbesetzt (auch, damit ein evtl. irgendwo schon geladener 6.39-Stand keinen gleichnamigen Update-Banner/Cache-Konflikt auslöst). Was v6.39 enthalten sollte, steht unter „Offene Punkte".
+> **Stand v6.43 (Oktober 2026):** baut über v6.40–v6.42 direkt auf **v6.38** auf. **Seit v6.43 gibt es „Gezielt üben (Deep Learn)“ nicht mehr** — es wird in 6.44 ff. komplett neu gebaut (siehe „Offene Punkte"). Die zwischenzeitlich entwickelte **v6.39 wurde vom Nutzer als zu fehlerhaft verworfen** (nie als Basis übernommen) und soll später **komplett neu** gebaut werden — die Nummer 6.39 bleibt deshalb unbesetzt (auch, damit ein evtl. irgendwo schon geladener 6.39-Stand keinen gleichnamigen Update-Banner/Cache-Konflikt auslöst). Was v6.39 enthalten sollte, steht unter „Offene Punkte".
 
 > **Fortsetzungs-Chat (v6.28):** Neue Sitzung, aufgesetzt auf der hochgeladenen `index.html` (v6.27) und dieser Doku, wie im Abschnitt „Fortsetzung in neuem Chat" der Vorversion vorgesehen. `const VER='6.27'` wurde vor der Änderung gegengeprüft (stimmte).
 
@@ -94,9 +94,9 @@ Der Build wurde per Diff/Prüfsumme gegen die vorherige Single-File-Version veri
 
 > **Achtung bei Änderung:** Die Namen der Stufen (Spalte "Name", aus `SRS_N()`/I18N) sind statischer Text und passen sich **nicht** automatisch an, wenn die Wartezeit geändert wird. Setzt man z. B. Stufe 2 auf 10 Tage, heißt sie im UI weiterhin "1 Woche". Bewusste Design-Entscheidung (siehe Abschnitt "Einstellungen"), um den Aufwand klein zu halten — Zahlenwert in den Settings ist die Quelle der Wahrheit, der Name ist nur ein Anhaltspunkt.
 
-- **Graduierung:** Karte steigt eine Stufe, wenn sie `repeatN`-mal korrekt beantwortet wurde (Standard: 3, einstellbar 1–10). *(Bugfix v6.24: Fallback-Wert war uneinheitlich `||2` an zwei Stellen und `||3` an zwei anderen — jetzt überall `||3`.)*
-- **Bei falscher Antwort:** Ausmaß des Stufenabzugs hängt von Fehlertyp **und** Lernmodus ab, Werte seit v6.24 einstellbar (Standard: Tippfehler/Buchstabendreher −2, Verwechslung mit anderem Wort −1, falsch in Gezielt üben −1) — siehe Abschnitt „Fehlertoleranz beim Tippen/Buchstabieren" und Abschnitt „Lernmodi" (Gezielt üben).
-- **Fälligkeit:** `(lastReviewed + days * 86400000) <= Date.now()`, geprüft über `isDue(v)` / `getDue()`.
+- **Graduierung:** Karte steigt eine Stufe, wenn sie `repeatN`-mal korrekt beantwortet wurde (Standard: 3, einstellbar 1–10). **Seit v6.43:** War das Wort in der laufenden Sitzung schon einmal falsch, gilt stattdessen die eigene Einstellung `wrongRepeatN` (Standard 3, einstellbar 2–5) — so oft hintereinander richtig; ein weiterer Fehler setzt den Zähler wieder auf 0. *(Bugfix v6.24: Fallback-Wert war uneinheitlich `||2` an zwei Stellen und `||3` an zwei anderen — jetzt überall `||3`.)*
+- **Bei falscher Antwort:** Ausmaß des Stufenabzugs hängt vom Fehlertyp ab, Werte seit v6.24 einstellbar (Standard: Tippfehler/Buchstabendreher −2, Verwechslung mit anderem Wort −1; der frühere dritte Wert „falsch in Gezielt üben −1“ entfiel in v6.43 mit dem Modus) — siehe Abschnitt „Fehlertoleranz beim Tippen/Buchstabieren".
+- **Fälligkeit:** `(lastReviewed + days * 86400000) <= Date.now()`, geprüft über `getDue()` (die frühere Hilfsfunktion `isDue(v)` entfiel in v6.43, sie wurde nur noch vom Gezielt-üben-Zweig gebraucht).
 
 ---
 
@@ -110,21 +110,15 @@ Der Build wurde per Diff/Prüfsumme gegen die vorherige Single-File-Version veri
 - Richtung: 1. Abfrage vorwärts (native→foreign), 2. Abfrage rückwärts (foreign→native), dann abwechselnd
 - Gap-Logik: nach korrekter Antwort wandert die Karte `gapN` Positionen nach hinten (Standard 3, einstellbar 1–20)
 
-### Gezielt üben (Deep Learn)
+### Gezielt üben (Deep Learn) — in v6.43 komplett entfernt
 
-Auswahlbildschirm vor Sitzungsstart (`openDeepSelect()` / `dsRender()`):
+**Nutzerentscheidung (Oktober 2026):** Die vorhandene Funktion wurde nicht angepasst, sondern **vollständig entfernt und wird neu gebaut** — der letzte Umbau (verworfene v6.39) war an der Verflechtung mit der gemeinsamen Lern-Engine gescheitert: Der Deep-Zweig hing an rund 25 Stellen in `startLearn()`, `renderCard()`, `mark()`, `dontKnow()`, den Einstellungen und den Texten, und die Abfrage-Phase war an zwei Stellen fest auf Flip verdrahtet.
 
-- Filter-Chips pro SRS-Stufe (einzeln an-/abwählbar, "Alle"/"Keine")
-- Schalter "Nur oft falsche Wörter" (`dsOften`, Filter: `wrong ≥ correct`)
-- Live-Zähler passender Vokabeln, Start-Button erst aktiv bei ≥1 Treffer
-- Zeigt nur die im Auswahlbildschirm gefilterten Vokabeln
+**Entfernt in v6.43:** Home-Button „🎯 Gezielt üben“ samt Beschreibung „Deep Learn (N× richtig)“; Auswahl-Dialog (`openDeepSelect`, `dsRender`, `dsMatch`, `dsFiltered`, Stufen-Chips, Schalter „Nur oft falsche Wörter“, CSS `.ds-*`); Phase 1/Phase 2 mit `dp2()` und `LS.phase`; alle `LS.mode==='deep'`-Zweige in `startLearn`, `renderCard`, `mark`, `showLScr`; die Sonderstrafe `penalty.deepWrong` (Einstellung, Standardwert, Texte, `wrongArg`); `updateDeepDesc()`; 11 Textschlüssel × 3 Sprachen (`deep*`, `penaltyDeep`); die Erwähnung in den Tutorial-Texten; die jetzt unbenutzte Hilfsfunktion `isDue()`.
 
-Ablauf:
+**Bewusst behalten (kein Deep-Code, sondern Log-Kompatibilität):** `LS.mode` (immer `'quick'`) und Bit `s` im Log-Feld `x` (1 = Gezielt üben) in `logLearn()`/`logDecode()` — alte Einträge aus dem alten Modus bleiben lesbar und werden in der Statistik weiter verarbeitet (getestet), der Neubau schreibt das Bit wieder. Gespeicherte Altwerte `penalty.deepWrong` in `sv6set` werden ignoriert und beim nächsten Speichern der Strafen verworfen.
 
-- **Phase 1:** Karte komplett aufgedeckt (Lernphase, reiner Flip-Kartentyp)
-- **Phase 2:** Abfrage per Flip-Karte (in Deep Learn immer `ctype='flip'`, unabhängig von SRS-Stufe — anders als in Schnell lernen)
-- **Aufsteigen nur wenn fällig:** SRS-Stufe wird nur erhöht, wenn die Karte auch fällig war (`isDue(S.vocab[vi])||LS.mode==='quick'` in `mark()`) — verhindert vorzeitiges Aufsteigen beim gezielten Üben nicht-fälliger Karten. Unverändert seit v6.5, mehrfach bestätigt korrekt.
-- **Strafe bei falscher Antwort — seit v6.22 entschärft:** Vorher setzte jede falsche Antwort im Deep-Learn-Modus (Falsch-Button oder "Weiß ich nicht") die Stufe komplett auf 0 zurück, da der Flip-Kartentyp standardmäßig keinen abgestuften `stageDrop` an `mark()` übergab. Seit v6.22 wird im Deep-Learn-Modus (`LS.mode==='deep'`) sowohl beim Falsch-Button als auch bei "Weiß ich nicht" `mark(false,1)` statt `mark(false)` aufgerufen → **maximal −1 Stufe**, kein Totalreset mehr. Gilt ausschließlich für Deep Learn; normales Lernen (Schnell lernen) bleibt bei Totalreset für Flip-"Falsch" bzw. "Weiß ich nicht", das ist dort weiterhin gewollt.
+**Altes Verhalten (v6.5–v6.42), als Referenz für den Neubau:** Auswahlbildschirm mit Filter-Chips je SRS-Stufe und Schalter „Nur oft falsche Wörter“ (`wrong ≥ correct`, global über die gesamte Lebenszeit), Live-Zähler; Sitzung in zufälliger Reihenfolge (nicht nach Fälligkeit); Phase 1 = Karte komplett aufgedeckt, Phase 2 = Abfrage **immer** per Flip (unabhängig von der SRS-Stufe); Stufe stieg nur, wenn das Wort auch fällig war; falsche Antwort und „Weiß ich nicht“ kosteten nur −1 Stufe (seit v6.22, ab v6.24 einstellbar) statt Totalreset.
 
 ### Karten-Typen
 
@@ -132,7 +126,7 @@ Ablauf:
 - **Tippen (Type):** Frage anzeigen → Antwort eintippen → Live-Auto-Check beim Tippen (bestätigt sofort bei Treffer, inkl. Akzent-Toleranz seit v6.8) → Enter oder ✓-Button für manuelle Bestätigung mit differenzierter Rückmeldung (siehe Abschnitt „Fehlertoleranz beim Tippen/Buchstabieren")
 - **Buchstaben (Letters):** Buchstaben-Kacheln (aus dem Zielwort, gemischt) antippen um das Wort zusammenzusetzen; differenzierte Rückmeldung bei Fehlern (siehe Abschnitt „Fehlertoleranz beim Tippen/Buchstabieren")
 
-"Weiß ich nicht"-Button: in allen drei Kartentypen unterhalb der Karte. Zeigt sofort die Lösung + Weiter-Button. In **Schnell lernen** weiterhin Totalreset auf Stufe 0; in **Gezielt üben** seit v6.22 nur −1 Stufe (siehe oben).
+"Weiß ich nicht"-Button: in allen drei Kartentypen unterhalb der Karte. Zeigt sofort die Lösung + Weiter-Button. Totalreset auf Stufe 0 (der frühere abweichende Wert in Gezielt üben entfiel mit dem Modus in v6.43).
 
 Kein Auto-Weiterblättern nach Antwort — alle Modi erfordern manuellen Weiter-Button.
 
@@ -200,7 +194,7 @@ Standardwerte (Einstellungen → SRS-Parameter → Kartentyp-Verteilung): `lette
 | 4 | 0% | 7% | 93% |
 | 5+ (6 Monate+) | 0% | 0% | **100%** |
 
-Mit Standardwerten: Buchstaben-Modus verschwindet linear bis Stufe 3, Umdrehen-Modus linear bis Stufe 5, ab Stufe 5 nur noch Tipp-Modus. Alle drei Parameter individuell in den Einstellungen änderbar (`ctypeCfg()`, gespeichert unter `S.set.ctype`). Gilt nur für Schnell lernen — in Gezielt üben immer Flip, unabhängig von diesen Parametern (siehe Abschnitt „Lernmodi").
+Mit Standardwerten: Buchstaben-Modus verschwindet linear bis Stufe 3, Umdrehen-Modus linear bis Stufe 5, ab Stufe 5 nur noch Tipp-Modus. Alle drei Parameter individuell in den Einstellungen änderbar (`ctypeCfg()`, gespeichert unter `S.set.ctype`). Gilt für Schnell lernen (seit v6.43 der einzige Lernmodus; der frühere Gezielt-üben-Modus nutzte immer Flip).
 
 Zusätzlich unverändert: bei Wörtern >12 Zeichen wird der Buchstaben-Anteil dem Tipp-Modus zugeschlagen (`pickCtype`, dieser Schwellenwert ist **nicht** einstellbar — auf Nutzerwunsch bewusst nur die SRS-Parameter im engeren Sinn konfigurierbar gemacht, siehe Abschnitt "Einstellungen").
 
@@ -208,7 +202,7 @@ Zusätzlich unverändert: bei Wörtern >12 Zeichen wird der Buchstaben-Anteil de
 
 ## Kartenanzeige & mobiles Layout
 
-**Neu seit v6.22**, betrifft alle vier Kartenansichten (Flip, Tippen, Buchstaben, Deep-Learn-Phase-1):
+**Neu seit v6.22**, betrifft alle vier Kartenansichten (Flip, Tippen, Buchstaben; bis v6.42 zusätzlich Deep-Learn-Phase-1):
 
 ### Kartenkopf: Flagge + SRS-Stufe
 
@@ -333,7 +327,7 @@ Kernfunktionen: `editDistance(a,b)` (Damerau-Levenshtein — zählt benachbarte 
 - Komplett falsch → **Stufe 0 (fix)**
 - Eigene Eingabe wird hier nicht angezeigt (Buchstaben-Kacheln sind ohnehin sichtbar), nur die Lösung bei Fehlern
 
-**"Weiß ich nicht"** (alle Kartentypen) bleibt in **Schnell lernen** immer Totalreset auf Stufe 0 (fix). In **Gezielt üben** seit v6.22 nur −1 Stufe, seit v6.24 über `penaltyCfg().deepWrong` einstellbar (siehe Abschnitt „Lernmodi").
+**"Weiß ich nicht"** (alle Kartentypen) ist immer Totalreset auf Stufe 0 (fix; der bis v6.42 abweichende, über `deepWrong` einstellbare Gezielt-üben-Wert entfiel in v6.43).
 
 ### Verwechslungs-Erkennung (neu seit v6.23, nur Tipp-Modus)
 
@@ -357,7 +351,7 @@ Bei `tier==='wrong'` (komplett falsche Antwort, kein Typo/Akzent-Fall) prüft `c
 | `sv6_vocab_{native}_{target}` | Array aller Vokabeln für ein Sprachpaar |
 | `sv6langs` | Array der Sprachpaare `[{native, target, label}]` |
 | `sv6pair` | Aktives Sprachpaar `{native, target, label}` |
-| `sv6set` | Einstellungen (theme, tts, repeatN, gapN, uiLang, …) |
+| `sv6set` | Einstellungen (theme, tts, repeatN, wrongRepeatN, gapN, uiLang, …) |
 | `sv6log` | Array von Lern-Events: `{t, ok, w}` **+ seit v6.38:** `x` (gepackte Zusatzinfo), optional `cw` — siehe Abschnitt „Lern-Event-Zusatzinfo (x/cw)" |
 | `sv6tut` | `1` wenn Tutorial abgeschlossen |
 | `sv6_tc_{lang}` | Übersetzungs-Cache pro Zielsprache |
@@ -587,7 +581,7 @@ x = c + 4*d + 8*s + 16*ty
 |---|---|---|
 | `c` (0–1) | Kartentyp | 0=Umdrehen · 1=Tippen · 2=Buchstaben |
 | `d` (2) | Abfrage-Richtung | 0=Frage Muttersprache→Antwort Fremdsprache · 1=umgekehrt |
-| `s` (3) | Sitzungsart | 0=Fällige (Quick) · 1=Gezielt üben (Deep) |
+| `s` (3) | Sitzungsart | 0=Fällige (Quick) · 1=Gezielt üben (Deep; Modus seit v6.43 entfernt, Bit bleibt reserviert, alte Einträge bleiben lesbar, der Neubau schreibt es wieder) |
 | `ty` (4–6) | Antwort-Güte | 0=nicht erfasst (Umdrehen, selbstbewertet) · 1=exakt · 2=nur Akzente falsch · 3=Buchstabenfehler (Levenshtein-Abstand 1) · 4=falsch · 5=Wort exakt, nur Artikel falsch · 6="Weiß nicht" (aufgegeben) |
 
 Zusätzlich, **nur** wenn `ty=4` (falsch) **und** eine Verwechslung erkannt wurde (nur Tipp-Modus, siehe `checkConfusion()`): `cw` — der Schlüssel (`native_foreign`) des tatsächlich eingegebenen, falschen Worts.
@@ -681,6 +675,7 @@ Unverändert in diesem Chat.
 | TTS (Vorlesen) | `tts` | `true` | bool |
 | Abstand (Gap) | `gapN` | 3 | 1–20 |
 | Wiederholungen | `repeatN` | 3 | 1–10 |
+| Wiederholungen nach einem Fehler (seit v6.43) | `wrongRepeatN` | 3 | 2–5 |
 | Benachrichtigungen | `notifications` | `false` | bool |
 
 **Neu seit v6.24 — SRS-Parameter (erweitert):**
@@ -690,7 +685,6 @@ Unverändert in diesem Chat.
 | Wiederholungs-Intervalle Stufe 1–6 (Tage) | `srsDays` (Array, 6 Werte) | `[1,7,30,60,180,365]` | ≥0, je Stufe |
 | Abzug bei Tippfehler/Buchstabendreher | `penalty.typo` | 2 | 0–7 |
 | Abzug bei Verwechslung mit anderem Wort | `penalty.confusion` | 1 | 0–7 |
-| Abzug bei falscher Antwort in Gezielt üben | `penalty.deepWrong` | 1 | 0–7 |
 | Buchstaben-Modus bis Stufe | `ctype.lettersMaxStage` | 3 | 0–7 |
 | Umdrehen-Modus bis Stufe | `ctype.flipMaxStage` | 5 | 0–7 |
 | Start-Anteil bei Stufe 0 (%) | `ctype.basePct` | 33 | 0–100 |
@@ -718,10 +712,17 @@ Erledigt seit letzter Revision: Typografie-Fix, Sitzungs-Zusammenfassung → v6.
 
 **v6.39 — verworfen, soll später komplett neu gebaut werden (Nutzerentscheidung, Oktober 2026).** Die damalige Version wurde als zu fehlerhaft verworfen und ist **nicht** Teil des Codes; v6.40 basiert auf v6.38. Inhalt der verworfenen Version als Auftragsliste für den Neubau (damals vom Nutzer als Paket bestätigt: „alles gleich“): (1) eigene Einstellung `wrongRepeatN` (2–5, Standard 3): wie oft ein in der Sitzung falsches Wort hintereinander richtig sein muss, unabhängig vom allgemeinen `repeatN`; (2) „Gezielt üben“-Auswahl als echte Checkbox-Wortliste statt Stufenfilter+Anzahl; (3) zeitgewichteter Dringlichkeits-Score statt des flachen `wrong≥correct`-Filters (Halbwertszeit 60 Tage, Auswertung aus dem Log inkl. `x`-Feld; Wörter mit positivem Score vorausgewählt); (4) Verwechslungs-Paare üben über einen neuen Kartentyp „Auswahl“ (richtige Übersetzung vs. verwechseltes Wort); (5) Gezielt üben bevorzugt pro Wort die schwächste Kombination aus Kartentyp+Richtung (erst ab ≥3 Versuchen je Kombination) statt immer Flip — **Achtung:** Phase 2 war in `renderCard()` und `dp2()` fest auf `flip` verdrahtet, das war der größere Umbau; (6) Wörter, die zuletzt mit „Weiß ich nicht“ beantwortet wurden, als eigene wählbare Kategorie mit bewusst gemischten Kartentypen. Beim Neubau: kleiner schneiden und pro Teil auf dem Gerät testen, statt alles in einer Version zu bündeln.
 
+**Neubau der v6.39-Funktionen — Fahrplan (Stand v6.43, Nutzer bestätigte „mit 6.43 anfangen“, Deep Learn „komplett entfernen und neu bauen, nicht nur anpassen“):**
+- **6.43 ✔ erledigt:** Wunsch 1 (`wrongRepeatN`) und der **Rückbau des alten Gezielt üben**.
+- **6.44 (nächster Schritt, vorher Entwurf zur Bestätigung):** neues Gezielt üben als **eigenes, sauber getrenntes Modul** (nicht mehr als Zweige in `mark()`/`renderCard()`): Auswahl als Checkbox-Wortliste (Wunsch 2) mit zeitgewichtetem Dringlichkeits-Score aus dem Log (Wunsch 3, Halbwertszeit 60 Tage, positive Scores vorausgewählt) und der Kategorie „zuletzt Weiß ich nicht“ (Wunsch 6, Auswahlteil). Weil es neu entsteht, bekommt es von Anfang an **alle Kartentypen und Richtungen** — das war im alten Plan der separate Umbauschritt 6.45 und entfällt damit als eigener Schritt.
+- **6.45:** pro Wort die schwächste Kombination aus Kartentyp+Richtung (Wunsch 5, ab ≥3 Versuchen je Kombination) und bewusst gemischte Kartentypen bei „Weiß nicht“-Wörtern (Wunsch 6, Kartenteil).
+- **6.46:** Verwechslungs-Paare üben mit neuem Kartentyp „Auswahl“ (Wunsch 4).
+Die Nummer 6.39 bleibt unbesetzt. Jeder Schritt wird einzeln auf dem Gerät getestet, bevor der nächste kommt.
+
 **Aus der Analyse von v6.38/v6.40 (Export/Import-Lücken, Stats-Verdopplung, Settings-Restore, doppelter `mergeWord()`-Aufruf) — alles erledigt in v6.42.** Offen bleiben nur: Import direkt aus dem Onboarding (ein frisches Gerät muss erst die Sprachwahl durchlaufen), ein CSV-Import und `created` im CSV-Export — jeweils nur festgestellt, nicht beauftragt.
 
 **Weiterhin offen, nur als Ausblick genannt, nicht konkret beauftragt:**
-1. **"Gezielt üben" mit Pro-Wort-Daten verbessern:** z. B. Filter nach "kürzlich häufig falsch" (aus Sitzungs-/Log-Daten) statt nur dem bisherigen globalen `wrong≥correct`-Filter (`dsOften`). Seit v6.38 stünde dafür zusätzlich die Antwort-Güte (`ty`, z. B. nur echte Fehler statt auch Tippfehler zählen) zur Verfügung. Weiterhin nicht umgesetzt.
+1. **"Gezielt üben" mit Pro-Wort-Daten verbessern** — wird durch den Neubau (6.44 ff.) abgedeckt: z. B. Filter nach "kürzlich häufig falsch" (aus Sitzungs-/Log-Daten) statt des früheren globalen `wrong≥correct`-Filters (`dsOften`, mit dem Rückbau entfernt). Seit v6.38 stünde dafür zusätzlich die Antwort-Güte (`ty`, z. B. nur echte Fehler statt auch Tippfehler zählen) zur Verfügung. Weiterhin nicht umgesetzt.
 2. **Statistik-Seite um Pro-Wort-Auswertungen erweitern** (z. B. "Problemwörter"-Liste, anklickbar → direkt in Gezielt üben starten): Der SRS-Zeitverlauf (v6.27) ist ein erster Schritt in diese Richtung, aber keine vollständige Problemwörter-Auswertung — die konkrete Idee aus dem Chat ist also nur teilweise abgedeckt.
 3. Weitere in einem früheren Chat genannte Ideen zur erweiterten Statistiknutzung: Verwechslungs-Paare auswerten — **das dafür nötige Tracking existiert seit v6.38** (`x`/`cw` im Log, siehe Abschnitt „Lern-Event-Zusatzinfo"), die Auswertungs-Ansicht selbst aber noch nicht, hier ansetzen. Auswertung nach Pack/Kategorie steht weiterhin ganz offen (kein Tracking dafür). Beides rein als Ideen im Raum, nicht konkret beauftragt.
 4. **Eigener Übungsmodus für Kasus/Aspekt (Slowakisch), siehe „Lernphilosophie":** Nur als Idee besprochen, nicht angefragt. Wäre inhaltlich etwas anderes als die bisherigen Modi — kein einfaches Wortpaar mehr, sondern Deklinationstabellen (6 Kasus × Singular/Plural × Genusklassen) bzw. Aspekt-Paare mit Beispielsätzen. Dafür existiert aktuell **keine Datenbasis** — die Pack-Dateien enthalten nur `n`/`f`/`a` (Wort, Übersetzung, deutscher Artikel), keine slowakische Kasus- oder Aspekt-Information. Größerer Umfang als bisherige Features, auch weil die grammatischen Inhalte selbst sorgfältig verifiziert werden müssten, nicht nur der Code.
@@ -729,6 +730,15 @@ Erledigt seit letzter Revision: Typografie-Fix, Sitzungs-Zusammenfassung → v6.
 ---
 
 ## Changelog
+
+### v6.43 — Rückbau von „Gezielt üben (Deep Learn)“ + neue Einstellung `wrongRepeatN`
+Erster Schritt des Neubaus der verworfenen v6.39-Funktionen (Fahrplan unter „Offene Punkte“). Auf Nutzerwunsch wird die alte Deep-Learn-Funktion **nicht angepasst, sondern komplett entfernt** (Begründung und Liste siehe „Lernmodi“). Version 6.43, weil 6.39 unbesetzt bleibt.
+- **Neu: `wrongRepeatN` (Wunsch 1):** eigene Einstellung „Richtige Antworten nach einem Fehler“ (Schieberegler 2–5, **Standard 3**, de/en/sk). War ein Wort in der Sitzung schon einmal falsch, braucht es diese Zahl richtiger Antworten **hintereinander** zum Aufsteigen (statt `repeatN`); ein weiterer Fehler setzt den Zähler zurück. Umsetzung: eine Zeile in `mark()` (`const reqN=LS.cc[key].wrong?(S.set.wrongRepeatN||3):(S.set.repeatN||3)`), der bestehende Flag `LS.cc[key].wrong` wird nur noch ausgewertet. **Verhaltensänderung bei Standardwerten:** Wer `repeatN` ≠ 3 eingestellt hat, bekommt für falsche Wörter jetzt 3 statt `repeatN`, bis er die neue Einstellung anpasst.
+- **Entfernt:** alles Deep-Learn-bezogene (Liste unter „Lernmodi“), `isDue()`; die Startseite hat nur noch die Karte „Schnell lernen“ (`.mgrid` einspaltig). `startLearn(mode)` baut nur noch die Fällig-Warteschlange.
+- **Nebenbei korrigiert:** Der Beschreibungstext von „Richtige Antworten zum Abschluss“ nannte „Standard 2“, der Code-Standard (`S.set.repeatN`) ist seit jeher 3 → Text angepasst (de/en/sk).
+- **Größe:** `index.html` 181.451 → 175.530 Byte (**−5,9 KB**).
+- **Im Browser getestet (Playwright/Chromium):** `wrongRepeatN` bei `repeatN=3`: ohne Fehler 3 richtige nötig; Fehler + 2 richtige genügen bei Einstellung 2; Fehler mitten in der Folge setzt den Zähler zurück; Einstellung 5 verlangt 5; nicht gesetzt = 3 (auch bei `repeatN=2`); Stufe danach plausibel (Totalreset auf 0, dann +1); Mehr-Wörter-Sitzung läuft bis zur Zusammenfassung; Startseite ohne „Gezielt“, ohne `#deep-desc`; Einstellungen zeigen die neue Zeile (Bereich 2–5, Wert persistiert), keine Deep-Strafe mehr; Altdaten (`penalty.deepWrong`, Log-Einträge mit `s`-Bit) laden ohne Fehler, Statistik und `logDecode` funktionieren; en/sk-Texte; Lern-Screen-Titel „Schnell lernen“; statisch: keine Deep-Referenzen mehr im Code außer der bewusst behaltenen Log-Kompatibilität. Keine JS-Fehler.
+- **Nicht getestet:** echtes Gerät.
 
 ### v6.42 — Export/Import: Vollbackup (Format 5) und Import mit Auswahl
 Vom Nutzer gewünscht und als Vorschlag bestätigt („alles exportieren und importieren, auch die neuen Parameter; dient auch als Backup“, „auswählen, was importiert wird“). Ergebnis der vorangegangenen Prüfung (auf einem simulierten leeren Gerät nachgestellt): Der Import verlor `created`, 6 von 9 Einstellungen, aktives Paar und Tutorial-Flag; die per-Antwort-Parameter („Weiß nicht“, richtig/falsch mit Zeit) stecken im Log und waren im Export, gingen aber nur dort mit, wo der Import sie nicht verfälschte.
@@ -926,10 +936,10 @@ Siehe vorherige Doku-Version (`SLOVNIK_DOKU_6_6.md`) — Kernpunkte: abgestufte 
 
 ## Hinweis: Fortsetzung in neuem Chat
 
-Stand nach v6.42. Für den nächsten Chat:
+Stand nach v6.43. Für den nächsten Chat:
 
-1. **Diese Doku-Datei** (`SLOVNIK_DOKU.md`) und die aktuelle **`index.html`** (v6.42) zusammen hochladen — idealerweise auch `sw.js` und `manifest.json` — die Doku ist der verlässliche Kontext, nicht Chatverlauf-Erinnerung.
-2. **Als Erstes tun:** `index.html` öffnen, `const VER=` gegenprüfen (muss `'6.42'` sein — falls nicht, hat der Nutzer zwischenzeitlich selbst etwas geändert oder eine andere Version hochgeladen, dann Vorsicht mit Annahmen aus dieser Doku).
+1. **Diese Doku-Datei** (`SLOVNIK_DOKU.md`) und die aktuelle **`index.html`** (v6.43) zusammen hochladen — idealerweise auch `sw.js` und `manifest.json` — die Doku ist der verlässliche Kontext, nicht Chatverlauf-Erinnerung.
+2. **Als Erstes tun:** `index.html` öffnen, `const VER=` gegenprüfen (muss `'6.43'` sein — falls nicht, hat der Nutzer zwischenzeitlich selbst etwas geändert oder eine andere Version hochgeladen, dann Vorsicht mit Annahmen aus dieser Doku).
 3. **Interner Build-Workflow (3-Teile-Aufbau, Abschnitt „Architektur"):** existiert nur innerhalb einer laufenden Sitzung, muss im neuen Chat bei Bedarf neu aus der hochgeladenen `index.html` hergestellt werden (an den `<style>`/`<script>`-Grenzen extrahieren, siehe `src/build.js`-Beschreibung im Architektur-Abschnitt). Nicht automatisch vorhanden.
 4. **Standing Instructions, die weiterhin gelten sollten** (bisher in diesem Chat etabliert, nicht in der App selbst gespeichert, also hier explizit vermerkt):
    - Diese Doku nach jeder Versionsänderung automatisch mit aktualisieren, ohne dass extra danach gefragt werden muss (siehe Hinweis-Box ganz oben im Dokument).
@@ -940,4 +950,4 @@ Stand nach v6.42. Für den nächsten Chat:
 
 ---
 
-*Dokumentation zuletzt aktualisiert: Oktober 2026, basierend auf Code-Stand **v6.42** (`index.html` + `sw.js` + `manifest.json` + Pack-Dateien). v6.40–v6.42 per Syntax-Check und automatisierten Playwright-/Chromium-Tests (Export/Import, Packs, Service Worker) verifiziert, nicht auf einem echten Gerät. v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.38 nur per Syntax-Check/Codesichtung — v6.30–v6.32 (Service Worker, Update-Erkennung) und v6.33/v6.34 wurden auf einem echten Gerät nachverfolgt, v6.35–v6.38 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*
+*Dokumentation zuletzt aktualisiert: Oktober 2026, basierend auf Code-Stand **v6.43** (`index.html` + `sw.js` + `manifest.json` + Pack-Dateien). v6.40–v6.43 per Syntax-Check und automatisierten Playwright-/Chromium-Tests (Export/Import, Packs, Service Worker) verifiziert, nicht auf einem echten Gerät. v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.38 nur per Syntax-Check/Codesichtung — v6.30–v6.32 (Service Worker, Update-Erkennung) und v6.33/v6.34 wurden auf einem echten Gerät nachverfolgt, v6.35–v6.38 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*

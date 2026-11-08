@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.44 */
+/* Slovník v6.45 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -80,6 +80,8 @@ a{color:var(--acs);text-decoration:none;}
 /* MODE BUTTONS */
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .gch{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px 2px;} .gchip{background:var(--b3);border:1px solid var(--br);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--t2);touch-action:manipulation;} .gchip.on{background:var(--acd);border-color:var(--ac);color:var(--acs);}
+.gbar{display:flex;align-items:center;gap:8px;padding:8px 16px 0;} .gbar span{font-size:12px;color:var(--t3);margin-left:auto;}
+.gpan{padding:4px 16px 12px;border-bottom:1px solid var(--br);background:var(--b2);max-height:48vh;overflow-y:auto;margin-top:8px;} .gl{font-size:11px;font-weight:700;color:var(--t3);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.04em;} .gsr{display:flex;gap:6px;align-items:center;} .gsr select{flex:1;background:var(--b3);border:1px solid var(--br);border-radius:6px;padding:7px;color:var(--t);}
 .gft{padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--br);background:var(--b2);}
 .mbtn{background:var(--b3);border:1px solid var(--br);border-radius:var(--rad);padding:14px 12px;text-align:left;transition:all var(--tr);touch-action:manipulation;}
 .mbtn:hover,.mbtn:active{border-color:var(--ac);background:var(--acd);}
@@ -517,14 +519,17 @@ input[type=range]{width:100%;accent-color:var(--ac);}
   <div class="lbody" id="lbody"></div>
 </div>
 
-<!-- GEZIELT ÜBEN: AUSWAHL (seit v6.44) -->
+<!-- GEZIELT ÜBEN: AUSWAHL (seit v6.44, Filter/Sortierung seit v6.45) -->
 <div id="gscr" class="scr" style="display:none;">
   <div class="lhdr">
     <button class="ibtn" onclick="gClose()">✕</button>
     <div class="lht" id="gtit">Gezielt üben</div>
+    <button class="ibtn" onclick="gInfo()">ℹ️</button>
     <div class="lhp" id="gcnt">0</div>
   </div>
   <div class="gch" id="gch"></div>
+  <div class="gbar"><button class="gchip" id="gfb" onclick="gPanel()"></button><span id="gsh"></span></div>
+  <div class="gpan" id="gpan" style="display:none;"></div>
   <div class="scroll" id="glist"></div>
   <div class="gft"><button class="btn bp bw" id="gst" onclick="gStart()">Start</button></div>
 </div>
@@ -540,7 +545,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.44 */
+/* Slovník v6.45 */
 /* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
    Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
 let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
@@ -596,7 +601,7 @@ async function triggerInstall(){
   deferredInstallPrompt=null;
 }
 
-const VER='6.44';
+const VER='6.45';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -614,7 +619,7 @@ de:{
   addBtn:'✓ Hinzufügen',alreadyExistsWarn:'⚠️ Vokabel bereits vorhanden',natPh:'z. B. Hund',forPh:'Übersetzung…',
   search:'🔍 Suchen…',sortAlpha:'A–Z',sortStage:'Stufe',sortDate:'Datum',
   fAll:'Alle',fNew:'Neu',f1d:'1T',f1w:'1W',f1m:'1M',f2m:'2M',f6m:'6M',f1y:'1J',fDone:'✓',
-  noVocab:'Keine Vokabeln',deep:'Gezielt üben',deepSub:'Eigene Auswahl, Auffälliges zuerst',gAff:'Auffällig',gDk:'Weiß nicht (30 T)',gAll:'Alle',gNone:'Keine',gSel:n=>`${n} ausgewählt`,gStart:'Starten',gNoSel:'Nichts ausgewählt',
+  noVocab:'Keine Vokabeln',deep:'Gezielt üben',deepSub:'Eigene Auswahl, Auffälliges zuerst',gNone:'Keine',gSel:n=>`${n} ausgewählt`,gScore:'Score',gFilter:'Filter & Sortierung',gFStage:'Stufe',gFCond:'Bedingungen',gAnd:'UND (alle)',gOr:'ODER (eine)',gScoreMin:'Score ab',gOff:'aus',gSort:'Sortieren nach',gThen:'dann nach',gReset:'Zurücksetzen',gFlwrong:'Fehler (30 T)',gFldk:'Weiß nicht (30 T)',gFlstuck:'Festgefahren',gFldue:'Fällig',gFlaff:'Auffällig',gFlnw:'Nie geübt',gSoscore:'Score',gSostage:'Stufe',gSowrong:'Fehler (30 T)',gSodk:'Weiß nicht (30 T)',gSodue:'Überfällig',gSoage:'Alter (hinzugefügt)',gSolast:'Zuletzt falsch',gSoalpha:'A–Z',gSelAff:n=>`Auffällige (${n})`,gVisOn:'Sichtbare ✓',gVisOff:'Sichtbare ✗',gShown:(k,n)=>`${k} von ${n}`,gInfoT:'So funktioniert Gezielt üben',gInfo:'<div style="font-size:13px;line-height:1.6;"><b>Gezielt üben</b> trainiert genau die Wörter, die du ankreuzt — mit allen Kartentypen und Richtungen.<br><br><b>Score:</b> Fehler zählen schwerer als richtige Antworten (Gewicht in den Einstellungen), und je älter eine Antwort ist, desto weniger zählt sie (Halbwertszeit 60 Tage). Ab 0,3 ist ein Wort <b>auffällig</b>.<br><br><b>🔁 Festgefahren:</b> Das Wort ist alt genug, um längst höher zu stehen, war im eingestellten Zeitraum aber nie über der eingestellten Stufe.<br><br>❌ Fehler und ✋ „Weiß nicht“ beziehen sich auf die letzten 30 Tage.<br><br><b>Vorausgewählt</b> sind auffällige und festgefahrene Wörter. Filter und Sortierung kannst du frei kombinieren, die Auswahl bleibt dabei erhalten.<br><br><b>Stufen:</b> Richtig steigert die Stufe nur bei fälligen Wörtern; bei einer falschen Antwort gilt der Abzug aus den Einstellungen.</div>',gSetT:'GEZIELT ÜBEN',gWeightL:'Gewicht falscher Antworten',gWeightD:'Wie schwer ein Fehler im Score zählt, verglichen mit einer richtigen Antwort (1–6, Standard 3)',gDropL:'Abzug bei falscher Antwort',gDropD:'Stufen-Abzug bei einer falschen Antwort in Gezielt üben (0 = keiner, 7 = Reset, Standard 1)',stuckMaxL:'Festgefahren: Höchststufe',stuckMaxD:'Wörter, die im Zeitraum nie über dieser Stufe waren (0–6, Standard 3)',stuckDaysL:'Festgefahren: Zeitraum',stuckDaysD:'Betrachtete Tage (7–90, Standard 30)',gStart:'Starten',gNoSel:'Nichts ausgewählt',
   packsTitle:'Vokabelpacks',dataSection:'Daten',jsonExport:'⬇ Vollbackup (JSON)',csvExport:'📄 CSV-Export',
   jsonImport:'⬆ Import (JSON)',addPairSection:'Sprachpaar hinzufügen',targetLangLbl:'Zielsprache (Kürzel)',targetLangPh:'sk, hu, fr, it, pl …',
   addBtnShort:'Hinzufügen',noLangPair:'Kein Sprachpaar gewählt',loadingPacks:'⏳ Lade Packs…',
@@ -700,7 +705,7 @@ en:{
   addBtn:'✓ Add',alreadyExistsWarn:'⚠️ Word already exists',natPh:'e.g. dog',forPh:'Translation…',
   search:'🔍 Search…',sortAlpha:'A–Z',sortStage:'Stage',sortDate:'Date',
   fAll:'All',fNew:'New',f1d:'1d',f1w:'1w',f1m:'1m',f2m:'2m',f6m:'6m',f1y:'1y',fDone:'✓',
-  noVocab:'No words',deep:'Focused practice',deepSub:'Your own selection, problem words first',gAff:'Problem words',gDk:"Don't know (30 d)",gAll:'All',gNone:'None',gSel:n=>`${n} selected`,gStart:'Start',gNoSel:'Nothing selected',
+  noVocab:'No words',deep:'Focused practice',deepSub:'Your own selection, problem words first',gNone:'None',gSel:n=>`${n} selected`,gScore:'Score',gFilter:'Filter & sort',gFStage:'Level',gFCond:'Conditions',gAnd:'AND (all)',gOr:'OR (any)',gScoreMin:'Score from',gOff:'off',gSort:'Sort by',gThen:'then by',gReset:'Reset',gFlwrong:'Mistakes (30 d)',gFldk:"Don't know (30 d)",gFlstuck:'Stuck',gFldue:'Due',gFlaff:'Problem',gFlnw:'Never practiced',gSoscore:'Score',gSostage:'Level',gSowrong:'Mistakes (30 d)',gSodk:"Don't know (30 d)",gSodue:'Overdue',gSoage:'Age (added)',gSolast:'Last wrong',gSoalpha:'A–Z',gSelAff:n=>`Problem words (${n})`,gVisOn:'Visible ✓',gVisOff:'Visible ✗',gShown:(k,n)=>`${k} of ${n}`,gInfoT:'How focused practice works',gInfo:'<div style="font-size:13px;line-height:1.6;"><b>Focused practice</b> trains exactly the words you tick — with all card types and directions.<br><br><b>Score:</b> mistakes weigh more than correct answers (weight in settings), and the older an answer is, the less it counts (half-life 60 days). From 0.3 a word counts as a <b>problem word</b>.<br><br><b>🔁 Stuck:</b> the word is old enough to be far higher by now, but never rose above the set level in the set period.<br><br>❌ mistakes and ✋ “don’t know” refer to the last 30 days.<br><br><b>Preselected</b> are problem and stuck words. You can combine filters and sorting freely; your selection is kept.<br><br><b>Levels:</b> a correct answer only raises the level of due words; for a wrong answer the penalty from the settings applies.</div>',gSetT:'FOCUSED PRACTICE',gWeightL:'Weight of wrong answers',gWeightD:'How heavily a mistake counts in the score compared to a correct answer (1–6, default 3)',gDropL:'Penalty for a wrong answer',gDropD:'Level penalty for a wrong answer in focused practice (0 = none, 7 = reset, default 1)',stuckMaxL:'Stuck: max level',stuckMaxD:'Words that never rose above this level in the period (0–6, default 3)',stuckDaysL:'Stuck: period',stuckDaysD:'Days considered (7–90, default 30)',gStart:'Start',gNoSel:'Nothing selected',
   packsTitle:'Vocab packs',dataSection:'Data',jsonExport:'⬇ Full backup (JSON)',csvExport:'📄 CSV export',
   jsonImport:'⬆ Import (JSON)',addPairSection:'Add language pair',targetLangLbl:'Target language (code)',targetLangPh:'sk, hu, fr, it, pl …',
   addBtnShort:'Add',noLangPair:'No language pair selected',loadingPacks:'⏳ Loading packs…',
@@ -786,7 +791,7 @@ sk:{
   addBtn:'✓ Pridať',alreadyExistsWarn:'⚠️ Slovíčko už existuje',natPh:'napr. pes',forPh:'Preklad…',
   search:'🔍 Hľadať…',sortAlpha:'A–Z',sortStage:'Stupeň',sortDate:'Dátum',
   fAll:'Všetko',fNew:'Nové',f1d:'1d',f1w:'1t',f1m:'1m',f2m:'2m',f6m:'6m',f1y:'1r',fDone:'✓',
-  noVocab:'Žiadne slovíčka',deep:'Cielené učenie',deepSub:'Vlastný výber, problémové slová prvé',gAff:'Problémové',gDk:'Neviem (30 d)',gAll:'Všetky',gNone:'Žiadne',gSel:n=>`${n} vybraných`,gStart:'Štart',gNoSel:'Nič nevybrané',
+  noVocab:'Žiadne slovíčka',deep:'Cielené učenie',deepSub:'Vlastný výber, problémové slová prvé',gNone:'Žiadne',gSel:n=>`${n} vybraných`,gScore:'Skóre',gFilter:'Filter a zoradenie',gFStage:'Úroveň',gFCond:'Podmienky',gAnd:'A (všetky)',gOr:'ALEBO (jedna)',gScoreMin:'Skóre od',gOff:'vyp.',gSort:'Zoradiť podľa',gThen:'potom podľa',gReset:'Obnoviť',gFlwrong:'Chyby (30 d)',gFldk:'Neviem (30 d)',gFlstuck:'Zaseknuté',gFldue:'Splatné',gFlaff:'Nápadné',gFlnw:'Nikdy necvičené',gSoscore:'Skóre',gSostage:'Úroveň',gSowrong:'Chyby (30 d)',gSodk:'Neviem (30 d)',gSodue:'Po termíne',gSoage:'Vek (pridané)',gSolast:'Naposledy chybne',gSoalpha:'A–Z',gSelAff:n=>`Nápadné (${n})`,gVisOn:'Viditeľné ✓',gVisOff:'Viditeľné ✗',gShown:(k,n)=>`${k} z ${n}`,gInfoT:'Ako funguje cielené učenie',gInfo:'<div style="font-size:13px;line-height:1.6;"><b>Cielené učenie</b> trénuje presne tie slová, ktoré označíš — so všetkými typmi kariet a smermi.<br><br><b>Skóre:</b> chyby majú väčšiu váhu ako správne odpovede (váha v nastaveniach) a čím je odpoveď staršia, tým menej sa počíta (polčas 60 dní). Od 0,3 je slovo <b>nápadné</b>.<br><br><b>🔁 Zaseknuté:</b> slovo je dosť staré na to, aby bolo dávno vyššie, ale v nastavenom období nikdy nebolo nad nastavenou úrovňou.<br><br>❌ chyby a ✋ „Neviem“ sa týkajú posledných 30 dní.<br><br><b>Predvolené</b> sú nápadné a zaseknuté slová. Filtre a zoradenie môžeš voľne kombinovať, výber sa zachová.<br><br><b>Úrovne:</b> správna odpoveď zvyšuje úroveň len pri splatných slovách; pri chybe platí zrážka z nastavení.</div>',gSetT:'CIELENÉ UČENIE',gWeightL:'Váha nesprávnych odpovedí',gWeightD:'Ako ťažko sa chyba počíta v skóre oproti správnej odpovedi (1–6, predvolené 3)',gDropL:'Zrážka za nesprávnu odpoveď',gDropD:'Zrážka úrovne pri nesprávnej odpovedi v cielenom učení (0 = žiadna, 7 = reset, predvolené 1)',stuckMaxL:'Zaseknuté: najvyššia úroveň',stuckMaxD:'Slová, ktoré v období nikdy nepresiahli túto úroveň (0–6, predvolené 3)',stuckDaysL:'Zaseknuté: obdobie',stuckDaysD:'Sledované dni (7–90, predvolené 30)',gStart:'Štart',gNoSel:'Nič nevybrané',
   packsTitle:'Balíčky slovíčok',dataSection:'Dáta',jsonExport:'⬇ Úplná záloha (JSON)',csvExport:'📄 CSV export',
   jsonImport:'⬆ Import (JSON)',addPairSection:'Pridať jazykový pár',targetLangLbl:'Cieľový jazyk (skratka)',targetLangPh:'sk, hu, fr, it, pl …',
   addBtnShort:'Pridať',noLangPair:'Nie je vybraný jazykový pár',loadingPacks:'⏳ Načítavam balíčky…',
@@ -1637,66 +1642,134 @@ function rmSlot(si){
 }
 
 /* ════════════════════════════════
-   GEZIELT ÜBEN (seit v6.44) — neu gebaut, eigenes Modul
-   Auswahl-Screen (#gscr) mit Checkbox-Liste, sortiert nach Dringlichkeits-Score. Die Sitzung läuft über
-   dieselbe Lern-Engine wie "Schnell lernen" (alle Kartentypen und Richtungen), unterscheidet sich aber
-   NUR über die Richtlinie LS.pol=GP — es gibt keine Moduszweige in mark()/renderCard() mehr.
+   GEZIELT ÜBEN (seit v6.44, erweitert in v6.45) — eigenes Modul
+   Auswahl-Screen (#gscr): Checkbox-Liste mit kombinierbaren Filtern und zweistufiger Sortierung. Die Sitzung
+   läuft über dieselbe Lern-Engine wie "Schnell lernen" (alle Kartentypen/Richtungen); der einzige Unterschied
+   ist die Richtlinie LS.pol (gGP) — es gibt keine Moduszweige in mark()/renderCard().
+   Einstellungen (S.set): gWeight (Gewicht falscher Antworten im Score, 1–6, Std 3), gDrop (Stufenabzug bei falsch,
+   0–7, 7=Reset, Std 1), stuckMax (Höchststufe für "festgefahren", Std 3), stuckDays (Zeitraum, Std 30).
    ════════════════════════════════ */
-const GP={wrongDrop:1,dueOnly:true}; // falsch kostet höchstens −1 Stufe (statt Totalreset); Stufe steigt nur bei fälligen Wörtern
-const G_HALF=60*86400000;            // Score-Halbwertszeit: 60 Tage — alte Fehler verblassen, neue dominieren
-const G_MIN=0.3;                     // ab diesem Score gilt ein Wort als "auffällig" (vorausgewählt)
+const G_HALF=60*86400000,G_MIN=0.3,GD=86400000;
+const gGP=()=>({wrongDrop:S.set.gDrop===undefined?1:S.set.gDrop,dueOnly:true}); // falsch kostet höchstens gDrop Stufen; Stufe steigt nur bei fälligen Wörtern
+const gF=n=>{const x=(Math.abs(n)<0.05?0:n).toFixed(1);return S.ui==='en'?x:x.replace('.',',');};
 let G=null;
-function wordScores(){ // Score je Wort aus dem Log: Σ (falsch +1, richtig −1) · 0.5^(Alter/60 Tage)
-  const now=Date.now(),m={};
+function wordScores(){ // Score je Wort aus dem Log: Σ (falsch +Gewicht, richtig −1) · 0.5^(Alter/60 Tage)
+  const now=Date.now(),W=S.set.gWeight||3,m={};
   (lg(SK.log)||[]).forEach(e=>{
     if(!e||typeof e!=='object'||!e.w)return; // Altbestand ohne Wortbezug (nur Zeitstempel) zählt nicht
-    const o=m[e.w]||(m[e.w]={sc:0,w30:0,gu30:0}),age=now-(e.t||0),bad=e.ok===false;
-    o.sc+=(bad?1:-1)*Math.pow(.5,age/G_HALF);
-    if(bad&&age<30*86400000){o.w30++;const d=logDecode(e);if(d&&d.ty===6)o.gu30++;}
+    const o=m[e.w]||(m[e.w]={sc:0,w30:0,gu30:0,lw:0}),age=now-(e.t||0),bad=e.ok===false;
+    o.sc+=(bad?W:-1)*Math.pow(.5,age/G_HALF);
+    if(bad){if((e.t||0)>o.lw)o.lw=e.t;if(age<30*GD){o.w30++;const d=logDecode(e);if(d&&d.ty===6)o.gu30++;}}
   });
   return m;
 }
+function stuckSet(){ /* "Festgefahren": im Zeitraum (stuckDays) nie über Stufe stuckMax — aber nur, wenn das Wort alt genug ist,
+   dass es bei perfekten Wiederholungen längst ≥2 Stufen darüber stünde (maxPossibleStage), sonst wären alle jungen Wörter
+   "festgefahren". Höchststufe im Zeitraum = max(aktuelle Stufe, from/to aller Stufenwechsel in den Sitzungen des Zeitraums).
+   Wörter ohne Erstelldatum werden nie markiert. Grenze: nur die letzten 100 Sitzungen. */
+  const max=S.set.stuckMax===undefined?3:S.set.stuckMax,t0=Date.now()-(S.set.stuckDays||30)*GD,mx={},out={};
+  S.vocab.forEach(v=>{mx[v.native+'_'+v.foreign]=v.stage||0;});
+  (lg(SK.sessions)||[]).forEach(s=>{if(s.ts<t0)return;(s.moves||[]).forEach(m=>{const k=m.native+'_'+m.foreign;if(k in mx)mx[k]=Math.max(mx[k],m.from||0,m.to||0);});});
+  S.vocab.forEach(v=>{const k=v.native+'_'+v.foreign;if(v.created&&mx[k]<=max&&maxPossibleStage(v.created,Date.now())>=max+2)out[k]=1;});
+  return out;
+}
+const GF={wrong:r=>r.w30>0,dk:r=>r.gu30>0,stuck:r=>r.stuck,due:r=>r.due,aff:r=>r.sc>=G_MIN,nw:r=>!r.used};
+const GS={score:r=>r.sc,stage:r=>r.v.stage||0,wrong:r=>r.w30,dk:r=>r.gu30,due:r=>r.od,age:r=>r.age,last:r=>r.lw,alpha:r=>r.v.native.toLowerCase()};
 function gOpen(){
   if(!S.vocab.length){toast(t('noVocab'));return;}
-  const sc=wordScores();
-  const rows=S.vocab.map(v=>{const o=sc[v.native+'_'+v.foreign]||{sc:0,w30:0,gu30:0};return{v,sc:o.sc,w30:o.w30,gu30:o.gu30};});
-  rows.sort((a,b)=>b.sc-a.sc||(a.v.stage||0)-(b.v.stage||0)||a.v.native.localeCompare(b.v.native));
-  G={rows,sel:new Set(rows.map((r,i)=>r.sc>=G_MIN?i:-1).filter(i=>i>=0))};
-  const sn=SRS_N();
-  document.getElementById('glist').innerHTML=rows.map((r,i)=>`<label class="ic"><input type="checkbox" data-i="${i}" onchange="gTog(${i},this.checked)"><span>${esc((r.v.article?r.v.article+' ':'')+r.v.native)} → ${esc(r.v.foreign)}<small>${esc(sn[r.v.stage||0])}${r.w30?` · ❌ ${r.w30}×`:''}${r.gu30?` · ✋ ${r.gu30}×`:''}</small></span></label>`).join('');
+  const sc=wordScores(),st=stuckSet(),td=dayStart(),now=Date.now();
+  const rows=S.vocab.map(v=>{
+    const k=v.native+'_'+v.foreign,o=sc[k]||{sc:0,w30:0,gu30:0,lw:0},s=v.stage||0,due=isDue(v,td);
+    return{v,sc:o.sc,w30:o.w30,gu30:o.gu30,lw:o.lw,stuck:!!st[k],due,od:due?(td-((v.lastReviewed||0)+(SRS_D[s]||0)*GD))/GD:-1,
+      age:v.created?(now-v.created)/GD:0,used:((v.stats?.correct||0)+(v.stats?.wrong||0))>0};
+  });
+  G={rows,sel:new Set(rows.map((r,i)=>(r.sc>=G_MIN||r.stuck)?i:-1).filter(i=>i>=0)),
+     f:{st:new Set(),fl:new Set(),or:false,min:-5},s:[['score',-1],['stage',1]],pan:false};
   document.getElementById('gtit').textContent=t('deep');
   document.getElementById('mscr').style.display='none';
   const g=document.getElementById('gscr');g.style.display='flex';g.classList.add('on');
+  gDraw();
+}
+function gView(){ // sichtbare Zeilen (Indizes): Filter → Sortierung
+  const f=G.f,R=G.rows;
+  const v=R.map((_,i)=>i).filter(i=>{const r=R[i];
+    if(f.st.size&&!f.st.has(r.v.stage||0))return false;
+    if(f.min>-5&&r.sc<f.min)return false;
+    if(f.fl.size){const a=[...f.fl].map(k=>GF[k](r));if(!(f.or?a.some(Boolean):a.every(Boolean)))return false;}
+    return true;});
+  v.sort((a,b)=>{for(const[k,d]of G.s){const x=GS[k](R[a]),y=GS[k](R[b]),c=typeof x==='string'?x.localeCompare(y):x-y;if(c)return c*d;}return a-b;});
+  return v;
+}
+function gDraw(){ // Liste + Leiste + Panel neu aufbauen (bei Filter-/Sortierwechsel); Checkbox-Wechsel nutzen nur gSync()
+  const sn=SRS_N(),view=G.vis=gView();
+  document.getElementById('glist').innerHTML=view.map(i=>{const r=G.rows[i];
+    return `<label class="ic"><input type="checkbox" data-i="${i}" onchange="gTog(${i},this.checked)"><span>${esc((r.v.article?r.v.article+' ':'')+r.v.native)} → ${esc(r.v.foreign)}<small>${esc(sn[r.v.stage||0])} · ${t('gScore')} ${gF(r.sc)}${r.w30?` · ❌ ${r.w30}×`:''}${r.gu30?` · ✋ ${r.gu30}×`:''}${r.stuck?' · 🔁':''}</small></span></label>`;}).join('');
   document.getElementById('glist').scrollTop=0;
+  const n=G.f.st.size+G.f.fl.size+(G.f.min>-5?1:0);
+  document.getElementById('gfb').textContent=`⚙ ${t('gFilter')}${n?` (${n})`:''}`;
+  document.getElementById('gpan').style.display=G.pan?'block':'none';
+  if(G.pan)document.getElementById('gpan').innerHTML=gPanelHtml();
   gSync();
 }
-function gGroup(k){return G.rows.map((r,i)=>(k==='aff'?r.sc>=G_MIN:r.gu30>0)?i:-1).filter(i=>i>=0);}
-function gSync(){ // Checkboxen, Chips und Zähler aus G.sel neu setzen (die Liste selbst bleibt unverändert → Scrollposition bleibt)
+function gPanelHtml(){
+  const f=G.f,sn=SRS_N(),FL=Object.keys(GF),SO=Object.keys(GS);
+  const ch=(on,fn,txt)=>`<button class="gchip${on?' on':''}" onclick="${fn}">${txt}</button>`;
+  const sel=i=>`<select onchange="gSo(${i},this.value)">${SO.map(k=>`<option value="${k}"${G.s[i][0]===k?' selected':''}>${t('gSo'+k)}</option>`).join('')}</select><button class="gchip" onclick="gDir(${i})">${G.s[i][1]<0?'↓':'↑'}</button>`;
+  return `<div class="gl">${t('gFStage')}</div><div class="gch" style="padding:0">${sn.map((n,i)=>ch(f.st.has(i),`gSt(${i})`,n)).join('')}</div>
+    <div class="gl">${t('gFCond')}</div><div class="gch" style="padding:0">${FL.map(k=>ch(f.fl.has(k),`gFl('${k}')`,t('gFl'+k))).join('')}</div>
+    <div class="gch" style="padding:6px 0 0">${ch(!f.or,'gOr(0)',t('gAnd'))}${ch(f.or,'gOr(1)',t('gOr'))}</div>
+    <div class="gl">${t('gScoreMin')}: <b id="gmv">${f.min>-5?gF(f.min):t('gOff')}</b></div>
+    <input type="range" min="-5" max="10" step="0.5" value="${f.min}" style="width:100%" oninput="document.getElementById('gmv').textContent=this.value>-5?gF(+this.value):t('gOff')" onchange="gMin(this.value)">
+    <div class="gl">${t('gSort')}</div><div class="gsr">${sel(0)}</div>
+    <div class="gl">${t('gThen')}</div><div class="gsr">${sel(1)}</div>
+    <button class="gchip" style="margin-top:12px" onclick="gRst()">${t('gReset')}</button>`;
+}
+function gSync(){ // Checkboxen, Schnellwahl-Chips und Zähler aus G.sel setzen (Liste bleibt → Scrollposition bleibt)
   document.querySelectorAll('#glist input').forEach(b=>{b.checked=G.sel.has(+b.dataset.i);});
-  const on=a=>a.length>0&&a.every(i=>G.sel.has(i)),aff=gGroup('aff'),dk=gGroup('dk');
+  const aff=gAffIdx(),on=aff.length>0&&aff.every(i=>G.sel.has(i));
   document.getElementById('gch').innerHTML=
-    `<button class="gchip${on(aff)?' on':''}" onclick="gGrp('aff')">${t('gAff')} (${aff.length})</button>`+
-    `<button class="gchip${on(dk)?' on':''}" onclick="gGrp('dk')">${t('gDk')} (${dk.length})</button>`+
-    `<button class="gchip" onclick="gAll(1)">${t('gAll')}</button><button class="gchip" onclick="gAll(0)">${t('gNone')}</button>`;
+    `<button class="gchip${on?' on':''}" onclick="gGrp()">${t('gSelAff')(aff.length)}</button>`+
+    `<button class="gchip" onclick="gVis(1)">${t('gVisOn')}</button><button class="gchip" onclick="gVis(0)">${t('gVisOff')}</button><button class="gchip" onclick="gNone()">${t('gNone')}</button>`;
   document.getElementById('gcnt').textContent=G.sel.size;
+  document.getElementById('gsh').textContent=t('gShown')(G.vis.length,G.rows.length);
   const b=document.getElementById('gst');b.textContent=`${t('gStart')} · ${t('gSel')(G.sel.size)}`;b.disabled=G.sel.size===0;
 }
+const gAffIdx=()=>G.rows.map((r,i)=>(r.sc>=G_MIN||r.stuck)?i:-1).filter(i=>i>=0);
 function gTog(i,on){on?G.sel.add(i):G.sel.delete(i);gSync();}
-function gGrp(k){const a=gGroup(k),all=a.length>0&&a.every(i=>G.sel.has(i));a.forEach(i=>all?G.sel.delete(i):G.sel.add(i));gSync();}
-function gAll(on){G.sel=on?new Set(G.rows.map((_,i)=>i)):new Set();gSync();}
+function gGrp(){const a=gAffIdx(),all=a.length>0&&a.every(i=>G.sel.has(i));a.forEach(i=>all?G.sel.delete(i):G.sel.add(i));gSync();}
+function gVis(on){G.vis.forEach(i=>on?G.sel.add(i):G.sel.delete(i));gSync();}
+function gNone(){G.sel=new Set();gSync();}
+function gPanel(){G.pan=!G.pan;document.getElementById('gpan').style.display=G.pan?'block':'none';if(G.pan)document.getElementById('gpan').innerHTML=gPanelHtml();}
+function gSt(i){G.f.st.has(i)?G.f.st.delete(i):G.f.st.add(i);gDraw();}
+function gFl(k){G.f.fl.has(k)?G.f.fl.delete(k):G.f.fl.add(k);gDraw();}
+function gOr(on){G.f.or=!!on;gDraw();}
+function gMin(v){G.f.min=parseFloat(v);gDraw();}
+function gSo(i,k){G.s[i][0]=k;gDraw();}
+function gDir(i){G.s[i][1]*=-1;gDraw();}
+function gRst(){G.f={st:new Set(),fl:new Set(),or:false,min:-5};G.s=[['score',-1],['stage',1]];gDraw();}
+function gInfo(){openMod(t('gInfoT'),t('gInfo'));}
 function gClose(starting){
   document.getElementById('gscr').style.display='none';document.getElementById('gscr').classList.remove('on');
-  G=starting?G:null;
-  if(!starting)showMain();
+  if(!starting){G=null;showMain();}
 }
 function gStart(){
   const list=[...G.sel].map(i=>G.rows[i].v);
   if(!list.length){toast(t('gNoSel'));return;}
   for(let i=list.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[list[i],list[j]]=[list[j],list[i]];}
   gClose(true);G=null;
-  LS={mode:'deep',tk:'deep',pol:GP,queue:list,total:list.length,dir:0,cc:{},tts:S.set.tts!==false,startTime:Date.now(),wordStats:{}};
+  LS={mode:'deep',tk:'deep',pol:gGP(),queue:list,total:list.length,dir:0,cc:{},tts:S.set.tts!==false,startTime:Date.now(),wordStats:{}};
   showLScr();renderCard();
 }
+/* Einstellungs-Regler "Gezielt üben" (generisch): setGS(Schlüssel, Regler) */
+const gsTxt=(k,v)=>k==='gDrop'?(v>=7?'Reset':v?'−'+v:'0'):k==='stuckDays'?v+' T':String(v).replace('.',S.ui==='en'?'.':',');
+function setGS(k,el){const v=parseFloat(el.value);S.set[k]=v;ls(SK.set,S.set);el.nextElementSibling.textContent=gsTxt(k,v);}
+function gsRow(k,min,max,step,def){const v=S.set[k]===undefined?def:S.set[k];return `<div class="setr">
+        <div><div class="setl">${t(k+'L')}</div><div class="setd">${t(k+'D')}</div></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="range" min="${min}" max="${max}" step="${step}" value="${v}" oninput="setGS('${k}',this)" style="width:80px;">
+          <span style="font-size:14px;font-weight:700;color:var(--acs);min-width:34px;">${gsTxt(k,v)}</span>
+        </div>
+      </div>`;}
 
 /* WEISS ICH NICHT */
 function dontKnow(){
@@ -1733,7 +1806,7 @@ function mark(ok,stageDrop){
   if(!LS)return;
   // Kontext fürs Log VOR den Änderungen unten sichern (LS.dir wird weiter unten verändert)
   const logX={ct:LS._ctype,d:LS.dir,s:LS.mode,ctx:LS.ctx};LS.ctx=null;
-  const pol=LS.pol||{}; // Sitzungs-Richtlinie (seit v6.44): Schnell lernen = leer, Gezielt üben = GP (siehe dort)
+  const pol=LS.pol||{}; // Sitzungs-Richtlinie (seit v6.44): Schnell lernen = leer, Gezielt üben = gGP() (siehe dort)
   const card=LS.queue[0];
   const key=card.native+'_'+card.foreign;
   if(!LS.cc[key]) LS.cc[key]={fwd:0,bwd:0,any:0,att:0,wrong:false};
@@ -3013,6 +3086,10 @@ function openSettings(){
         <div><div class="setl">${t('dailyReminder')}</div><div class="setd">${t('reminderDesc')}</div></div>
         <div class="tog ${s.notifications?'on':''}" onclick="togNotif(this)"></div>
       </div>
+    </div>
+    <div class="card">
+      <div class="stit">${t('gSetT')}</div>
+      ${gsRow('gWeight',1,6,.5,3)}${gsRow('gDrop',0,7,1,1)}${gsRow('stuckMax',0,6,1,3)}${gsRow('stuckDays',7,90,1,30)}
     </div>
     <div class="card">
       <div class="stit">${t('srsAdvanced')}</div>

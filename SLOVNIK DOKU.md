@@ -1,8 +1,8 @@
 # Slovník — Technische Dokumentation
 
-**Version:** 6.44 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
+**Version:** 6.45 **Dateien:** `index.html` (Single-File-App, intern aus 3 Teilen gebaut) **+ `sw.js`** (Service Worker, seit v6.30, separate Datei — siehe Changelog) **Hosting:** GitHub Pages (statisch, kein Backend)
 
-> **Stand v6.44 (November 2026):** baut über v6.40–v6.43 direkt auf **v6.38** auf. „Gezielt üben“ wurde in v6.43 komplett entfernt und in **v6.44 neu gebaut** (eigenes Modul, siehe „Lernmodi"); die weiteren Schritte des v6.39-Neubaus stehen unter „Offene Punkte". Die zwischenzeitlich entwickelte **v6.39 wurde vom Nutzer als zu fehlerhaft verworfen** (nie als Basis übernommen) und soll später **komplett neu** gebaut werden — die Nummer 6.39 bleibt deshalb unbesetzt (auch, damit ein evtl. irgendwo schon geladener 6.39-Stand keinen gleichnamigen Update-Banner/Cache-Konflikt auslöst). Was v6.39 enthalten sollte, steht unter „Offene Punkte".
+> **Stand v6.45 (November 2026):** baut über v6.40–v6.44 direkt auf **v6.38** auf. „Gezielt üben“ wurde in v6.43 komplett entfernt, in **v6.44 neu gebaut** und in **v6.45 nach Nutzerfeedback erweitert** (Filter, Sortierung, Score-Anzeige, Einstellungen, Erklärung; siehe „Lernmodi"); die weiteren Schritte des v6.39-Neubaus stehen unter „Offene Punkte". Die zwischenzeitlich entwickelte **v6.39 wurde vom Nutzer als zu fehlerhaft verworfen** (nie als Basis übernommen) und soll später **komplett neu** gebaut werden — die Nummer 6.39 bleibt deshalb unbesetzt (auch, damit ein evtl. irgendwo schon geladener 6.39-Stand keinen gleichnamigen Update-Banner/Cache-Konflikt auslöst). Was v6.39 enthalten sollte, steht unter „Offene Punkte".
 
 > **Fortsetzungs-Chat (v6.28):** Neue Sitzung, aufgesetzt auf der hochgeladenen `index.html` (v6.27) und dieser Doku, wie im Abschnitt „Fortsetzung in neuem Chat" der Vorversion vorgesehen. `const VER='6.27'` wurde vor der Änderung gegengeprüft (stimmte).
 
@@ -95,7 +95,7 @@ Der Build wurde per Diff/Prüfsumme gegen die vorherige Single-File-Version veri
 > **Achtung bei Änderung:** Die Namen der Stufen (Spalte "Name", aus `SRS_N()`/I18N) sind statischer Text und passen sich **nicht** automatisch an, wenn die Wartezeit geändert wird. Setzt man z. B. Stufe 2 auf 10 Tage, heißt sie im UI weiterhin "1 Woche". Bewusste Design-Entscheidung (siehe Abschnitt "Einstellungen"), um den Aufwand klein zu halten — Zahlenwert in den Settings ist die Quelle der Wahrheit, der Name ist nur ein Anhaltspunkt.
 
 - **Graduierung:** Karte steigt eine Stufe, wenn sie `repeatN`-mal korrekt beantwortet wurde (Standard: 3, einstellbar 1–10). **Seit v6.43:** War das Wort in der laufenden Sitzung schon einmal falsch, gilt stattdessen die eigene Einstellung `wrongRepeatN` (Standard 3, einstellbar 2–5) — so oft hintereinander richtig; ein weiterer Fehler setzt den Zähler wieder auf 0. *(Bugfix v6.24: Fallback-Wert war uneinheitlich `||2` an zwei Stellen und `||3` an zwei anderen — jetzt überall `||3`.)*
-- **Bei falscher Antwort:** Ausmaß des Stufenabzugs hängt vom Fehlertyp ab, Werte seit v6.24 einstellbar (Standard: Tippfehler/Buchstabendreher −2, Verwechslung mit anderem Wort −1; der frühere dritte Wert „falsch in Gezielt üben −1“ entfiel in v6.43 mit dem Modus; seit v6.44 steckt der Abzug von −1 als feste Konstante in der Richtlinie `GP` des neuen Gezielt üben) — siehe Abschnitt „Fehlertoleranz beim Tippen/Buchstabieren".
+- **Bei falscher Antwort:** Ausmaß des Stufenabzugs hängt vom Fehlertyp ab, Werte seit v6.24 einstellbar (Standard: Tippfehler/Buchstabendreher −2, Verwechslung mit anderem Wort −1; der frühere dritte Wert „falsch in Gezielt üben −1“ entfiel in v6.43 mit dem Modus; seit v6.45 ist der Abzug in Gezielt üben die Einstellung `gDrop`, Standard 1) — siehe Abschnitt „Fehlertoleranz beim Tippen/Buchstabieren".
 - **Fälligkeit:** `(lastReviewed + days * 86400000) <= Date.now()`, geprüft über `getDue()` (die frühere Hilfsfunktion `isDue(v)` entfiel in v6.43, sie wurde nur noch vom Gezielt-üben-Zweig gebraucht).
 
 ---
@@ -110,19 +110,34 @@ Der Build wurde per Diff/Prüfsumme gegen die vorherige Single-File-Version veri
 - Richtung: 1. Abfrage vorwärts (native→foreign), 2. Abfrage rückwärts (foreign→native), dann abwechselnd
 - Gap-Logik: nach korrekter Antwort wandert die Karte `gapN` Positionen nach hinten (Standard 3, einstellbar 1–20)
 
-### Gezielt üben — neu seit v6.44 (eigenes Modul)
+### Gezielt üben — neu seit v6.44, erweitert in v6.45 (eigenes Modul)
 
-**Startseite:** zweite Karte „🎯 Gezielt üben — Eigene Auswahl, Auffälliges zuerst“ (`.mgrid` wieder zweispaltig). `gOpen()` öffnet den Auswahl-Screen `#gscr` (eigener Screen wie `#lscr`; `showMain()` blendet ihn mit aus).
+**Startseite:** zweite Karte „🎯 Gezielt üben — Eigene Auswahl, Auffälliges zuerst“ (`.mgrid` zweispaltig). `gOpen()` öffnet den Auswahl-Screen `#gscr` (eigener Screen wie `#lscr`; `showMain()` blendet ihn mit aus).
 
-**Auswahl (Wunsch 2):** alle Vokabeln des aktiven Paars als Checkbox-Liste, sortiert nach Score absteigend, dann Stufe aufsteigend, dann alphabetisch. Zeile: Artikel + Wort → Übersetzung, darunter Stufenname, „❌ n×“ (Fehler in den letzten 30 Tagen) und „✋ n×“ („Weiß nicht“ in den letzten 30 Tagen). Chips: „Auffällig (n)“ und „Weiß nicht (30 T) (n)“ schalten die jeweilige Gruppe an/aus (aktiv, wenn alle ihre Wörter angehakt sind), dazu „Alle“ und „Keine“. **Vorausgewählt sind alle auffälligen Wörter.** Fuß: „Starten · n ausgewählt“ (deaktiviert bei 0), im Kopf der Zähler. Beim Anhaken werden nur Chips, Zähler und Checkboxen aktualisiert (`gSync()`), nicht die Liste — die Scrollposition bleibt. Gemessen: 1500 Wörter + 20.000 Log-Einträge → Öffnen ≈ 80 ms.
+**Auswahl-Screen:** Kopf mit ✕, Titel, **ℹ️ (Kurzerklärung, `gInfo()` → Modal in de/en/sk)** und Zähler. Schnellwahl-Chips: „Auffällige (n)“ (schaltet die Gruppe *auffällig ODER festgefahren* an/aus), „Sichtbare ✓“, „Sichtbare ✗“, „Keine“. Leiste: „⚙ Filter & Sortierung (n)“ (klappt das Panel auf; n = Zahl aktiver Filter) und „k von N“. Liste: Checkbox, Artikel + Wort → Übersetzung, darunter **Stufenname · Score · ❌ n× · ✋ n× · 🔁** (❌ = Fehler, ✋ = „Weiß nicht“, jeweils letzte 30 Tage; 🔁 = festgefahren). Fuß: „Starten · n ausgewählt“ (deaktiviert bei 0). **Die Auswahl bleibt über Filter- und Sortierwechsel erhalten**; Filter und Sortierung wirken nur auf die Anzeige, „Starten“ nimmt alle ausgewählten Wörter, auch gerade ausgeblendete. **Vorausgewählt:** auffällige und festgefahrene Wörter.
 
-**Score (Wunsch 3, `wordScores()`):** Summe über alle Log-Einträge des Worts (Schlüssel `native_foreign`): falsch **+1**, richtig **−1**, jeweils gewichtet mit **0,5^(Alter/60 Tage)** (Halbwertszeit 60 Tage — alte Fehler verblassen, neue dominieren). Altbestand ohne Wortbezug (reine Zeitstempel) zählt nicht. **Auffällig = Score ≥ 0,3** (`G_MIN`, entspricht etwa einem nicht ausgeglichenen Fehler der letzten ~100 Tage). Da richtige Antworten — auch das Wiederholen innerhalb der Sitzung — den Score senken, fallen Wörter, die inzwischen sicher sitzen, wieder aus der Markierung.
+**Filter (v6.45, frei kombinierbar):** *Stufe* (Chips, mehrere gewählte Stufen gelten als ODER), *Bedingungen* (Fehler 30 T, Weiß nicht 30 T, Festgefahren, Fällig, Auffällig, Nie geübt) mit Umschalter **UND (alle) / ODER (eine)**, und *Score ab* (−5…10 in 0,5-Schritten, −5 = aus). Stufe, Bedingungen und Score-Minimum sind untereinander immer UND. „Zurücksetzen“ stellt Filter und Sortierung auf Standard.
 
-**Kategorie „Weiß nicht“ (Wunsch 6, Auswahlteil):** Wörter mit mindestens einem „Weiß ich nicht“ (Log-Güte `ty=6`) in den letzten 30 Tagen. *Bewusste Abweichung vom früheren Plan („zuletzt“ mit Weiß nicht beantwortet):* Wörtlich genommen wäre die Kategorie fast immer leer, weil jedes Wort nach „Weiß nicht“ in der Sitzung wiederholt wird, bis es sitzt — der letzte Logeintrag ist dann eine richtige Antwort. Das bewusste Mischen der Kartentypen für diese Wörter (Kartenteil von Wunsch 6) folgt in 6.45.
+**Sortierung (v6.45):** zwei Ebenen („Sortieren nach“ / „dann nach“), jeweils mit Richtungstaste ↓/↑: Score, Stufe, Fehler (30 T), Weiß nicht (30 T), Überfällig (Tage über der Fälligkeit; nicht fällige Wörter negativ), Alter (seit Hinzufügen), Zuletzt falsch, A–Z. Standard: Score ↓, dann Stufe ↑; bei Gleichstand die Reihenfolge der Vokabelliste. Das Panel rendert die Liste nur bei Filter-/Sortierwechsel neu, Checkbox-Klicks aktualisieren nur Chips und Zähler (`gSync()`).
 
-**Sitzung:** zufällige Reihenfolge der gewählten Wörter; sie läuft über **dieselbe Lern-Engine wie Schnell lernen**, also von Anfang an mit **allen Kartentypen und Richtungen** (`pickCtype`, Richtungswechsel), `repeatN`/`wrongRepeatN` und Gap. Titel „Gezielt üben“ (`LS.tk='deep'`), Log-Bit `s=1` (wird wieder geschrieben), Sitzungs-Zusammenfassung und Abbruch wie gewohnt. **Der einzige Unterschied ist die Richtlinie `LS.pol=GP`:** `GP={wrongDrop:1,dueOnly:true}` — eine falsche Antwort kostet höchstens −1 Stufe (nie mehr: auch Tipp-/Verwechslungsstrafen werden auf −1 gedeckelt) statt Totalreset, und die Stufe steigt nur bei Wörtern, die beim Graduieren fällig sind (damit Extra-Üben die SRS-Intervalle nicht aufbläht). In `mark()` gibt es **keine Moduszweige**, nur `const pol=LS.pol||{}` und zwei Stellen, die `pol` auswerten (Graduieren, Stufenabzug). `isDue(v,td)` wurde dafür wieder eingeführt; `getDue()` benutzt es mit (gleiche Logik, kein Doppelcode).
+**Score (`wordScores()`):** Summe über alle Log-Einträge des Worts (Schlüssel `native_foreign`): falsch **+`gWeight`**, richtig **−1**, jeweils × **0,5^(Alter/60 Tage)** (Halbwertszeit 60 Tage). Altbestand ohne Wortbezug (reine Zeitstempel) zählt nicht. **`gWeight` Standard 3** — in v6.44 zählte ein Fehler faktisch 1 (Nutzerfeedback: „Gewichtung zu leicht“). **Auffällig = Score ≥ 0,3** (`G_MIN`). Richtige Antworten, auch das Wiederholen innerhalb der Sitzung, senken den Score; je höher das Fehlergewicht, desto eher bleibt ein Wort trotz Erholung markiert (Beispiel: Fehler + 3 richtige danach: Gewicht 3 → ≈ 0, Gewicht 6 → ≈ +2,6). Anzeige mit einer Nachkommastelle (Komma in de/sk, kein „−0,0“).
 
-**Entscheidungen, die ich getroffen habe (ohne Vorab-Entwurf, auf Nutzerwunsch „fortfahren“) und die korrigiert werden können:** Score-Gewichtung richtig = falsch; Schwelle 0,3; Halbwertszeit 60 Tage; Reihenfolge zufällig statt nach Score; −1-Abzug fest (die frühere Einstellung `deepWrong` kommt nicht zurück); „Weiß nicht“-Kategorie über 30 Tage statt „letzte Antwort“.
+**Festgefahren (🔁, v6.45, `stuckSet()`):** Nutzerwunsch: Wörter, die „im letzten Monat nur in Stufe 0, 1, 2 und 3“ waren — kurz gelernt, aber zu schlecht, als dass es langfristig bleibt. Umsetzung: Höchststufe im Zeitraum (`stuckDays`, Standard 30) = Maximum aus aktueller Stufe und `from`/`to` aller Stufenwechsel in den Sitzungen des Zeitraums (`sv6_sessions`); festgefahren, wenn sie ≤ `stuckMax` (Standard 3) ist. **Zusätzliche Altersbedingung (bewusst, sonst wären alle jungen Wörter „festgefahren“):** Das Wort muss alt genug sein, dass es bei perfekten Wiederholungen mindestens `stuckMax + 2` erreicht hätte (`maxPossibleStage(created, jetzt) ≥ stuckMax+2`; bei Standard-Intervallen ≈ 100 Tage alt für Stufe 5). Der Grund: Mit den Standard-Intervallen (0/1/7/30/60 …) erreicht ein perfekt gelerntes Wort Stufe 4 frühestens nach ≈ 38 Tagen — „nur Stufe 0–3 im letzten Monat“ ist also für **jedes** Wort normal, das jünger als ca. 70 Tage ist. **Grenzen:** Wörter ohne Erstelldatum (vor v6.25) werden nie markiert; Stufenwechsel sind nur aus den letzten 100 Sitzungen (und erst seit v6.26) bekannt — dieselbe Einschränkung wie beim Stufenverlauf pro Wort.
+
+**Kategorie „Weiß nicht“:** Wörter mit mindestens einem „Weiß ich nicht“ (Log-Güte `ty=6`) in den letzten 30 Tagen. *Bewusste Abweichung vom früheren Plan („zuletzt“ mit Weiß nicht beantwortet):* Wörtlich genommen wäre die Kategorie fast immer leer, weil jedes Wort nach „Weiß nicht“ in der Sitzung wiederholt wird, bis es sitzt. Das bewusste Mischen der Kartentypen für diese Wörter folgt (Kartenteil von Wunsch 6).
+
+**Sitzung:** zufällige Reihenfolge der gewählten Wörter; sie läuft über **dieselbe Lern-Engine wie Schnell lernen**, also mit **allen Kartentypen und Richtungen**, `repeatN`/`wrongRepeatN`/Gap. Titel „Gezielt üben“ (`LS.tk='deep'`), Log-Bit `s=1`, Sitzungs-Zusammenfassung und Abbruch wie gewohnt. **Der einzige Unterschied ist die Richtlinie `LS.pol=gGP()`:** `{wrongDrop:gDrop, dueOnly:true}` — eine falsche Antwort kostet höchstens `gDrop` Stufen statt Totalreset (**`gDrop` Standard 1, einstellbar 0–7; 0 = kein Abzug, 7 = Reset auf 0**; Tipp-/Verwechslungsstrafen werden auf `gDrop` gedeckelt, sind also nie härter als der Wert), und die Stufe steigt nur bei Wörtern, die beim Graduieren fällig sind. In `mark()` gibt es keine Moduszweige, nur `const pol=LS.pol||{}`. `isDue(v,td)` wird von `getDue()` mitbenutzt.
+
+**Einstellungen (Karte „GEZIELT ÜBEN“ im Einstellungs-Dialog, vier Regler, generisch über `setGS(Schlüssel, Regler)`/`gsRow()`):**
+
+| Einstellung | Schlüssel in `sv6set` | Standard | Bereich |
+|---|---|---|---|
+| Gewicht falscher Antworten (im Score) | `gWeight` | 3 | 1–6 (0,5er-Schritte) |
+| Abzug bei falscher Antwort | `gDrop` | 1 | 0–7 (7 = Reset) |
+| Festgefahren: Höchststufe | `stuckMax` | 3 | 0–6 |
+| Festgefahren: Zeitraum | `stuckDays` | 30 | 7–90 Tage |
+
+Alle vier sind Teil von Backup/Import (Einstellungen werden komplett gesichert). **Auslegung des Nutzerwunschs (v6.45):** „Gewichtung“ = Gewicht falscher Antworten im Score; „Einstellung, was bei falschen Antworten kommt“ = der Stufenabzug in Gezielt üben (kehrt damit als Einstellung zurück, nachdem er in v6.44 fest war); „Score bei den Vokabeln anzeigen“ = in den Zeilen der Auswahlliste — **nicht** in der Vokabel-Liste/Detailansicht (dort bisher nicht umgesetzt; bei Bedarf nachziehbar).
 
 ### Vorgänger „Gezielt üben (Deep Learn)“ — in v6.43 komplett entfernt
 
@@ -140,7 +155,7 @@ Der Build wurde per Diff/Prüfsumme gegen die vorherige Single-File-Version veri
 - **Tippen (Type):** Frage anzeigen → Antwort eintippen → Live-Auto-Check beim Tippen (bestätigt sofort bei Treffer, inkl. Akzent-Toleranz seit v6.8) → Enter oder ✓-Button für manuelle Bestätigung mit differenzierter Rückmeldung (siehe Abschnitt „Fehlertoleranz beim Tippen/Buchstabieren")
 - **Buchstaben (Letters):** Buchstaben-Kacheln (aus dem Zielwort, gemischt) antippen um das Wort zusammenzusetzen; differenzierte Rückmeldung bei Fehlern (siehe Abschnitt „Fehlertoleranz beim Tippen/Buchstabieren")
 
-"Weiß ich nicht"-Button: in allen drei Kartentypen unterhalb der Karte. Zeigt sofort die Lösung + Weiter-Button. Totalreset auf Stufe 0 (nur im Gezielt-üben-Modus gestaffelt, max. −1 über `GP`, siehe dort).
+"Weiß ich nicht"-Button: in allen drei Kartentypen unterhalb der Karte. Zeigt sofort die Lösung + Weiter-Button. Totalreset auf Stufe 0 (nur im Gezielt-üben-Modus gestaffelt, über die Einstellung `gDrop`, siehe dort).
 
 Kein Auto-Weiterblättern nach Antwort — alle Modi erfordern manuellen Weiter-Button.
 
@@ -341,7 +356,7 @@ Kernfunktionen: `editDistance(a,b)` (Damerau-Levenshtein — zählt benachbarte 
 - Komplett falsch → **Stufe 0 (fix)**
 - Eigene Eingabe wird hier nicht angezeigt (Buchstaben-Kacheln sind ohnehin sichtbar), nur die Lösung bei Fehlern
 
-**"Weiß ich nicht"** (alle Kartentypen) ist in Schnell lernen immer Totalreset auf Stufe 0 (fix); im Gezielt-üben-Modus gilt seit v6.44 max. −1 über die Richtlinie `GP` (die frühere Einstellung `deepWrong` gibt es nicht mehr).
+**"Weiß ich nicht"** (alle Kartentypen) ist in Schnell lernen immer Totalreset auf Stufe 0 (fix); im Gezielt-üben-Modus gilt seit v6.44 ein gestaffelter Abzug über die Richtlinie `gGP()`, seit v6.45 einstellbar über `gDrop` (Standard 1; die frühere Einstellung `deepWrong` gibt es nicht mehr).
 
 ### Verwechslungs-Erkennung (neu seit v6.23, nur Tipp-Modus)
 
@@ -690,6 +705,7 @@ Unverändert in diesem Chat.
 | Abstand (Gap) | `gapN` | 3 | 1–20 |
 | Wiederholungen | `repeatN` | 3 | 1–10 |
 | Wiederholungen nach einem Fehler (seit v6.43) | `wrongRepeatN` | 3 | 2–5 |
+| Gezielt üben: Gewicht falscher Antworten, Abzug, „festgefahren“ (seit v6.45) | `gWeight`, `gDrop`, `stuckMax`, `stuckDays` | 3 / 1 / 3 / 30 | siehe „Lernmodi“ |
 | Benachrichtigungen | `notifications` | `false` | bool |
 
 **Neu seit v6.24 — SRS-Parameter (erweitert):**
@@ -729,8 +745,9 @@ Erledigt seit letzter Revision: Typografie-Fix, Sitzungs-Zusammenfassung → v6.
 **Neubau der v6.39-Funktionen — Fahrplan (Stand v6.43, Nutzer bestätigte „mit 6.43 anfangen“, Deep Learn „komplett entfernen und neu bauen, nicht nur anpassen“):**
 - **6.43 ✔ erledigt:** Wunsch 1 (`wrongRepeatN`) und der **Rückbau des alten Gezielt üben**.
 - **6.44 ✔ erledigt (November 2026):** neues Gezielt üben als **eigenes, sauber getrenntes Modul** (nicht mehr als Zweige in `mark()`/`renderCard()`): Auswahl als Checkbox-Wortliste (Wunsch 2) mit zeitgewichtetem Dringlichkeits-Score aus dem Log (Wunsch 3, Halbwertszeit 60 Tage, positive Scores vorausgewählt) und der Kategorie „zuletzt Weiß ich nicht“ (Wunsch 6, Auswahlteil). Weil es neu entsteht, bekommt es von Anfang an **alle Kartentypen und Richtungen** — das war im alten Plan der separate Umbauschritt 6.45 und entfällt damit als eigener Schritt.
-- **6.45 (nächster Schritt):** pro Wort die schwächste Kombination aus Kartentyp+Richtung (Wunsch 5, ab ≥3 Versuchen je Kombination) und bewusst gemischte Kartentypen bei „Weiß nicht“-Wörtern (Wunsch 6, Kartenteil).
-- **6.46:** Verwechslungs-Paare üben mit neuem Kartentyp „Auswahl“ (Wunsch 4).
+- **6.45 ✔ erledigt (November 2026, Nutzerfeedback zu 6.44):** Gezielt üben erweitert — Gewicht falscher Antworten, Abzug und „festgefahren“ als Einstellungen, neue Kategorie „festgefahren“, kombinierbare Filter und zweistufige Sortierung, Score-Anzeige, Kurzerklärung (siehe „Lernmodi“).
+- **6.46 (nächster Schritt; war ursprünglich 6.45):** pro Wort die schwächste Kombination aus Kartentyp+Richtung (Wunsch 5, ab ≥3 Versuchen je Kombination) und bewusst gemischte Kartentypen bei „Weiß nicht“-Wörtern (Wunsch 6, Kartenteil).
+- **6.47 (war 6.46):** Verwechslungs-Paare üben mit neuem Kartentyp „Auswahl“ (Wunsch 4).
 Die Nummer 6.39 bleibt unbesetzt. Jeder Schritt wird einzeln auf dem Gerät getestet, bevor der nächste kommt.
 
 **Aus der Analyse von v6.38/v6.40 (Export/Import-Lücken, Stats-Verdopplung, Settings-Restore, doppelter `mergeWord()`-Aufruf) — alles erledigt in v6.42.** Offen bleiben nur: Import direkt aus dem Onboarding (ein frisches Gerät muss erst die Sprachwahl durchlaufen), ein CSV-Import und `created` im CSV-Export — jeweils nur festgestellt, nicht beauftragt.
@@ -744,6 +761,15 @@ Die Nummer 6.39 bleibt unbesetzt. Jeder Schritt wird einzeln auf dem Gerät gete
 ---
 
 ## Changelog
+
+### v6.45 — Gezielt üben nach Nutzerfeedback erweitert
+Rückmeldung des Nutzers nach dem ersten Test von 6.44: „Die Gewichtung ist zu leicht“ → Schieberegler in den Einstellungen; zusätzlich eine Einstellung dafür, was bei falschen Antworten passiert; Wörter einbeziehen, die „im letzten Monat nur in 0, 1, 2 und 3“ waren; kurze Erklärung; genauere Auswahl mit individuell kombinierbarer Sortierung und Filtern nach Stufe, Score, Weiß nicht, falschen Antworten und mehr; Score in der Wortliste anzeigen. Die ursprünglich für 6.45 geplante Funktion (schwächste Kartentyp-Richtung-Kombination) rückt auf 6.46.
+- **Einstellungen:** neue Karte „GEZIELT ÜBEN“ mit vier Reglern (`gWeight`, `gDrop`, `stuckMax`, `stuckDays`, Tabelle unter „Lernmodi“). Das Fehlergewicht steht jetzt standardmäßig auf 3 (vorher faktisch 1); der Stufenabzug (`gDrop`, Standard 1) ist wieder einstellbar.
+- **Neu: „festgefahren“ (🔁):** siehe „Lernmodi“ — inklusive der bewussten Altersbedingung und ihrer Begründung (ohne sie wäre jedes junge Wort „festgefahren“). Festgefahrene Wörter sind wie auffällige vorausgewählt.
+- **Auswahl-Screen:** Filter-Panel (Stufe, Bedingungen mit UND/ODER, Score ab), zweistufige Sortierung mit Richtung, Schnellwahl „Auffällige / Sichtbare ✓ / Sichtbare ✗ / Keine“, Auswahl bleibt über Filterwechsel erhalten, Score pro Zeile, ℹ️-Kurzerklärung. 40 neue Textschlüssel in de/en/sk, alte Schlüssel `gAff`/`gDk`/`gAll` entfernt.
+- **Größe:** `index.html` 182.158 → 194.766 Byte (**+12,6 KB**; davon rund 6,1 KB Texte in drei Sprachen, der Rest Filter-/Sortier-/Score-Code, Einstellungs-Karte und CSS). Deutlich mehr als bei den vorigen Schritten — die Texte machen knapp die Hälfte aus.
+- **Im Browser getestet (Playwright/Chromium, 390×844):** Score gegen Handrechnung bei Gewicht 1, 3 und 6; Festgefahren-Logik mit sieben Fällen (altes Wort bleibt in niedrigen Stufen → markiert; zu junges Wort, Stufe 5, Reset von Stufe 5 im Fenster, ohne Erstelldatum, neues Wort → nicht markiert; alter Stufenwechsel außerhalb des Fensters zählt nicht, bei längerem Zeitraum schon; Höchststufe 1 → keine); Vorauswahl; Filter einzeln und kombiniert (Stufe, Fehler, Weiß nicht, Festgefahren, Fällig, Nie geübt, Score ab, UND vs. ODER, Zurücksetzen); alle acht Sortierungen inkl. zweiter Ebene und Richtungswechsel; Auswahl bleibt über Filterwechsel erhalten und Start nimmt ausgeblendete Wörter mit; Info-Dialog; Einstellungs-Karte (Anzeige, Speichern, Reset-Wert); Abzug bei falscher Antwort für `gDrop` 0/1/2/7 und Standard, Tipp-Strafe wird gedeckelt, **Schnell lernen unberührt von `gDrop`**; 1500 Wörter + 20.000 Log-Einträge + 100 Sitzungen: Öffnen ≈ 70 ms, Filter-/Sortierwechsel ≤ 50 ms; en/sk-Texte; Screenshots geprüft; keine JS-Fehler.
+- **Nicht getestet:** echtes Gerät; ob die Standardwerte (Gewicht 3, Schwelle 0,3, Höchststufe 3/30 Tage) zu deinem Bestand passen.
 
 ### v6.44 — Gezielt üben neu gebaut (Wünsche 2, 3 und Auswahlteil von 6)
 Zweiter Schritt des Neubaus der verworfenen v6.39-Funktionen, auf Nutzerwunsch „mit 6.44 wie beschrieben fortfahren“. Der zugesagte Vorab-Entwurf zu Sitzungsablauf, Score und Liste wurde nicht separat vorgelegt; die dabei getroffenen Entscheidungen stehen unter „Lernmodi → Gezielt üben — neu seit v6.44“ und im Antworttext.
@@ -958,10 +984,10 @@ Siehe vorherige Doku-Version (`SLOVNIK_DOKU_6_6.md`) — Kernpunkte: abgestufte 
 
 ## Hinweis: Fortsetzung in neuem Chat
 
-Stand nach v6.44. Für den nächsten Chat:
+Stand nach v6.45. Für den nächsten Chat:
 
-1. **Diese Doku-Datei** (`SLOVNIK_DOKU.md`) und die aktuelle **`index.html`** (v6.44) zusammen hochladen — idealerweise auch `sw.js` und `manifest.json` — die Doku ist der verlässliche Kontext, nicht Chatverlauf-Erinnerung.
-2. **Als Erstes tun:** `index.html` öffnen, `const VER=` gegenprüfen (muss `'6.44'` sein — falls nicht, hat der Nutzer zwischenzeitlich selbst etwas geändert oder eine andere Version hochgeladen, dann Vorsicht mit Annahmen aus dieser Doku).
+1. **Diese Doku-Datei** (`SLOVNIK_DOKU.md`) und die aktuelle **`index.html`** (v6.45) zusammen hochladen — idealerweise auch `sw.js` und `manifest.json` — die Doku ist der verlässliche Kontext, nicht Chatverlauf-Erinnerung.
+2. **Als Erstes tun:** `index.html` öffnen, `const VER=` gegenprüfen (muss `'6.45'` sein — falls nicht, hat der Nutzer zwischenzeitlich selbst etwas geändert oder eine andere Version hochgeladen, dann Vorsicht mit Annahmen aus dieser Doku).
 3. **Interner Build-Workflow (3-Teile-Aufbau, Abschnitt „Architektur"):** existiert nur innerhalb einer laufenden Sitzung, muss im neuen Chat bei Bedarf neu aus der hochgeladenen `index.html` hergestellt werden (an den `<style>`/`<script>`-Grenzen extrahieren, siehe `src/build.js`-Beschreibung im Architektur-Abschnitt). Nicht automatisch vorhanden.
 4. **Standing Instructions, die weiterhin gelten sollten** (bisher in diesem Chat etabliert, nicht in der App selbst gespeichert, also hier explizit vermerkt):
    - Diese Doku nach jeder Versionsänderung automatisch mit aktualisieren, ohne dass extra danach gefragt werden muss (siehe Hinweis-Box ganz oben im Dokument).
@@ -972,4 +998,4 @@ Stand nach v6.44. Für den nächsten Chat:
 
 ---
 
-*Dokumentation zuletzt aktualisiert: Oktober 2026, basierend auf Code-Stand **v6.44** (`index.html` + `sw.js` + `manifest.json` + Pack-Dateien). v6.40–v6.44 per Syntax-Check und automatisierten Playwright-/Chromium-Tests (Export/Import, Packs, Service Worker) verifiziert, nicht auf einem echten Gerät. v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.38 nur per Syntax-Check/Codesichtung — v6.30–v6.32 (Service Worker, Update-Erkennung) und v6.33/v6.34 wurden auf einem echten Gerät nachverfolgt, v6.35–v6.38 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*
+*Dokumentation zuletzt aktualisiert: Oktober 2026, basierend auf Code-Stand **v6.45** (`index.html` + `sw.js` + `manifest.json` + Pack-Dateien). v6.40–v6.45 per Syntax-Check und automatisierten Playwright-/Chromium-Tests (Export/Import, Packs, Service Worker) verifiziert, nicht auf einem echten Gerät. v6.7–v6.27 gegen die reale Datei verifiziert (Vorgänger-Chat, inkl. Playwright); v6.28–v6.38 nur per Syntax-Check/Codesichtung — v6.30–v6.32 (Service Worker, Update-Erkennung) und v6.33/v6.34 wurden auf einem echten Gerät nachverfolgt, v6.35–v6.38 stehen noch aus. Die Doku wird als `SLOVNIK_DOKU.md` ohne Versionsnummer im Dateinamen ausgeliefert (auf Nutzerwunsch, zum direkten Überspeichern) — die Versionsangabe bleibt oben im Dokument und im Changelog.*

@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Slovník</title>
 <style>
-/* Slovník v6.43 */
+/* Slovník v6.44 */
 :root{
   --ac:#6366f1;--acs:#818cf8;--acd:rgba(99,102,241,.15);
   --g:#22c55e;--r:#ef4444;--y:#f59e0b;--cy:#06b6d4;
@@ -78,7 +78,9 @@ a{color:var(--acs);text-decoration:none;}
 .srs-lg-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--t3);}
 .srs-lg-item i{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
 /* MODE BUTTONS */
-.mgrid{display:grid;grid-template-columns:1fr;gap:8px;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.gch{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px 2px;} .gchip{background:var(--b3);border:1px solid var(--br);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--t2);touch-action:manipulation;} .gchip.on{background:var(--acd);border-color:var(--ac);color:var(--acs);}
+.gft{padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--br);background:var(--b2);}
 .mbtn{background:var(--b3);border:1px solid var(--br);border-radius:var(--rad);padding:14px 12px;text-align:left;transition:all var(--tr);touch-action:manipulation;}
 .mbtn:hover,.mbtn:active{border-color:var(--ac);background:var(--acd);}
 .mbtn .mi{font-size:22px;margin-bottom:6px;}
@@ -337,6 +339,10 @@ input[type=range]{width:100%;accent-color:var(--ac);}
         <div class="mi">⚡</div><div class="mn" data-i18n="quick">Schnell lernen</div>
         <div class="md" data-i18n="quickSub">Zufälliger Kartenmodus</div>
       </button>
+      <button class="mbtn" onclick="gOpen()">
+        <div class="mi">🎯</div><div class="mn" data-i18n="deep">Gezielt üben</div>
+        <div class="md" data-i18n="deepSub">Eigene Auswahl, Auffälliges zuerst</div>
+      </button>
     </div>
     <button class="btn bs bw" style="margin-top:14px;" onclick="openSessionHistory()">🕘 <span data-i18n="sessHistoryBtn">Sitzungs-Verlauf</span></button>
     <div class="vtag">Slovník</div>
@@ -511,6 +517,18 @@ input[type=range]{width:100%;accent-color:var(--ac);}
   <div class="lbody" id="lbody"></div>
 </div>
 
+<!-- GEZIELT ÜBEN: AUSWAHL (seit v6.44) -->
+<div id="gscr" class="scr" style="display:none;">
+  <div class="lhdr">
+    <button class="ibtn" onclick="gClose()">✕</button>
+    <div class="lht" id="gtit">Gezielt üben</div>
+    <div class="lhp" id="gcnt">0</div>
+  </div>
+  <div class="gch" id="gch"></div>
+  <div class="scroll" id="glist"></div>
+  <div class="gft"><button class="btn bp bw" id="gst" onclick="gStart()">Start</button></div>
+</div>
+
 </div><!-- /app -->
 <div id="toast"></div>
 <div id="mov" onclick="closeMov(event)">
@@ -522,7 +540,7 @@ input[type=range]{width:100%;accent-color:var(--ac);}
 <div id="spo"></div>
 
 <script>
-/* Slovník v6.43 */
+/* Slovník v6.44 */
 /* Service Worker: Registrierung + Update-Erkennung (seit v6.30).
    Cache-Versionierung passiert in sw.js (CACHE_VER, gekoppelt an VER hier). */
 let swReg=null,swUpdateSeen=false,deferredInstallPrompt=null;
@@ -578,7 +596,7 @@ async function triggerInstall(){
   deferredInstallPrompt=null;
 }
 
-const VER='6.43';
+const VER='6.44';
 const SK={v:'sv6_vocab',log:'sv6log',langs:'sv6langs',pair:'sv6pair',set:'sv6set',tut:'sv6tut',hid:'sv6_hidden',tc:l=>`sv6_tc_${l}`,tf:l=>`sv6_tf_${l}`,sessions:'sv6_sessions'};
 const SESSIONS_MAX=100; // Anzahl gespeicherter Sitzungs-Zusammenfassungen (neueste zuerst, älter werden verworfen)
 
@@ -596,7 +614,7 @@ de:{
   addBtn:'✓ Hinzufügen',alreadyExistsWarn:'⚠️ Vokabel bereits vorhanden',natPh:'z. B. Hund',forPh:'Übersetzung…',
   search:'🔍 Suchen…',sortAlpha:'A–Z',sortStage:'Stufe',sortDate:'Datum',
   fAll:'Alle',fNew:'Neu',f1d:'1T',f1w:'1W',f1m:'1M',f2m:'2M',f6m:'6M',f1y:'1J',fDone:'✓',
-  noVocab:'Keine Vokabeln',
+  noVocab:'Keine Vokabeln',deep:'Gezielt üben',deepSub:'Eigene Auswahl, Auffälliges zuerst',gAff:'Auffällig',gDk:'Weiß nicht (30 T)',gAll:'Alle',gNone:'Keine',gSel:n=>`${n} ausgewählt`,gStart:'Starten',gNoSel:'Nichts ausgewählt',
   packsTitle:'Vokabelpacks',dataSection:'Daten',jsonExport:'⬇ Vollbackup (JSON)',csvExport:'📄 CSV-Export',
   jsonImport:'⬆ Import (JSON)',addPairSection:'Sprachpaar hinzufügen',targetLangLbl:'Zielsprache (Kürzel)',targetLangPh:'sk, hu, fr, it, pl …',
   addBtnShort:'Hinzufügen',noLangPair:'Kein Sprachpaar gewählt',loadingPacks:'⏳ Lade Packs…',
@@ -623,7 +641,7 @@ de:{
   unknownFormat:'Unbekanntes Format',importErr:e=>`Import-Fehler: ${e}`,
   impTitle:'Import',impFile:(d,v)=>`Backup vom ${d} (App v${v})`,impWhat:'Was importieren?',impVocab:p=>`Vokabeln ${p}`,impLog:'Lernverlauf (Antworten)',impSess:'Sitzungsverlauf',impSet:'Einstellungen',impLangs:'Sprachpaare & aktives Paar',impCache:'Übersetzungs-Cache',impOther:'Weitere Daten',impNew:'neu',impUpd:'aktualisiert',impMode:'Modus',impMerge:'Zusammenführen',impMergeH:'Neues kommt dazu, Vorhandenes bleibt. Bei Wörtern auf beiden Seiten gewinnt die Seite mit mehr Antworten. Kann gefahrlos wiederholt werden.',impReplace:'Ersetzen',impReplaceH:'Die gewählten Bereiche werden komplett durch das Backup ersetzt (Wiederherstellung).',impBackupFirst:'Vorher aktuellen Stand sichern (Download)',impReplaceConfirm:'Die gewählten Bereiche auf diesem Gerät werden ersetzt. Fortfahren?',impGo:'Importieren',impNone:'Nichts auswählbar bzw. ausgewählt',impDone:'Import abgeschlossen',
   tutTitles:['Topbar','Navigation','Lernmodi','Übersicht','SRS-Chart','Packs & Export'],
-  tutTexts:['Streak 🔥, fällige Vokabeln, Sprachpaar-Wechsel und Einstellungen.','Zwischen Lernen, Hinzufügen, Vokabelliste, Packs und Statistik wechseln.','Schnell: zufälliger Kartenmodus (Flip/Tippen/Buchstaben).','Gesamtzahl deiner Vokabeln und heute fällige Karten.','Balkendiagramm: Verteilung auf alle 8 Lernstufen.','Externe Vokabelpacks laden, Daten exportieren und importieren.'],
+  tutTexts:['Streak 🔥, fällige Vokabeln, Sprachpaar-Wechsel und Einstellungen.','Zwischen Lernen, Hinzufügen, Vokabelliste, Packs und Statistik wechseln.','Schnell: zufälliger Kartenmodus (Flip/Tippen/Buchstaben). Gezielt: eigene Wortauswahl, Auffälliges zuerst.','Gesamtzahl deiner Vokabeln und heute fällige Karten.','Balkendiagramm: Verteilung auf alle 8 Lernstufen.','Externe Vokabelpacks laden, Daten exportieren und importieren.'],
   tutSkip:'Überspringen',tutNext:'Weiter →',tutDone:'Fertig ✓',tutFinished:'Tutorial abgeschlossen! 🎉',
   labelArt:'Artikel',labelNat:'Muttersprache',labelFor:'Fremdsprache',labelSyn:'Synonyme',labelNote:'Notiz',correctIs:'Richtig',
   synNative:'Synonyme (Muttersprache)',synForeign:'Synonyme (Fremdsprache)',
@@ -682,7 +700,7 @@ en:{
   addBtn:'✓ Add',alreadyExistsWarn:'⚠️ Word already exists',natPh:'e.g. dog',forPh:'Translation…',
   search:'🔍 Search…',sortAlpha:'A–Z',sortStage:'Stage',sortDate:'Date',
   fAll:'All',fNew:'New',f1d:'1d',f1w:'1w',f1m:'1m',f2m:'2m',f6m:'6m',f1y:'1y',fDone:'✓',
-  noVocab:'No words',
+  noVocab:'No words',deep:'Focused practice',deepSub:'Your own selection, problem words first',gAff:'Problem words',gDk:"Don't know (30 d)",gAll:'All',gNone:'None',gSel:n=>`${n} selected`,gStart:'Start',gNoSel:'Nothing selected',
   packsTitle:'Vocab packs',dataSection:'Data',jsonExport:'⬇ Full backup (JSON)',csvExport:'📄 CSV export',
   jsonImport:'⬆ Import (JSON)',addPairSection:'Add language pair',targetLangLbl:'Target language (code)',targetLangPh:'sk, hu, fr, it, pl …',
   addBtnShort:'Add',noLangPair:'No language pair selected',loadingPacks:'⏳ Loading packs…',
@@ -709,7 +727,7 @@ en:{
   unknownFormat:'Unknown format',importErr:e=>`Import error: ${e}`,
   impTitle:'Import',impFile:(d,v)=>`Backup from ${d} (app v${v})`,impWhat:'What to import?',impVocab:p=>`Vocabulary ${p}`,impLog:'Learning history (answers)',impSess:'Session history',impSet:'Settings',impLangs:'Language pairs & active pair',impCache:'Translation cache',impOther:'Other data',impNew:'new',impUpd:'updated',impMode:'Mode',impMerge:'Merge',impMergeH:'New items are added, existing ones stay. For words on both sides, the side with more answers wins. Safe to repeat.',impReplace:'Replace',impReplaceH:'The selected areas are fully replaced by the backup (restore).',impBackupFirst:'Save current data first (download)',impReplaceConfirm:'The selected areas on this device will be replaced. Continue?',impGo:'Import',impNone:'Nothing selectable / selected',impDone:'Import complete',
   tutTitles:['Top bar','Navigation','Learning modes','Overview','SRS chart','Packs & export'],
-  tutTexts:['Streak 🔥, due words, language pair switch and settings.','Switch between Learn, Add, Word list, Packs and Stats.','Quick: random card mode (flip/type/letters).','Total number of words and how many are due today.','Bar chart: distribution across all 8 learning stages.','Load external vocab packs, export and import data.'],
+  tutTexts:['Streak 🔥, due words, language pair switch and settings.','Switch between Learn, Add, Word list, Packs and Stats.','Quick: random card mode (flip/type/letters). Focused: your own word selection, problem words first.','Total number of words and how many are due today.','Bar chart: distribution across all 8 learning stages.','Load external vocab packs, export and import data.'],
   tutSkip:'Skip',tutNext:'Next →',tutDone:'Done ✓',tutFinished:'Tutorial completed! 🎉',
   labelArt:'Article',labelNat:'Native language',labelFor:'Foreign language',labelSyn:'Synonyms',labelNote:'Note',correctIs:'Correct',
   synNative:'Synonyms (native language)',synForeign:'Synonyms (foreign language)',
@@ -768,7 +786,7 @@ sk:{
   addBtn:'✓ Pridať',alreadyExistsWarn:'⚠️ Slovíčko už existuje',natPh:'napr. pes',forPh:'Preklad…',
   search:'🔍 Hľadať…',sortAlpha:'A–Z',sortStage:'Stupeň',sortDate:'Dátum',
   fAll:'Všetko',fNew:'Nové',f1d:'1d',f1w:'1t',f1m:'1m',f2m:'2m',f6m:'6m',f1y:'1r',fDone:'✓',
-  noVocab:'Žiadne slovíčka',
+  noVocab:'Žiadne slovíčka',deep:'Cielené učenie',deepSub:'Vlastný výber, problémové slová prvé',gAff:'Problémové',gDk:'Neviem (30 d)',gAll:'Všetky',gNone:'Žiadne',gSel:n=>`${n} vybraných`,gStart:'Štart',gNoSel:'Nič nevybrané',
   packsTitle:'Balíčky slovíčok',dataSection:'Dáta',jsonExport:'⬇ Úplná záloha (JSON)',csvExport:'📄 CSV export',
   jsonImport:'⬆ Import (JSON)',addPairSection:'Pridať jazykový pár',targetLangLbl:'Cieľový jazyk (skratka)',targetLangPh:'sk, hu, fr, it, pl …',
   addBtnShort:'Pridať',noLangPair:'Nie je vybraný jazykový pár',loadingPacks:'⏳ Načítavam balíčky…',
@@ -795,7 +813,7 @@ sk:{
   unknownFormat:'Neznámy formát',importErr:e=>`Chyba importu: ${e}`,
   impTitle:'Import',impFile:(d,v)=>`Záloha z ${d} (app v${v})`,impWhat:'Čo importovať?',impVocab:p=>`Slovíčka ${p}`,impLog:'História učenia (odpovede)',impSess:'História sedení',impSet:'Nastavenia',impLangs:'Jazykové páry a aktívny pár',impCache:'Cache prekladov',impOther:'Ďalšie dáta',impNew:'nové',impUpd:'aktualizované',impMode:'Režim',impMerge:'Zlúčiť',impMergeH:'Nové sa pridá, existujúce zostane. Pri slovách na oboch stranách vyhráva strana s viacerými odpoveďami. Možno bezpečne opakovať.',impReplace:'Nahradiť',impReplaceH:'Vybrané oblasti sa úplne nahradia zálohou (obnovenie).',impBackupFirst:'Najprv uložiť aktuálny stav (stiahnuť)',impReplaceConfirm:'Vybrané oblasti v tomto zariadení budú nahradené. Pokračovať?',impGo:'Importovať',impNone:'Nič nie je vybrateľné / vybrané',impDone:'Import dokončený',
   tutTitles:['Horná lišta','Navigácia','Režimy učenia','Prehľad','SRS graf','Balíčky a export'],
-  tutTexts:['Séria 🔥, slovíčka na opakovanie, prepínanie jazykových párov a nastavenia.','Prepínanie medzi Učiť sa, Pridať, Zoznam slov, Balíčky a Štatistika.','Rýchlo: náhodný režim kariet (otočiť/písať/písmená).','Celkový počet slovíčok a koľko ich je dnes na opakovanie.','Stĺpcový graf: rozdelenie do všetkých 8 úrovní učenia.','Načítanie externých balíčkov, export a import dát.'],
+  tutTexts:['Séria 🔥, slovíčka na opakovanie, prepínanie jazykových párov a nastavenia.','Prepínanie medzi Učiť sa, Pridať, Zoznam slov, Balíčky a Štatistika.','Rýchlo: náhodný režim kariet (otočiť/písať/písmená). Cielené: vlastný výber slov, problémové prvé.','Celkový počet slovíčok a koľko ich je dnes na opakovanie.','Stĺpcový graf: rozdelenie do všetkých 8 úrovní učenia.','Načítanie externých balíčkov, export a import dát.'],
   tutSkip:'Preskočiť',tutNext:'Ďalej →',tutDone:'Hotovo ✓',tutFinished:'Tutoriál dokončený! 🎉',
   labelArt:'Člen',labelNat:'Materinský jazyk',labelFor:'Cudzí jazyk',labelSyn:'Synonymá',labelNote:'Poznámka',correctIs:'Správne',
   synNative:'Synonymá (materinský jazyk)',synForeign:'Synonymá (cudzí jazyk)',
@@ -986,6 +1004,7 @@ function showMain(){
   document.getElementById('obscr').style.display='none';
   document.getElementById('obscr').classList.remove('on');
   document.getElementById('lscr').style.display='none';
+  document.getElementById('gscr').style.display='none';
   const ms=document.getElementById('mscr');
   ms.style.display='flex';ms.classList.add('on');
   tab('home');updateTB();renderHome();
@@ -1190,14 +1209,12 @@ function wordStageChartHtml(points){
 }
 
 /* ── DUE ── */
-function getDue(){
-  const td=dayStart();
-  return S.vocab.filter(v=>{
-    const s=v.stage||0;if(s>=7)return false;
-    const d=SRS_D[s];if(d===0)return true;
-    return(td-(v.lastReviewed||0))>=d*86400000;
-  });
+function isDue(v,td){
+  const s=v.stage||0;if(s>=7)return false;
+  const d=SRS_D[s];if(d===0)return true;
+  return((td||dayStart())-(v.lastReviewed||0))>=d*86400000;
 }
+function getDue(){const td=dayStart();return S.vocab.filter(v=>isDue(v,td));}
 function dayStart(){const d=new Date();d.setHours(0,0,0,0);return d.getTime();}
 
 /* ════════════════════════════════
@@ -1235,7 +1252,7 @@ function startLearn(mode){
   const due=getDue();
   if(due.length===0){toast(t('noDueToast'));return;}
   LS={
-    mode,
+    mode,tk:'quick',
     queue:sortByPriority(due),total:due.length,
     dir:0,
     cc:{},
@@ -1250,7 +1267,7 @@ function showLScr(){
   document.getElementById('mscr').style.display='none';
   const ls=document.getElementById('lscr');
   ls.style.display='flex';ls.classList.add('on');
-  document.getElementById('ltit').textContent=t('quick');
+  document.getElementById('ltit').textContent=t(LS.tk);
   document.getElementById('ttsbtn').style.opacity=LS.tts?'1':'.4';
 }
 
@@ -1619,6 +1636,68 @@ function rmSlot(si){
   document.getElementById('tl'+rm.id)?.classList.remove('used');
 }
 
+/* ════════════════════════════════
+   GEZIELT ÜBEN (seit v6.44) — neu gebaut, eigenes Modul
+   Auswahl-Screen (#gscr) mit Checkbox-Liste, sortiert nach Dringlichkeits-Score. Die Sitzung läuft über
+   dieselbe Lern-Engine wie "Schnell lernen" (alle Kartentypen und Richtungen), unterscheidet sich aber
+   NUR über die Richtlinie LS.pol=GP — es gibt keine Moduszweige in mark()/renderCard() mehr.
+   ════════════════════════════════ */
+const GP={wrongDrop:1,dueOnly:true}; // falsch kostet höchstens −1 Stufe (statt Totalreset); Stufe steigt nur bei fälligen Wörtern
+const G_HALF=60*86400000;            // Score-Halbwertszeit: 60 Tage — alte Fehler verblassen, neue dominieren
+const G_MIN=0.3;                     // ab diesem Score gilt ein Wort als "auffällig" (vorausgewählt)
+let G=null;
+function wordScores(){ // Score je Wort aus dem Log: Σ (falsch +1, richtig −1) · 0.5^(Alter/60 Tage)
+  const now=Date.now(),m={};
+  (lg(SK.log)||[]).forEach(e=>{
+    if(!e||typeof e!=='object'||!e.w)return; // Altbestand ohne Wortbezug (nur Zeitstempel) zählt nicht
+    const o=m[e.w]||(m[e.w]={sc:0,w30:0,gu30:0}),age=now-(e.t||0),bad=e.ok===false;
+    o.sc+=(bad?1:-1)*Math.pow(.5,age/G_HALF);
+    if(bad&&age<30*86400000){o.w30++;const d=logDecode(e);if(d&&d.ty===6)o.gu30++;}
+  });
+  return m;
+}
+function gOpen(){
+  if(!S.vocab.length){toast(t('noVocab'));return;}
+  const sc=wordScores();
+  const rows=S.vocab.map(v=>{const o=sc[v.native+'_'+v.foreign]||{sc:0,w30:0,gu30:0};return{v,sc:o.sc,w30:o.w30,gu30:o.gu30};});
+  rows.sort((a,b)=>b.sc-a.sc||(a.v.stage||0)-(b.v.stage||0)||a.v.native.localeCompare(b.v.native));
+  G={rows,sel:new Set(rows.map((r,i)=>r.sc>=G_MIN?i:-1).filter(i=>i>=0))};
+  const sn=SRS_N();
+  document.getElementById('glist').innerHTML=rows.map((r,i)=>`<label class="ic"><input type="checkbox" data-i="${i}" onchange="gTog(${i},this.checked)"><span>${esc((r.v.article?r.v.article+' ':'')+r.v.native)} → ${esc(r.v.foreign)}<small>${esc(sn[r.v.stage||0])}${r.w30?` · ❌ ${r.w30}×`:''}${r.gu30?` · ✋ ${r.gu30}×`:''}</small></span></label>`).join('');
+  document.getElementById('gtit').textContent=t('deep');
+  document.getElementById('mscr').style.display='none';
+  const g=document.getElementById('gscr');g.style.display='flex';g.classList.add('on');
+  document.getElementById('glist').scrollTop=0;
+  gSync();
+}
+function gGroup(k){return G.rows.map((r,i)=>(k==='aff'?r.sc>=G_MIN:r.gu30>0)?i:-1).filter(i=>i>=0);}
+function gSync(){ // Checkboxen, Chips und Zähler aus G.sel neu setzen (die Liste selbst bleibt unverändert → Scrollposition bleibt)
+  document.querySelectorAll('#glist input').forEach(b=>{b.checked=G.sel.has(+b.dataset.i);});
+  const on=a=>a.length>0&&a.every(i=>G.sel.has(i)),aff=gGroup('aff'),dk=gGroup('dk');
+  document.getElementById('gch').innerHTML=
+    `<button class="gchip${on(aff)?' on':''}" onclick="gGrp('aff')">${t('gAff')} (${aff.length})</button>`+
+    `<button class="gchip${on(dk)?' on':''}" onclick="gGrp('dk')">${t('gDk')} (${dk.length})</button>`+
+    `<button class="gchip" onclick="gAll(1)">${t('gAll')}</button><button class="gchip" onclick="gAll(0)">${t('gNone')}</button>`;
+  document.getElementById('gcnt').textContent=G.sel.size;
+  const b=document.getElementById('gst');b.textContent=`${t('gStart')} · ${t('gSel')(G.sel.size)}`;b.disabled=G.sel.size===0;
+}
+function gTog(i,on){on?G.sel.add(i):G.sel.delete(i);gSync();}
+function gGrp(k){const a=gGroup(k),all=a.length>0&&a.every(i=>G.sel.has(i));a.forEach(i=>all?G.sel.delete(i):G.sel.add(i));gSync();}
+function gAll(on){G.sel=on?new Set(G.rows.map((_,i)=>i)):new Set();gSync();}
+function gClose(starting){
+  document.getElementById('gscr').style.display='none';document.getElementById('gscr').classList.remove('on');
+  G=starting?G:null;
+  if(!starting)showMain();
+}
+function gStart(){
+  const list=[...G.sel].map(i=>G.rows[i].v);
+  if(!list.length){toast(t('gNoSel'));return;}
+  for(let i=list.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[list[i],list[j]]=[list[j],list[i]];}
+  gClose(true);G=null;
+  LS={mode:'deep',tk:'deep',pol:GP,queue:list,total:list.length,dir:0,cc:{},tts:S.set.tts!==false,startTime:Date.now(),wordStats:{}};
+  showLScr();renderCard();
+}
+
 /* WEISS ICH NICHT */
 function dontKnow(){
   if(!LS||!LS.queue.length)return;
@@ -1654,6 +1733,7 @@ function mark(ok,stageDrop){
   if(!LS)return;
   // Kontext fürs Log VOR den Änderungen unten sichern (LS.dir wird weiter unten verändert)
   const logX={ct:LS._ctype,d:LS.dir,s:LS.mode,ctx:LS.ctx};LS.ctx=null;
+  const pol=LS.pol||{}; // Sitzungs-Richtlinie (seit v6.44): Schnell lernen = leer, Gezielt üben = GP (siehe dort)
   const card=LS.queue[0];
   const key=card.native+'_'+card.foreign;
   if(!LS.cc[key]) LS.cc[key]={fwd:0,bwd:0,any:0,att:0,wrong:false};
@@ -1681,7 +1761,7 @@ function mark(ok,stageDrop){
     const totalOk=LS.cc[key].any;
     // Graduieren: reqN richtige erreicht (wrong-Flag wird ignoriert nach reqN)
     if(totalOk>=reqN){
-      if(vi>=0){
+      if(vi>=0&&(!pol.dueOnly||isDue(S.vocab[vi]))){
         S.vocab[vi].stage=Math.min((S.vocab[vi].stage||0)+1,7);
         S.vocab[vi].lastReviewed=Date.now();
       }
@@ -1699,7 +1779,8 @@ function mark(ok,stageDrop){
     // Falsch: any auf 0 zurück (muss reqN Mal neu richtig), Stage reset (voll oder gestaffelt)
     LS.cc[key].any=0;LS.cc[key].att=0;LS.cc[key].wrong=true;
     if(vi>=0){
-      S.vocab[vi].stage=(typeof stageDrop==='number')?Math.max(0,(S.vocab[vi].stage||0)-stageDrop):0;
+      const drop=(typeof stageDrop==='number')?(typeof pol.wrongDrop==='number'?Math.min(stageDrop,pol.wrongDrop):stageDrop):pol.wrongDrop;
+      S.vocab[vi].stage=(typeof drop==='number')?Math.max(0,(S.vocab[vi].stage||0)-drop):0;
       S.vocab[vi].lastReviewed=0;
     }
     LS.queue.shift();
